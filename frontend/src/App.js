@@ -1,7 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <div className="App font-body bg-sky-50">
+      <BrowserRouter> 
+        <Navbar />
+        <Home />
+        <Footer />
+      </BrowserRouter>
+    </div>
   )
 }
