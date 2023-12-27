@@ -1,7 +1,7 @@
 import React from 'react'
 import About from '../components/About'
 import Services from '../components/Services'
-import Doctors from '../components/Doctors'
+import Doctors from '../components/Doctors/Doctors.jsx'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
 

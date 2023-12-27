@@ -10,23 +10,23 @@ const Services = () => {
 
     return (
         <section id='services' className='bg-white'>
-          <div className='py-12 md:py-20 md:px-4 px-8 mx-auto'>
-            <div className='md:w-1/2 mx-auto text-center pb-4'>
+          <div className='py-12 md:py-24 md:px-1 px-2 mx-auto'>
+            <div className='md:w-2/3 mx-auto text-center pb-4'>
                 <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                     Services
                 </h2>
-                <p className="lg:text-start text-center text-lg 2xl:text-xl">
+                <p className="text-center text-lg 2xl:text-xl text-gray-700">
                     At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                 </p>
             </div>
-            <div className='mt-12 mx-auto flex flex-wrap gap-12 md:gap-0'>
+            <div className='mt-12 flex flex-col md:flex-row gap-12 justify-center items-center'>
                 {
                     services.map(service => 
-                    <div key={service.id} className='mx-auto md:h-60 rounded-md shadow cursor-pointer hover:-translate-y-5 hover:border-b-4 hover:border-secondary transition-all duration-300 flex items-center justify-center h-full px-4 py-8 text-center w-[300px]'>
+                    <div key={service.id} className=' md:mx-4 2xl:mx-8 md:h-60 rounded-md shadow cursor-pointer hover:-translate-y-5 hover:border-b-4 hover:border-secondary transition-all duration-300 flex items-center justify-center h-full px-4 py-8 text-center w-[300px]'>
                         <div className=''>
                             <div className='bg-gray-200 h-14 w-14 mx-auto rounded-tl-3 rounded-br-3xl mb-4'>{service.icon}</div>
-                            <h4 className='text-2xl font-bold mb-2 px-2'>{service.title}</h4>
-                            <p className='px-2'>{service.description}</p>
+                            <h4 className='text-2xl font-bold mb-2 px-2 text-gray-800'>{service.title}</h4>
+                            <p className='px-2 text-gray-700'>{service.description}</p>
                         </div>    
                     </div>
                     )

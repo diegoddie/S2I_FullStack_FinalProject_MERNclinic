@@ -16,8 +16,8 @@ const Hero = () => {
               </div>
             </div>
             <h1 className='text-5xl mb-6 font-bold text-[#168aad]'>Welcome to MyClinic. Your Health, Our Priority.</h1>
-            <p className='text-xl mb-8 md:max-w-xl'>At MyClinic, you can book and manage your appointments with our expert doctors, putting your health journey at the forefront of innovation.</p>
-            <div className='font-bold text-2xl'>
+            <p className='text-xl mb-8 md:max-w-xl text-gray-700'>At MyClinic, you can book and manage your appointments with our expert doctors, putting your health journey at the forefront of innovation.</p>
+            <div className='font-bold text-2xl text-gray-800'>
                 <Button label='Join MyClinic' color='[#ffafcc]' hoverColor='[#fa7fac]' to='/sign-up' />
             </div>
           </div>

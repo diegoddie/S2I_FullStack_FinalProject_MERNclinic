@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom'; 
 import logo from '../assets/MYClinic.png';
 import Button from './Button';
@@ -10,6 +11,7 @@ import { RiArrowLeftDoubleLine } from "react-icons/ri";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -22,12 +24,12 @@ const Navbar = () => {
     });
   };
 
-  const navItems = [
+  const homeNavItems = [
     { link: 'About', path: 'about' },
     { link: 'Services', path: 'services' },
     { link: 'Doctors', path: 'doctors' },
     { link: 'Contact', path: 'contact' }
-  ];
+  ];  
 
   return (
       <header className='py-4 lg:pt-2 lg:pb-14 lg:px-8 '>
@@ -47,8 +49,7 @@ const Navbar = () => {
               <FaPhoneAlt className='text-xl text-secondary'/>
               <div className='text-sm text-secondary'>+39 329-3094304</div>
             </div>
-            <div className='flex justify-center md:mt-0 items-center gap-2 font-bold text-xl'>
-              <button className='hover:bg-[#48cae4]'></button>
+            <div className='flex justify-center md:mt-0 items-center gap-2 font-bold text-xl text-gray-700'>
               <Button label='Login' color='primary' hoverColor='[#48cae4]' to='/login' />
               <Button label='Sign Up' color='[#ffc8dd]' hoverColor='[#fa7fac]' to='/sign-up' />
             </div>
@@ -66,27 +67,37 @@ const Navbar = () => {
                     <span className='text-2xl'>MyClinic</span>
                 </Link>
                 <ul className='flex flex-col gap-y-5'>
-                  {navItems.map(({ link, path }) => (
-                      <ScrollLink key={link} to={path} spy={true} smooth={true} duration={500}>
-                        <Link key={link} to={path} className='text-secondary hover:text-gray-300 transition-all duration-300 font-semibold text-xl'>
-                          {link}
-                        </Link>
-                      </ScrollLink>
-                  ))}
+                  {location.pathname === '/' ? (
+                    homeNavItems.map(({ link, path }) => (
+                        <ScrollLink key={link} to={path} spy={true} smooth={true} duration={500} className='text-secondary hover:text-gray-300 transition-all duration-300 font-semibold text-xl'>
+                          {link}  
+                        </ScrollLink>
+                    ))
+                  ) : (
+                    <Link to='/' className='text-secondary font-semibold hover:text-[#3f869c] transition-all duration-300 text-lg uppercase flex items-center'>
+                      <RiArrowLeftDoubleLine className='text-2xl' />
+                      HOME
+                    </Link>
+                  )}
                 </ul>
               </div>
             </nav>
             <nav className='bg-white absolute shadow-xl w-full left-0 -bottom-[86px] h-16 rounded-[10px] hidden lg:flex lg:items-center lg:justify-center lg:px-[50px]'>
-              <ul className='flex gap-x-8'>
-                  {navItems.map(({ link, path }, index) => (
-                    <ScrollLink key={link} to={path} spy={true} smooth={true} duration={500}>
-                      <Link key={link} to={path} className={`text-secondary font-semibold hover:text-[#3f869c] transition-all duration-300 text-lg uppercase ${
-                        index < navItems.length - 1 ? 'border-r pr-8' : ''
-                      }`}>
-                        {link}
-                      </Link>
+              <ul className='flex gap-x-8 cursor-pointer'>
+                {location.pathname === '/' ? (
+                  homeNavItems.map(({ link, path }, index) => (
+                    <ScrollLink key={link} to={path} spy={true} smooth={true} duration={500} className={`text-secondary font-semibold hover:text-[#3f869c] transition-all duration-300 text-lg uppercase ${
+                      index < homeNavItems.length - 1 ? 'border-r pr-8' : ''
+                    }`}>
+                      {link}
                     </ScrollLink>
-                  ))}
+                  ))
+                ) : (
+                  <Link to='/' className='text-secondary font-semibold hover:text-[#3f869c] transition-all duration-300 text-lg uppercase flex items-center'>
+                    <RiArrowLeftDoubleLine className='text-2xl' />
+                    Back to the homepage
+                  </Link>
+                )}
               </ul>
             </nav>
           </div>
