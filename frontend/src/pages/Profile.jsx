@@ -1,28 +1,14 @@
-import React, {useEffect} from 'react'
-import { useAuth } from '../context/authContext';
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const Profile = () => {
-    const { user, login } = useAuth();
-    console.log(user)
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-    
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          login(parsedUser);
-        } else {
-          navigate('/login');
-        }
-    }, []);
-    
+    const { user } = useAuthContext();
+    const userLoggedIn = user.user
 
     return (
         <div className='text-4xl py-10 h-screen'>
             <h2>Profile</h2>
-            <p>{user.firstName} {user.lastName}</p>
+            <p>{userLoggedIn.firstName} {userLoggedIn.lastName}</p>
         </div>
     )
 }

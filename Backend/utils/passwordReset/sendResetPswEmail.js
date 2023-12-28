@@ -10,7 +10,7 @@ export const sendResetPasswordEmail = async (email, resetToken) => {
             },
         });
 
-        const resetTokenLink = `http://localhost:3000/password-reset/${resetToken}`;
+        const resetTokenLink = `http://localhost:3001/password-reset/${resetToken}`;
 
         const mailOptions = {
             from: process.env.GMAIL,
@@ -26,4 +26,4 @@ export const sendResetPasswordEmail = async (email, resetToken) => {
         console.error('Error sending email: ', err);
         throw err;
     }
-  };
+};

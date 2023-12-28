@@ -37,7 +37,7 @@ export const signUp = async(req,res,next) => {
         const hashedPassword = bcryptjs.hashSync(password, 10)
         const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
         
-        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, profilePicture, isAdmin,  twoFactorSecret: tempSecret.base32})
+        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, profilePicture, isAdmin, twoFactorSecret: tempSecret.base32})
 
         res.status(201).json({ message: "User created successfully", user: newUser, secret: tempSecret.base32 });
     }catch(err){
@@ -86,7 +86,9 @@ export const userSignIn = async (req, res, next) => {
       }
       
       // Generate JWT token for authentication
-      const tokenPayload = { id: validUser._id };
+      const tokenPayload = { 
+        id: validUser._id 
+      };
   
       if (validUser.isAdmin) {
         tokenPayload.role = 'admin';
@@ -94,13 +96,13 @@ export const userSignIn = async (req, res, next) => {
   
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
       const { password: hashedPassword, ...rest } = validUser._doc;
-      const expiryDate = new Date(Date.now() + 100000);
+      const expiryDate = new Date(Date.now() + 3600000);
   
       // Set the token as an HTTP-only cookie and respond with user details
       res
         .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
         .status(200)
-        .json(rest);
+        .json({ user: rest, token: token, expiration: expiryDate.getTime() });
     } catch (err) {
         next(errorHandler(500, 'Internal Server Error'));
     }
@@ -212,12 +214,21 @@ export const passwordReset = async (req, res, next) => {
   try {
     // Extract token and new password from request parameters and body
     const { token } = req.params;
-    const { newPassword } = req.body;
+    const { newPassword, confirmNewPassword } = req.body;
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({ message: "Password must contain at least one lowercase letter, one uppercase letter, and one number" });
+    }
 
     if (!token || !newPassword) {
       return res.status(400).json({ message: 'Token and new password are required' });
     }
-
+    
     // Verify the reset token
     const decodedToken = jwt.verify(token, process.env.RESET_SECRET);
 

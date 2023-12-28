@@ -1,31 +1,51 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useReducer, useEffect, useState } from 'react'
 
-const AuthContext = createContext();
+export const AuthContext = createContext()
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
+export const authReducer = (state,action) => {
+    switch(action.type){
+        case 'LOGIN':
+            return { user: action.payload }
+        case 'LOGOUT':
+            return { user: null }
+        default:
+            return state
+    }
+}
+
+export const AuthContextProvider = ({children}) => {
+    const [state, dispatch] = useReducer(authReducer, {
+        user: null
     });
+    const [loading, setLoading] = useState(true);
 
-    const login = (userData) => {
-        setUser(userData);
-        console.log(user)
-        localStorage.setItem('user', JSON.stringify(userData));
-    };
+    useEffect(()=>{
+        const user = JSON.parse(localStorage.getItem('user'))
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
-    };
+        if(user){
+            const currentTime = Date.now();
+            const isTokenExpired = user.expiration && user.expiration < currentTime;
+
+            if (isTokenExpired) {
+                localStorage.removeItem('user');
+                dispatch({type: 'LOGOUT'});
+            } else {
+                dispatch({type: 'LOGIN', payload: user});
+            }
+        }
+
+        setLoading(false);
+    }, [])
+
+    console.log('AuthContext state: ', state)
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-        {children}
+        <AuthContext.Provider value={{...state, dispatch}}>
+            {loading ? (
+                 <div>Loading...</div>
+            ) : (
+                children 
+            )}   
         </AuthContext.Provider>
-    );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+    )
+}

@@ -8,13 +8,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
-import { useAuth } from '../context/authContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 import LogoutButton from './Auth/LogoutButton';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuth();
+  const { user } = useAuthContext();
+  const userLoggedIn = user?.user
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,11 +54,11 @@ const Navbar = () => {
               <div className='text-sm text-secondary'>+39 329-3094304</div>
             </div>
             <div className='flex justify-center md:mt-0 items-center gap-2 font-bold text-xl text-gray-700'>
-              {user ? (
+              {userLoggedIn ? (
                 <>
                   <div className="relative inline-block rounded-full overflow-hidden border-2 border-secondary mr-3" >
-                    <Link to={`/profile/${user._id}`}>
-                      <img src={user.profilePicture} alt="User" className="w-14 h-14 object-cover cursor-pointer" />
+                    <Link to={`/profile/${userLoggedIn._id}`}>
+                      <img src={userLoggedIn.profilePicture} alt="User" className="w-14 h-14 object-cover cursor-pointer" />
                     </Link>
                   </div>
                   <LogoutButton />

@@ -1,20 +1,12 @@
 import React from 'react';
-import axios from 'axios';
-import { useAuth } from '../../context/authContext';
-import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../../hooks/useLogout';
 
 const LogoutButton = () => {
-  const { logout } = useAuth(); 
-  const navigate = useNavigate()
+  const { logout } = useLogout()
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/sign-out', {withCredentials: true});
-
-      if(res.status === 200){
-        logout()
-        navigate('/');
-      }
+      logout()
     } catch (error) {
       console.error('Error during logout', error);
     }

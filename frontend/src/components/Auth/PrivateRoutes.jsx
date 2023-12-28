@@ -1,20 +1,10 @@
-import { Outlet, Navigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../context/authContext';
+import { Outlet, Navigate } from 'react-router-dom'
+import { useAuthContext } from '../../hooks/useAuthContext'
 
 const PrivateRoutes = () => {
-    const { user } = useAuth();
-    const { id } = useParams();
+    const {user} = useAuthContext()
+    console.log(user)
+    return user ? <Outlet/> : <Navigate to="/login"/>
+}
 
-    console.log(user._id)
-    console.log(id)
-
-    const validUser = user._id === id
-    console.log(validUser)
-    if (validUser === true){
-        return <Outlet />
-    }else{
-        return <Navigate to='/' />
-    }
-};
-
-export default PrivateRoutes;
+export default PrivateRoutes
