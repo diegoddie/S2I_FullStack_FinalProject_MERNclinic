@@ -1,6 +1,6 @@
 import React from 'react'
-import Button from './Button'
-import header from '../assets/header.png'
+import Button from '../Utils/Button'
+import header from '../../assets/header.png'
 import { FaShieldHeart } from "react-icons/fa6";
 
 const Hero = () => {

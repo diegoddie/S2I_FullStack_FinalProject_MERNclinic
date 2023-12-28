@@ -17,7 +17,15 @@ const app = express()
 app.use(cookieParser());
 
 // Enable Cross-Origin Resource Sharing (CORS)
-app.use(cors());
+if (process.env.NODE_ENV === 'development') {
+    app.use(cors({ 
+        origin: 'http://localhost:3001', // Sostituisci con l'URL del tuo frontend
+        credentials: true, // Consenti l'invio di cookie durante le richieste cross-origin
+    }));
+} else {
+    // Configurazione CORS per l'ambiente di produzione
+    app.use(cors());
+}
 
 // Parse JSON requests
 app.use(express.json())

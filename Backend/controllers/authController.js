@@ -14,7 +14,16 @@ export const signUp = async(req,res,next) => {
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()}) 
         }
-        const {firstName, lastName, email, taxId, password, profilePicture, isAdmin} = req.body;
+        const { firstName, lastName, email, taxId, password, confirmPassword, profilePicture, isAdmin } = req.body;
+
+        if (password !== confirmPassword) {
+          return res.status(400).json({ message: "Passwords do not match" });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: "Password must contain at least one lowercase letter, one uppercase letter, and one number" });
+        }
 
         // Check for existing user with the same TaxID or email
         const existingTaxId = await User.findOne({ taxId });
@@ -54,7 +63,7 @@ export const userSignIn = async (req, res, next) => {
       // Compare the provided password with the stored hashed password
       const validPassword = bcryptjs.compareSync(password, validUser.password);
       if (!validPassword) {
-        return next(errorHandler(401, 'Wrong credentials. Please check your email and password.'));
+        return res.status(401).json({message:'Wrong credentials. Please check your email and password.'}) 
       }
 
       // Verify two-factor authentication code if enabled
@@ -85,7 +94,7 @@ export const userSignIn = async (req, res, next) => {
   
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
       const { password: hashedPassword, ...rest } = validUser._doc;
-      const expiryDate = new Date(Date.now() + 3600000);
+      const expiryDate = new Date(Date.now() + 100000);
   
       // Set the token as an HTTP-only cookie and respond with user details
       res

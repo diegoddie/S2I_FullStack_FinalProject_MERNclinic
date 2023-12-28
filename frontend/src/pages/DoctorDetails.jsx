@@ -4,7 +4,7 @@ import { animateScroll as scroll } from 'react-scroll';
 import doctorsData from '../utils/doctorsData';
 import DoctorAbout from '../components/Doctors/DoctorAbout';
 import DoctorContacts from '../components/Doctors/DoctorContacts';
-import VisitBook from '../components/VisitBook';
+import VisitBook from '../components/Visits/VisitBook';
 
 const DoctorDetails = () => {
   const { id } = useParams();

@@ -1,5 +1,5 @@
 import React from "react";
-import clinic from "../assets/clinic.jpg";
+import clinic from "../../assets/clinic.jpg";
 
 const About = () => {
   return (

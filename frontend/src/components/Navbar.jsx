@@ -3,16 +3,19 @@ import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom'; 
 import logo from '../assets/MYClinic.png';
-import Button from './Button';
+import Button from './Utils/Button';
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
+import { useAuth } from '../context/authContext';
+import LogoutButton from './Auth/LogoutButton';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-
+  const { user } = useAuth();
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -50,8 +53,21 @@ const Navbar = () => {
               <div className='text-sm text-secondary'>+39 329-3094304</div>
             </div>
             <div className='flex justify-center md:mt-0 items-center gap-2 font-bold text-xl text-gray-700'>
-              <Button label='Login' color='primary' hoverColor='[#48cae4]' to='/login' />
-              <Button label='Sign Up' color='[#ffc8dd]' hoverColor='[#fa7fac]' to='/sign-up' />
+              {user ? (
+                <>
+                  <div className="relative inline-block rounded-full overflow-hidden border-2 border-secondary mr-3" >
+                    <Link to={`/profile/${user._id}`}>
+                      <img src={user.profilePicture} alt="User" className="w-14 h-14 object-cover cursor-pointer" />
+                    </Link>
+                  </div>
+                  <LogoutButton />
+                </>
+              ) : (
+                <>
+                  <Button label='Login' color='primary' hoverColor='[#48cae4]' to='/login' />
+                  <Button label='Sign Up' color='[#ffc8dd]' hoverColor='[#fa7fac]' to='/sign-up' />
+                </>
+              )}
             </div>
             <nav className={`bg-white fixed w-[250px] top-0 h-screen ${isMenuOpen ? 'left-0' : '-left-[250px]'} shadow-2xl lg:hidden transition-all duration-300 z-20`}>
               <div className='w-8 h-8 relative -right-full top-8 flex justify-center items-center rounded-tr-lg rounded-br-lg cursor-pointer transition-all'>

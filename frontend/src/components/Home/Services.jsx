@@ -3,9 +3,9 @@ import { FaSearch, FaCheckCircle, FaCalendar } from "react-icons/fa";
 
 const Services = () => {
     const services = [
-        {id: 1, title: "Find a doctor", description: "Connect with experienced doctors near you.", icon: <FaSearch className='w-10 h-10 text-emerald-500'/>},
-        {id: 2, title: "Book a visit", description: "Schedule and manage your appointments online.", icon: <FaCalendar className='w-10 h-10 text-emerald-500' />},
-        {id: 3, title: "Visit Completed", description: "You successfully concluded your visit with our doctors.", icon: <FaCheckCircle className='w-10 h-10 text-emerald-500'/>}
+        {id: 1, title: "Find a doctor", description: "Connect with experienced doctors near you.", icon: <FaSearch className='w-10 h-10 text-[#689f38]'/>},
+        {id: 2, title: "Book a visit", description: "Schedule and manage your appointments online.", icon: <FaCalendar className='w-10 h-10 text-[#689f38]' />},
+        {id: 3, title: "Visit Completed", description: "You successfully concluded your visit with our doctors.", icon: <FaCheckCircle className='w-10 h-10 text-[#689f38]'/>}
     ]
 
     return (

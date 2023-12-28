@@ -14,7 +14,7 @@ const DoctorCard = ({ doctor }) => {
         {firstName} {lastName}
       </h2>
       <div className='mt-2 flex items-center justify-between'>
-        <span className='bg-[#ffc8dd] hover:bg-[#fa7fac] py-1 px-2 lg:py-2 lg:px-6 md:text-lg rounded leading-4 lg:leading-7 font-bold'>
+        <span className='bg-[#ffc8dd] hover:bg-[#fa7fac] px-3 py-3 lg:px-6 md:text-lg rounded leading-4 lg:leading-7 font-bold'>
           {specialization}
         </span>
         <div className='flex items-center'>
