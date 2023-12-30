@@ -96,7 +96,7 @@ export const userSignIn = async (req, res, next) => {
   
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
       const { password: hashedPassword, ...rest } = validUser._doc;
-      const expiryDate = new Date(Date.now() + 3600000);
+      const expiryDate = new Date(Date.now() + 3000000);
   
       // Set the token as an HTTP-only cookie and respond with user details
       res
@@ -228,7 +228,7 @@ export const passwordReset = async (req, res, next) => {
     if (!token || !newPassword) {
       return res.status(400).json({ message: 'Token and new password are required' });
     }
-    
+
     // Verify the reset token
     const decodedToken = jwt.verify(token, process.env.RESET_SECRET);
 

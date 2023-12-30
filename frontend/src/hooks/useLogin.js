@@ -7,7 +7,7 @@ export const useLogin = () => {
     const navigate = useNavigate()
     const [error, setError] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const {dispatch} = useAuthContext()
+    const { dispatch } = useAuthContext()
 
     const login = async({formData}) => {
         try{
@@ -19,10 +19,17 @@ export const useLogin = () => {
             if (res.status === 200){
                 const json = res.data
 
-                localStorage.setItem('user', JSON.stringify(json))
-        
-                dispatch({type: 'LOGIN', payload: json})
-        
+                dispatch({
+                    type: 'LOGIN', 
+                    payload: {
+                        user: json.user,
+                        token: {
+                            token: json.token,
+                            expiration: json.expiration
+                        }
+                    },
+                })
+
                 setIsLoading(false)
                 const userId = json.user._id
                 navigate(`/profile/${userId}`);

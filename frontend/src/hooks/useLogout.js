@@ -8,7 +8,7 @@ export const useLogout = () => {
     const navigate = useNavigate()
     const [error, setError] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const {dispatch} = useAuthContext()
+    const { dispatch } = useAuthContext()
 
     const logout = async() => {
         try{
@@ -19,11 +19,13 @@ export const useLogout = () => {
 
             if(res.status === 200){
                 setIsLoading(false)
-                localStorage.removeItem('user')
                 dispatch({type: 'LOGOUT'})
+                localStorage.removeItem('user')
+                localStorage.removeItem('token')
                 navigate('/');
             }
         }catch(error){
+            setIsLoading(false);
             console.error('Error during logout:', error);
         }
     }

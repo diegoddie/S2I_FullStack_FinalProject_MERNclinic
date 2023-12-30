@@ -13,7 +13,7 @@ import PasswordResetRequest from "./pages/PasswordReset/PasswordResetRequest.jsx
 import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
 
 const App = () => {
-  const {user} = useAuthContext()
+  const {user,token} = useAuthContext()
 
   return (
     <div className="App font-body bg-teal-50">
@@ -22,9 +22,9 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/doctor/:id" element={<DoctorDetails />} />
-            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-            <Route path="/sign-up" element={!user ? <SignUp /> : <Navigate to="/" />} />
-            <Route path="/profile/:id" element={user ? <Profile /> : <Navigate to="/login" />} />
+            <Route path="/login" element={!user && !token ? <Login /> : <Navigate to="/" />} />
+            <Route path="/sign-up" element={!user && !token ? <SignUp /> : <Navigate to="/" />} />
+            <Route exact path="/profile/:id" element={user && token ? <Profile /> : <Navigate to="/login" />} />
             <Route path="/password-reset" element={<PasswordResetRequest />} />
             <Route path="/password-reset/:token" element={<PasswordReset />} />
             <Route path="*" element={<NotFound />}/>

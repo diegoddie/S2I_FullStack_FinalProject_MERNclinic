@@ -5,6 +5,28 @@ import bcryptjs from 'bcryptjs'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode';
 
+export const getUserProfile = async(req,res,next) => {
+    if(req.user.id !== req.params.id){
+        return next(errorHandler(401, 'You can see only your account'))
+    }
+
+    const userId = req.user.id
+
+    try{
+        const user = await User.findById(userId)
+
+        if(!user){
+            return res.status(404).json({message: "user not found."})
+        }
+
+        const {password, twoFactorEnabled, twoFactorSecret, isAdmin, ...rest} = user._doc
+
+        res.status(200).json({...rest})
+    }catch(err){
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+}
+
 export const getAllUsers = async(req,res,next) => {
     try {
         const users = await User.find();

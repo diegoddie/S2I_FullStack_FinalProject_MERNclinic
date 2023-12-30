@@ -1,10 +1,11 @@
 import express from 'express'
 import { check } from 'express-validator';
-import { updateUser, deleteUser, getAllUsers } from '../controllers/userController.js';
+import { updateUser, deleteUser, getAllUsers, getUserProfile } from '../controllers/userController.js';
 import { verifyAdmin, verifyToken } from '../middleware/middleware.js';
 const router = express.Router();
 
 router.get('/', verifyToken, verifyAdmin, getAllUsers)
+router.get('/:id', verifyToken, getUserProfile)
 
 router.put(
     '/update/:id',
