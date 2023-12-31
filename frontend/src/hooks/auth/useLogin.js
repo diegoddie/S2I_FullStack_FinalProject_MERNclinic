@@ -35,7 +35,7 @@ export const useLogin = () => {
                 navigate(`/profile/${userId}`);
             }
         } catch (error) {
-            console.log(error);
+            console.error('Error during login', error);
             setIsLoading(false);
           
             if (error.response && error.response.data && error.response.data.errors) {
@@ -45,8 +45,6 @@ export const useLogin = () => {
             } else {
                 setError(['Something went wrong.']);
             }
-          
-            console.error('Error during login', error);
         }      
     }
 

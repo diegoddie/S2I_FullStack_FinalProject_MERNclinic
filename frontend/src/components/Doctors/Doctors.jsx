@@ -2,10 +2,16 @@ import React from "react";
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import doctorsData from '../../utils/doctorsData.js';
 import DoctorCard from "./DoctorCard";
+import { useGetDoctors } from "../../hooks/doctors/useGetDoctors.js";
+import { useDoctorContext } from "../../hooks/doctors/useDoctorContext.js";
+import Alert from "../Utils/Alert.jsx";
+import Spinner from "../Utils/Spinner.jsx";
 
 const Doctors = () => {
+    const { doctors } = useDoctorContext()
+    const { error, isLoading } = useGetDoctors()
+
     const settings = {
         dots: true,
         infinite: true,
@@ -35,6 +41,20 @@ const Doctors = () => {
     return (
         <section id='doctors'>
             <div className='py-12 md:py-20 md:px-4 px-2 mx-auto'>
+            {error.length > 0 && (
+              <div className='w-full max-w-[570px]'>
+                {error.map((error, index) => (
+                  <Alert key={index} type='error' message={error} />
+                ))}
+              </div>
+            )}
+            {isLoading && 
+              <div className='flex items-center justify-center mx-auto py-10'>
+                <Spinner />
+              </div>
+            }
+            {!isLoading && (
+              <>
                 <div className='md:w-2/3 mx-auto text-center pb-4'>
                     <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                         Our Doctors
@@ -45,11 +65,13 @@ const Doctors = () => {
                 </div>
                 <div className="gap-10 px-8 items-center justify-center mx-auto my-10">
                     <Slider {...settings}>
-                        {doctorsData.map((doctor) => (
+                        {doctors.map((doctor) => (
                             <DoctorCard key={doctor.id} doctor={{ ...doctor, id: doctor.id }} />
                         ))}
                     </Slider>
                 </div>
+                </>
+              )}
             </div>
         </section>
     )

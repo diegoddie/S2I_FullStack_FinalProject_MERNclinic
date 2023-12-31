@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { MdArrowRightAlt } from 'react-icons/md';
 
 const DoctorCard = ({ doctor }) => {
-  const { firstName, lastName, specialization, img, id } = doctor;
+  const { firstName, lastName, specialization, profilePicture, _id } = doctor;
 
   return (
     <div className='px-4'>
       <div className='relative'>
-        <img src={img} alt='doctor' className='w-full h-[250px] md:h-[400px] object-cover' />
+        <img src={profilePicture} alt='doctor' className='w-full h-[250px] md:h-[400px] object-cover' />
       </div>
       <h2 className='text-lg leading-[30px] lg:text-xl lg:leading-9 font-semibold mt-2'>
         {firstName} {lastName}
@@ -19,7 +19,7 @@ const DoctorCard = ({ doctor }) => {
         </span>
         <div className='flex items-center'>
           <Link
-            to={`/doctor/${id}`}
+            to={`/doctor/${_id}`}
             className='w-[32px] h-[32px] md:w-[44px] md:h-[44px] rounded-full border border-solid border-black flex items-center justify-center group hover:bg-secondary'
           >
             <MdArrowRightAlt className='w-6 h-6' />

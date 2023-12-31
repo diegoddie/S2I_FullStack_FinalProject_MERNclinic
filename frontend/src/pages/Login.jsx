@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import Alert from '../components/Utils/Alert';
-import { useLogin } from '../hooks/useLogin';
+import { useLogin } from '../hooks/auth/useLogin';
 
 const Login = () => {
   const {login, error, isLoading} = useLogin()

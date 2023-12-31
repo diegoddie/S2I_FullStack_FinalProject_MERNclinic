@@ -1,65 +1,111 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { animateScroll as scroll } from 'react-scroll';
-import doctorsData from '../utils/doctorsData';
 import DoctorAbout from '../components/Doctors/DoctorAbout';
 import DoctorContacts from '../components/Doctors/DoctorContacts';
 import VisitBook from '../components/Visits/VisitBook';
+import Alert from '../components/Utils/Alert';
+import Spinner from '../components/Utils/Spinner';
+import axios from 'axios';
 
 const DoctorDetails = () => {
-  const { id } = useParams();
+    const { id } = useParams();
 
-  const [tab, setTab] = useState('about')
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState([]);
+    const [doctor, setDoctor] = useState(null);
+    const [tab, setTab] = useState('about')
 
-  // Find the doctor with the matching ID
-  const doctor = doctorsData.find((doc) => doc.id === parseInt(id));
+    useEffect(() => {
+        const getDoctorDetails = async () => {
+            try {
+                setLoading(true);
+                setError([])
 
-  useEffect(() => {
-    scroll.scrollToTop({
-      duration: 500,
-      smooth: 'easeInOutQuad',
-    });
-  }, []);
+                const res = await axios.get(`http://localhost:3000/doctor/${id}`);
 
-  return (
-    <section className='py-12 h-full'>
-        <div className='md:mt-10 px-5 mx-auto'>
-            <div className='flex flex-col md:flex-row gap-[50px] mx-auto justify-center items-center'>
-                <div className='max-w-[1120px] w-full'>
-                    <div className='flex flex-col md:flex-row items-center gap-5 justify-center mx-auto'>
-                        <figure className='max-w-[400px] max-h-[400px]'>
-                            <img src={doctor.img} alt="" className='w-full' />
-                        </figure>
-                        <div>
-                             <h3 className='py-2 px-2 text-2xl leading-9 font-bold text-gray-800 justify-center mx-auto items-center flex'>
-                                {doctor.firstName} {doctor.lastName}
-                            </h3>
-                            <span className='bg-[#ffc8dd] hover:bg-[#fa7fac] py-4 px-5 lg:py-2 lg:px-6 text-xl rounded leading-4 lg:leading-7 font-bold text-gray-800 items-center justify-center mx-auto flex'>
-                                {doctor.specialization}
-                            </span>
+                if(res.status === 200){
+                    setLoading(false)
+                    setDoctor(res.data);
+                }
+            } catch (error) {
+                console.error('Error getting doctor details:', error);
+                setLoading(false)
+
+                if (error.response && error.response.data && error.response.data.errors) {
+                    setError(error.response.data.errors.map((err) => err.msg));
+                } else if (error.response && error.response.data && error.response.data.message) {
+                    setError([error.response.data.message]);
+                } else {
+                    setError(['Something went wrong.']);
+                }
+            }
+        };
+
+        getDoctorDetails();
+    }, [id])
+
+    useEffect(() => {
+        scroll.scrollToTop({
+            duration: 500,
+            smooth: 'easeInOutQuad',
+        });
+    }, []);
+
+    return (
+        <section className='py-12 h-full'>
+            <div className='md:mt-10 px-5 mx-auto'>
+                {error.length > 0 && (
+                    <div className='w-full max-w-[570px]'>
+                        {error.map((error, index) => (
+                        <Alert key={index} type='error' message={error} />
+                        ))}
+                    </div>
+                )}
+                {loading && 
+                    <div className='flex items-center justify-center mx-auto py-10'>
+                        <Spinner />
+                    </div>
+                }
+                {!loading && doctor && (
+                <div className='flex flex-col md:flex-row gap-[50px] mx-auto justify-center items-center'>
+                    <div className='max-w-[1120px] w-full'>
+                        <div className='flex flex-col md:flex-row items-center gap-5 justify-center mx-auto'>
+                            <figure className='max-w-[400px] max-h-[400px]'>
+                                <img src={doctor.profilePicture} alt="" className='w-full' />
+                            </figure>
+                            <div>
+                                <h3 className='py-2 px-2 text-2xl leading-9 font-bold text-gray-800 justify-center mx-auto items-center flex'>
+                                    {doctor.firstName} {doctor.lastName}
+                                </h3>
+                                <span className='bg-[#ffc8dd] hover:bg-[#fa7fac] py-4 px-5 lg:py-2 lg:px-6 text-xl rounded leading-4 lg:leading-7 font-bold text-gray-800 items-center justify-center mx-auto flex'>
+                                    {doctor.specialization}
+                                </span>
+                            </div>
+                        </div>
+                        <div className='flex flex-row mt-[50px] border-b border-solid border-gray-400 justify-center items-center mx-auto'>
+                            <button onClick={()=>setTab('about')} className={`${tab === 'about' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>About</button>
+                            <button onClick={()=>setTab('contacts')} className={`${tab === 'contacts' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Contacts</button>
+                            <button onClick={()=>setTab('book')} className={`${tab === 'book' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Book</button>
+                        </div>
+                        <div className='mt-[20px] md:mt-[40px]'>
+                            {
+                                tab === 'about' && <DoctorAbout doctorAbout={doctor.about}/>
+                            }
+                            {
+                                tab === 'contacts' && <DoctorContacts doctor={doctor}/>
+                            }
+                            {
+                                tab === 'book' && <VisitBook />
+                            }
                         </div>
                     </div>
-                    <div className='flex flex-row mt-[50px] border-b border-solid border-gray-400 justify-center items-center mx-auto'>
-                        <button onClick={()=>setTab('about')} className={`${tab === 'about' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>About</button>
-                        <button onClick={()=>setTab('contacts')} className={`${tab === 'contacts' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Contacts</button>
-                        <button onClick={()=>setTab('book')} className={`${tab === 'book' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Book</button>
-                    </div>
-                    <div className='mt-[20px] md:mt-[40px]'>
-                        {
-                            tab === 'about' && <DoctorAbout doctorAbout={doctor.about}/>
-                        }
-                        {
-                            tab === 'contacts' && <DoctorContacts doctor={doctor}/>
-                        }
-                        {
-                            tab === 'book' && <VisitBook />
-                        }
-                    </div>
                 </div>
+                )}
+
             </div>
-        </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default DoctorDetails;

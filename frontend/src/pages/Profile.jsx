@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from '../hooks/auth/useAuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Alert from '../components/Utils/Alert';

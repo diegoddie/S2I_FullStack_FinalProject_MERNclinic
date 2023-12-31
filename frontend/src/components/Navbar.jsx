@@ -8,7 +8,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from '../hooks/auth/useAuthContext';
 import LogoutButton from './Auth/LogoutButton';
 
 const Navbar = () => {
