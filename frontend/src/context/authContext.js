@@ -36,7 +36,6 @@ export const AuthContextProvider = ({children}) => {
 
     useEffect(()=>{
         const token = JSON.parse(localStorage.getItem('token'))
-
         const user = JSON.parse(localStorage.getItem('user'))
 
         if(token){
