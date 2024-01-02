@@ -16,7 +16,7 @@ export const createDoctor = async (req, res, next) => {
       if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()}) 
       }
-      const { firstName, lastName, email, specialization, city, profilePicture, phoneNumber, workShifts, nonAvailability } = req.body;
+      const { firstName, lastName, email, specialization, city, profilePicture, about, phoneNumber, workShifts, nonAvailability } = req.body;
 
       // Check if a doctor with the same email already exists
       const existingDoctor = await Doctor.findOne({ email });
@@ -31,7 +31,7 @@ export const createDoctor = async (req, res, next) => {
       // Generate a temporary secret for two-factor authentication
       const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
 
-      const newDoctor = await Doctor.create({ firstName, lastName, email, password:hashedPassword, specialization, city, profilePicture, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts, nonAvailability });
+      const newDoctor = await Doctor.create({ firstName, lastName, email, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts, nonAvailability });
 
       // Send a welcome email to the new doctor
       await sendWelcomeEmail(newDoctor.email, randomPassword);
@@ -151,6 +151,10 @@ export const updateDoctor = async (req, res, next) => {
 
       if (req.body.specialization) {
         updateFields.specialization = req.body.specialization;
+      }
+
+      if (req.body.about){
+        updateFields.about = req.body.about;
       }
 
       if (req.body.city) {

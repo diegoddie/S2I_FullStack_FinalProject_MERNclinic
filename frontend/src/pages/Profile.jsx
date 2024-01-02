@@ -60,7 +60,7 @@ const Profile = () => {
   };
 
   return (
-      <section className="flex flex-col md:flex-row mx-auto h-screen md:h-[900px] w-full px-8 py-10 md:py-20 md:px-10">
+      <section className="flex flex-col md:flex-row mx-auto h-full md:h-full w-full px-8 py-10 md:py-20 md:px-10">
         {error.length > 0 && (
           <div className="w-full max-w-[570px]">
             {error.map((error, index) => (
@@ -81,7 +81,7 @@ const Profile = () => {
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />
-            <div className='flex-1 bg-green-400 py-4 rounded-md'>
+            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
               {selectedSection === 'MyVisits' && <MyVisits />}
               {selectedSection === 'Bookings' && <Bookings />}
               {selectedSection === 'Settings' && <Settings />}
