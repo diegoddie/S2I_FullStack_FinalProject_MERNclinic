@@ -51,6 +51,7 @@ export const updateUser = async(req,res,next) => {
         // Initialize an empty object to store the fields to be updated
         const updateFields = {};
         let qrCodeData;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
         if (req.body.firstName) {
             updateFields.firstName = req.body.firstName;
@@ -69,8 +70,14 @@ export const updateUser = async(req,res,next) => {
             updateFields.email = req.body.email;
         }
 
-        if(req.body.password) {
-            updateFields.password = bcryptjs.hashSync(req.body.password, 10);
+        if (req.body.password) {
+            if (req.body.password !== req.body.confirmPassword) {
+                return res.status(400).json({ message: 'Password and Confirm Password do not match' });
+            } else if (!passwordRegex.test(req.body.password)) {
+                return res.status(400).json({ message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number' });
+            } else {
+                updateFields.password = bcryptjs.hashSync(req.body.password, 10);
+            }
         }
       
         if (req.body.taxId) {
@@ -80,6 +87,10 @@ export const updateUser = async(req,res,next) => {
               return res.status(409).json({ message: 'TaxId already exists' });
             }
             updateFields.taxId = req.body.taxId;
+        }
+
+        if (req.body.phoneNumber){
+            updateFields.phoneNumber = req.body.phoneNumber;
         }
 
         if (req.body.profilePicture) {
@@ -113,6 +124,7 @@ export const updateUser = async(req,res,next) => {
         const {password, ...rest} = updatedUser._doc;
         res.status(200).json({ user: rest, qrCode: qrCodeData });
     }catch(err){
+        console.log(err)
         next(errorHandler(500, 'Internal Server Error'));
     }
 }

@@ -28,8 +28,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Parse JSON requests
-app.use(express.json())
-
+app.use(express.json({ limit: "200mb" }));
+app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 
 // Define routes
 app.use('/', authRoutes);

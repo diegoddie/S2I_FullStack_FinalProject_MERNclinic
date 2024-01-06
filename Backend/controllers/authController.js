@@ -14,7 +14,7 @@ export const signUp = async(req,res,next) => {
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()}) 
         }
-        const { firstName, lastName, email, taxId, password, confirmPassword, profilePicture, isAdmin } = req.body;
+        const { firstName, lastName, email, taxId, password, confirmPassword, phoneNumber, profilePicture, isAdmin } = req.body;
 
         if (password !== confirmPassword) {
           return res.status(400).json({ message: "Passwords do not match" });
@@ -37,7 +37,7 @@ export const signUp = async(req,res,next) => {
         const hashedPassword = bcryptjs.hashSync(password, 10)
         const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
         
-        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, profilePicture, isAdmin, twoFactorSecret: tempSecret.base32})
+        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin, twoFactorSecret: tempSecret.base32})
 
         res.status(201).json({ message: "User created successfully", user: newUser, secret: tempSecret.base32 });
     }catch(err){
