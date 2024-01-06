@@ -1,10 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../auth/useAuthContext";
 
 export const useUpdateUser = () => {
-    const navigate = useNavigate();
     const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
