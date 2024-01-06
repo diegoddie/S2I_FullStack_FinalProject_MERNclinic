@@ -6,7 +6,6 @@ import { useSignup } from '../hooks/auth/useSignup';
 
 const SignUp = () => {
   const {signup, error, isLoading} = useSignup()
-  console.log(error)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
