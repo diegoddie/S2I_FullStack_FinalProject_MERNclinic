@@ -59,14 +59,14 @@ const Doctors = () => {
                     <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                         Our Doctors
                     </h2>
-                    <p className="text-center text-lg 2xl:text-xl text-gray-700">
+                    <p className="md:text-center text-lg 2xl:text-xl text-gray-700 px-8 text-justify">
                         At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                     </p>
                 </div>
                 <div className="gap-10 px-8 items-center justify-center mx-auto my-10">
                     <Slider {...settings}>
-                        {doctors.map((doctor) => (
-                            <DoctorCard key={doctor.id} doctor={{ ...doctor, id: doctor.id }} />
+                        {doctors.map((doctor, id) => (
+                            <DoctorCard key={id} doctor={doctor} />
                         ))}
                     </Slider>
                 </div>

@@ -11,11 +11,11 @@ const Services = () => {
     return (
         <section id='services' className='bg-white'>
           <div className='py-12 md:py-24 md:px-1 px-2 mx-auto'>
-            <div className='md:w-2/3 mx-auto text-center pb-4'>
+            <div className='md:w-2/3 mx-auto text-center pb-4 items-center'>
                 <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                     Services
                 </h2>
-                <p className="text-center text-lg 2xl:text-xl text-gray-700">
+                <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-700 px-8">
                     At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                 </p>
             </div>

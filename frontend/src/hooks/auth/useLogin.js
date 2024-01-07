@@ -33,6 +33,8 @@ export const useLogin = () => {
                 setIsLoading(false)
                 const userId = json.user._id
                 navigate(`/profile/${userId}`);
+
+                return json
             }
         } catch (error) {
             console.error('Error during login', error);

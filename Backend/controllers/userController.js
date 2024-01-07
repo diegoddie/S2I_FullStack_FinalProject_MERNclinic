@@ -4,7 +4,7 @@ import { validationResult } from 'express-validator';
 import bcryptjs from 'bcryptjs'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode';
-import cloudinary from "../utils/cloudinary.js";
+import verifyOTP from "../utils/verifyOTP.js";
 
 export const getUserProfile = async(req,res,next) => {
     if(req.user.id !== req.params.id){
@@ -98,20 +98,6 @@ export const updateUser = async(req,res,next) => {
             updateFields.profilePicture = req.body.profilePicture;
         }
 
-        if (req.body.twoFactorEnabled !== undefined) {
-            updateFields.twoFactorEnabled = req.body.twoFactorEnabled;
-      
-            // If two-factor authentication is enabled, generate a temporary secret and QR code
-            if (req.body.twoFactorEnabled) {
-              const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
-              updateFields.twoFactorSecret = tempSecret.base32;
-              
-              qrCodeData = await qrcode.toDataURL(tempSecret.otpauth_url);
-            } else {
-              updateFields.twoFactorSecret = undefined;
-            }
-        }
-
         const updatedUser = await User.findByIdAndUpdate(
             req.params.id,
             { $set: updateFields },
@@ -123,7 +109,7 @@ export const updateUser = async(req,res,next) => {
         }
 
         const {password, ...rest} = updatedUser._doc;
-        res.status(200).json({ user: rest, qrCode: qrCodeData });
+        res.status(200).json({ user: rest });
     }catch(err){
         console.log(err)
         next(errorHandler(500, 'Internal Server Error'));
@@ -144,3 +130,101 @@ export const deleteUser = async (req, res, next) => {
         next(errorHandler(500, 'Internal Server Error'));
     }
 }
+
+export const generate2FA = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(401, 'You can generate 2FA only for your own account'));
+    }
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        if (user.twoFactorEnabled) {
+            return res.status(400).json({ message: 'Two-factor authentication is already enabled for this user.' });
+        }
+
+        const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
+
+        await User.findByIdAndUpdate(req.params.id, { twoFactorSecret: tempSecret.base32 });
+
+        res.status(200).json({ tempSecret: tempSecret.base32 });
+    } catch (err) {
+        console.error(err);
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+};
+
+export const verify2FA = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(401, 'You can verify 2FA only for your own account'));
+    }
+    try {
+        const { tempSecretCode } = req.body;
+
+        if (!tempSecretCode) {
+            return res.status(400).json({ message: 'Temporary secret code is required.' });
+        }
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        const isValidTempCode = verifyOTP(user, tempSecretCode)
+
+        if (!isValidTempCode) {
+            return res.status(401).json({ message: 'Invalid temporary secret code.' });
+        }
+
+        await User.findByIdAndUpdate(req.params.id, { twoFactorEnabled: true });
+
+        res.status(200).json({ message: 'Two-factor authentication verified successfully.' });
+    } catch (err) {
+        console.error(err);
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+};
+
+export const disable2FA = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorHandler(401, 'You can disable 2FA only for your own account'));
+    }
+
+    try {
+        const { password, confirmPassword } = req.body;
+
+        if (!password || !confirmPassword) {
+            return res.status(400).json({ message: 'Both password and confirmPassword are required for 2FA disable verification.' });
+        }
+
+        if (password !== confirmPassword) {
+            return res.status(400).json({ message: 'Password and confirmPassword must match.' });
+        }
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        if (!user.twoFactorEnabled) {
+            return res.status(400).json({ message: 'Two-factor authentication is not enabled for this user.' });
+        }
+
+        const validPassword = bcryptjs.compareSync(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Invalid password for 2FA disable verification.' });
+        }
+
+        await User.findByIdAndUpdate(req.params.id, { twoFactorEnabled: false, twoFactorSecret: "" });
+
+        res.status(200).json({ message: 'Two-factor authentication disabled successfully.' });
+    } catch (err) {
+        console.error(err);
+        next(errorHandler(500, 'Internal Server Error'));
+    }
+};

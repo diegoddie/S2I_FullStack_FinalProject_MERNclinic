@@ -17,6 +17,7 @@ export const useUpdateUser = () => {
                     Authorization: `Bearer ${token.token}`
                 },
             });
+            console.log(res)
 
             if (res.status === 200) {
                 window.location.reload();

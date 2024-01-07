@@ -7,10 +7,11 @@ import Alert from '../components/Utils/Alert';
 import Spinner from '../components/Utils/Spinner';
 import MyVisits from '../components/Profile/MyVisits';
 import Bookings from '../components/Profile/Bookings';
-import Settings from '../components/Profile/Settings';
+import UpdateProfile from '../components/Profile/UpdateProfile';
 import CreateDoctor from '../components/Admin/CreateDoctor';
 import Dashboard from '../components/Admin/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
+import Security from '../components/Profile/Security';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -84,7 +85,8 @@ const Profile = () => {
             <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
               {selectedSection === 'MyVisits' && <MyVisits />}
               {selectedSection === 'Bookings' && <Bookings />}
-              {selectedSection === 'Settings' && <Settings />}
+              {selectedSection === 'Update' && <UpdateProfile />}
+              {selectedSection === 'Security' && <Security />}
               {selectedSection === 'Create Doctor' && <CreateDoctor />}
               {selectedSection === 'Dashboard' && <Dashboard />}
             </div>

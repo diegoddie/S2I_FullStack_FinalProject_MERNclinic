@@ -9,7 +9,9 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    twoFactorCode: '',
   });
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +21,10 @@ const Login = () => {
     e.preventDefault();
 
     try{
-      await login({formData})
+      const userData = await login({formData})
+      if(userData.user.twoFactorEnabled){
+        setIsTwoFactorEnabled(true);
+      }
     } catch (error) {
       console.error('Error during login', error);
     }

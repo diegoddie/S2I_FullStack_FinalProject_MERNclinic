@@ -7,6 +7,7 @@ import { generateResetToken } from "../utils/passwordReset/generateResetToken.js
 import { sendResetPasswordEmail } from "../utils/passwordReset/sendResetPswEmail.js";
 import Doctor from "../models/doctorModel.js";
 import speakeasy from 'speakeasy'
+import verifyOTP from "../utils/verifyOTP.js";
 
 export const signUp = async(req,res,next) => {
     try{
@@ -35,11 +36,11 @@ export const signUp = async(req,res,next) => {
 
         // Hash the password and generate a temporary two-factor authentication secret
         const hashedPassword = bcryptjs.hashSync(password, 10)
-        const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
+        //const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
         
-        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin, twoFactorSecret: tempSecret.base32})
+        const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin})
 
-        res.status(201).json({ message: "User created successfully", user: newUser, secret: tempSecret.base32 });
+        res.status(201).json({ message: "User created successfully", user: newUser });
     }catch(err){
         console.log(err)
         next(errorHandler(500, 'Internal Server Error'));
@@ -72,11 +73,7 @@ export const userSignIn = async (req, res, next) => {
           return next(errorHandler(400, 'Two-factor authentication code is required.'));
         }
         
-        const isValidOTP = speakeasy.totp.verify({
-          secret: validUser.twoFactorSecret,
-          encoding: 'base32',
-          token: twoFactorCode,
-        });
+        const isValidOTP = verifyOTP(validUser, twoFactorCode)
       
         if (!isValidOTP) {
           return next(errorHandler(401, 'Invalid two-factor authentication code.'));
@@ -102,7 +99,7 @@ export const userSignIn = async (req, res, next) => {
       res
         .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
         .status(200)
-        .json({ user: rest, token: token, expiration: expiryDate.getTime() });
+        .json({ user: rest, token: token, expiration: expiryDate.getTime()});
     } catch (err) {
         next(errorHandler(500, 'Internal Server Error'));
     }
