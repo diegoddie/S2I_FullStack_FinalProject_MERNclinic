@@ -15,10 +15,9 @@ export const useLogin = () => {
             setError([])
 
             const res = await axios.post('http://localhost:3000/sign-in', formData, { withCredentials: true });
+            const { codeRequested, ...json } = res.data;
 
-            if (res.status === 200){
-                const json = res.data
-
+            if (res.status === 200 && !codeRequested){
                 dispatch({
                     type: 'LOGIN', 
                     payload: {
@@ -31,10 +30,13 @@ export const useLogin = () => {
                 })
 
                 setIsLoading(false)
-                const userId = json.user._id
+                const userId = json.user._id;
                 navigate(`/profile/${userId}`);
 
                 return json
+            }else if(codeRequested){
+                setIsLoading(false)
+                return { requiresTwoFactor: true };
             }
         } catch (error) {
             console.error('Error during login', error);
@@ -49,6 +51,5 @@ export const useLogin = () => {
             }
         }      
     }
-
     return { login, isLoading, error }
 }

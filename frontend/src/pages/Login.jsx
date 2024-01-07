@@ -17,14 +17,15 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
-      const userData = await login({formData})
-      if(userData.user.twoFactorEnabled){
+    try {
+      const userData = await login({ formData });
+      if (userData.requiresTwoFactor) {
         setIsTwoFactorEnabled(true);
-      }
+      } 
+
     } catch (error) {
       console.error('Error during login', error);
     }
@@ -51,28 +52,45 @@ const Login = () => {
         }
         {!isLoading && (
           <form onSubmit={handleSubmit} className='py-4'>
-            <div className='mb-5'>
-              <input
-                type='email'
-                placeholder='Enter your Email'
-                name='email'
-                value={formData.email}
-                onChange={handleInputChange}
-                className='w-full py-3 pl-2 border-b border-solid border-gray-300 focus:outline-none focus:border-gray-800 text-xl leading-7 text-gray-500 cursor-pointer'
-                required
-              />
-            </div>
-            <div className='mb-5'>
-              <input
-                type='password'
-                placeholder='Password'
-                name='password'
-                value={formData.password}
-                onChange={handleInputChange}
-                className='w-full py-3 pl-2 border-b border-solid border-gray-300 focus:outline-none focus:border-gray-800 text-xl leading-7 text-gray-500 cursor-pointer'
-                required
-              />
-            </div>
+            {!isTwoFactorEnabled && (
+               <>
+                <div className='mb-5'>
+                  <input
+                    type='email'
+                    placeholder='Enter your Email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className='w-full py-3 pl-2 border-b border-solid border-gray-300 focus:outline-none focus:border-gray-800 text-xl leading-7 text-gray-500 cursor-pointer'
+                    required
+                  />
+                </div>
+                <div className='mb-5'>
+                  <input
+                    type='password'
+                    placeholder='Password'
+                    name='password'
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className='w-full py-3 pl-2 border-b border-solid border-gray-300 focus:outline-none focus:border-gray-800 text-xl leading-7 text-gray-500 cursor-pointer'
+                    required
+                  />
+                </div>
+              </>
+            )}
+            {isTwoFactorEnabled && (
+              <div className='mb-5'>
+                <input
+                  type='text'
+                  placeholder='Enter your Authenticator Code'
+                  name='twoFactorCode'
+                  value={formData.twoFactorCode}
+                  onChange={handleInputChange}
+                  className='w-full py-3 pl-2 border-b border-solid border-gray-300 focus:outline-none focus:border-gray-800 text-xl leading-7 text-gray-500 cursor-pointer'
+                  required
+                />
+              </div>
+            )}
             <div className='mt-7'>
               <button
                 disabled={isLoading}

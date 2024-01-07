@@ -70,7 +70,7 @@ export const userSignIn = async (req, res, next) => {
       // Verify two-factor authentication code if enabled
       if (validUser.twoFactorEnabled) {
         if (!twoFactorCode) {
-          return next(errorHandler(400, 'Two-factor authentication code is required.'));
+          return res.status(200).json({ codeRequested: true });
         }
         
         const isValidOTP = verifyOTP(validUser, twoFactorCode)
