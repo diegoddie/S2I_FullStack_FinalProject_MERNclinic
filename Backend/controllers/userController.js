@@ -4,7 +4,7 @@ import { validationResult } from 'express-validator';
 import bcryptjs from 'bcryptjs'
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode';
-import verifyOTP from "../utils/verifyOTP.js";
+import verifyOTP from "../utils/auth/verifyOTP.js";
 
 export const getUserProfile = async(req,res,next) => {
     if(req.user.id !== req.params.id){

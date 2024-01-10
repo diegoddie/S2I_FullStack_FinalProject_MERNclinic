@@ -17,7 +17,7 @@ export const sendVisitCancellationEmail = async (userEmail, doctorEmail, visitDe
       html: `
         <html>
           <body>
-            <h1>Your Visit Cancellation</h1>
+            <h1>Your Visit Has Been Cancelled</h1>
             <p>Your visit scheduled on ${visitDetails.date} has been cancelled.</p>
             <p>Other Details:</p>
             <p>Doctor: ${visitDetails.doctor.firstName} ${visitDetails.doctor.lastName}</p>

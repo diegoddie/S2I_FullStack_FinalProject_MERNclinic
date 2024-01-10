@@ -3,12 +3,15 @@ import app from '../index.js';
 
 const port = process.env.PORT || 3000;
 
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`App listening on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error(`Error during connection to the DB: ${err.message}`);
-  });
+async function startServer() {
+    try {
+        await connectDB();
+        app.listen(port, () => {
+            console.log(`App listening on port ${port}`);
+        });
+    } catch (error) {
+        console.error(`Error starting server: ${error.message}`);
+    }
+}
+
+startServer();

@@ -7,7 +7,7 @@ import { generateResetToken } from "../utils/passwordReset/generateResetToken.js
 import { sendResetPasswordEmail } from "../utils/passwordReset/sendResetPswEmail.js";
 import Doctor from "../models/doctorModel.js";
 import speakeasy from 'speakeasy'
-import verifyOTP from "../utils/verifyOTP.js";
+import verifyOTP from "../utils/auth/verifyOTP.js";
 
 export const signUp = async(req,res,next) => {
     try{
@@ -36,7 +36,6 @@ export const signUp = async(req,res,next) => {
 
         // Hash the password and generate a temporary two-factor authentication secret
         const hashedPassword = bcryptjs.hashSync(password, 10)
-        //const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
         
         const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin})
 

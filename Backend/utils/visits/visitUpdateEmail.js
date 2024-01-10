@@ -18,7 +18,7 @@ export const sendVisitUpdateEmail = async (userEmail, doctorEmail, visitDetails)
         <html>
           <body>
             <h1>Visit Updated</h1>
-            <p>Your visit originally scheduded in date ${visitDetails.originalDate} has been rescheduled in date ${visitDetails.newDate}.
+            <p>Your visit originally scheduled in date ${visitDetails.originalDate} has been rescheduled in date ${visitDetails.newDate}.
             <p>Other Details:</p>
             <p>Doctor: ${visitDetails.doctor.firstName} ${visitDetails.doctor.lastName}</p>
             <p>${visitDetails.doctor.specialization}</p>
@@ -37,7 +37,7 @@ export const sendVisitUpdateEmail = async (userEmail, doctorEmail, visitDetails)
             <h1>Visit Updated</h1>
             <p>Patient: ${visitDetails.patient.firstName} ${visitDetails.patient.lastName}</p>
             <p>Tax ID: ${visitDetails.patient.taxId}</p>
-            <p>The visit originally scheduded in date ${visitDetails.originalDate} has been rescheduled in date ${visitDetails.newDate}.
+            <p>The visit originally scheduled in date ${visitDetails.originalDate} has been rescheduled in date ${visitDetails.newDate}.
           </body>
         </html>
       `,

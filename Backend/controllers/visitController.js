@@ -3,10 +3,10 @@ import { errorHandler } from "../utils/error.js";
 import { validationResult } from 'express-validator';
 import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js";
-import { sendVisitConfirmationEmail } from "../utils/visitEmails/visitConfirmationEmail.js";
-import { sendVisitUpdateEmail } from "../utils/visitEmails/visitUpdateEmail.js";
-import { sendVisitCancellationEmail } from "../utils/visitEmails/visitCancellationEmail.js";
-import { validateVisit } from "../utils/validateVisit.js";
+import { sendVisitConfirmationEmail } from "../utils/visits/visitConfirmationEmail.js";
+import { sendVisitUpdateEmail } from "../utils/visits/visitUpdateEmail.js";
+import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
+import { validateVisit } from "../utils/visits/validateVisit.js";
 
 export const createVisit = async (req, res, next) => {
   try {

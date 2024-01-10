@@ -1,4 +1,4 @@
-import { errorHandler } from "./error.js";
+import { errorHandler } from "../error.js";
 
 export const validateVisit = async (newVisitDate, patientDetails, doctorDetails) => {
     const currentDate = new Date();

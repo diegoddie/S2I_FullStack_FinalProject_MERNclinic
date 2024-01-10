@@ -2,13 +2,13 @@ import Doctor from "../models/doctorModel.js";
 import bcryptjs from 'bcryptjs'
 import { errorHandler } from "../utils/error.js";
 import { validationResult } from 'express-validator';
-import { generateRandomPassword } from "../utils/generateRandomPsw.js";
-import { sendWelcomeEmail } from "../utils/doctorWelcomeEmail.js";
+import { generateRandomPassword } from "../utils/auth/generateRandomPsw.js";
 import Visit from "../models/visitModel.js";
 import User from "../models/userModel.js";
-import { sendVisitCancellationEmail } from "../utils/visitEmails/visitCancellationEmail.js";
+import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode';
+import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
 
 export const createDoctor = async (req, res, next) => {
   try {

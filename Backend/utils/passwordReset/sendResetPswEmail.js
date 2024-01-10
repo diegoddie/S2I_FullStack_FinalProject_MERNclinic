@@ -15,8 +15,8 @@ export const sendResetPasswordEmail = async (email, resetToken) => {
         const mailOptions = {
             from: process.env.GMAIL,
             to: email,
-            subject: 'Reset Password',
-            html: `<p>Hai richiesto una reimpostazione della password. Clicca sul seguente link per procedere: <a href="${resetTokenLink}">${resetTokenLink}</a></p>`,
+            subject: 'Password Reset',
+            html: `<p>You have requested a password reset. Click on the following link to proceed: <a href="${resetTokenLink}">${resetTokenLink}</a></p>`,
         };
 
         const info = await transporter.sendMail(mailOptions);
