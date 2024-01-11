@@ -100,12 +100,14 @@ const Login = ({ model }) => {
                 Login
               </button>
             </div>
-            <p className='mt-5 text-gray-400 text-center text-lg'>
-              Don't have an account?
-              <Link to='/sign-up' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
-                Register
-              </Link>
-            </p>
+            {model === 'user' && (
+              <p className='mt-5 text-gray-400 text-center text-lg'>
+                Don't have an account?
+                <Link to='/sign-up' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+                  Register
+                </Link>
+              </p>
+            )}
             <p className='mt-2 text-gray-400 text-center text-lg'>
               Forgot your password?
               <Link to={`/${model === 'doctor' ? 'doctor' : 'user'}/password-reset`} className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>

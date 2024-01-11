@@ -190,7 +190,7 @@ export const passwordReset = async (req, res, next, Model) => {
     if (err.name === 'TokenExpiredError') {
       return res.status(400).json({ message: 'Token expired' });
     }
-
+    console.log(err)
     next(errorHandler(500, 'Internal Server Error'));
   }
 };

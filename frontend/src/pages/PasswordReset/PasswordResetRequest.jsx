@@ -5,7 +5,7 @@ import Spinner from '../../components/Utils/Spinner';
 
 const PasswordResetRequest = ({ model }) => {
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -23,11 +23,17 @@ const PasswordResetRequest = ({ model }) => {
     try {
       const response = await axios.post(`http://localhost:3000/${model}/password-reset-request`, formData);
       setMessage(response.data.message);
-      setError('');
+      setError([]);
     } catch (error) {
       console.error('Error during the password reset request', error);
-      setMessage('');
-      setError(error.response.data.message || 'An error occurred');
+
+      if (error.response && error.response.data && error.response.data.errors) {
+          setError(error.response.data.errors.map((err) => err.msg));
+      } else if (error.response && error.response.data && error.response.data.message) {
+          setError([error.response.data.message]);
+      } else {
+          setError(['Something went wrong.']);
+      }
     } finally {
       setIsLoading(false);
     }
