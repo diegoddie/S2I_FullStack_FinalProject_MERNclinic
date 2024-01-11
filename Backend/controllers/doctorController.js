@@ -7,7 +7,6 @@ import Visit from "../models/visitModel.js";
 import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
-import qrcode from 'qrcode';
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
 
 export const createDoctor = async (req, res, next) => {
@@ -16,12 +15,14 @@ export const createDoctor = async (req, res, next) => {
       if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()}) 
       }
-      const { firstName, lastName, email, specialization, city, profilePicture, about, phoneNumber, workShifts, nonAvailability } = req.body;
+      const { firstName, lastName, taxId, email, specialization, city, profilePicture, about, phoneNumber, workShifts, nonAvailability } = req.body;
 
       // Check if a doctor with the same email already exists
+      const existingTaxId = await Doctor.findOne({ taxId });
       const existingDoctor = await Doctor.findOne({ email });
-      if (existingDoctor) {
-        return res.status(409).json({ message: "A Doctor with the same email already exists" });
+
+      if (existingDoctor || existingTaxId) {
+        return res.status(409).json({ message: "A Doctor with the same TaxId or email already exists" });
       }
 
       // Generate a random password for the new doctor
@@ -31,7 +32,7 @@ export const createDoctor = async (req, res, next) => {
       // Generate a temporary secret for two-factor authentication
       const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
 
-      const newDoctor = await Doctor.create({ firstName, lastName, email, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts, nonAvailability });
+      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts, nonAvailability });
 
       // Send a welcome email to the new doctor
       await sendWelcomeEmail(newDoctor.email, randomPassword);
@@ -51,6 +52,28 @@ export const getAllDoctors = async (req, res, next) => {
     next(errorHandler(500, 'Internal Server Error'));
   }
 };
+
+export const getDoctorProfile = async(req,res,next) => {
+  if(req.user.id !== req.params.id){
+      return next(errorHandler(401, 'You can see only your account'))
+  }
+
+  const userId = req.user.id
+
+  try{
+      const doctor = await Doctor.findById(userId)
+
+      if(!doctor){
+          return res.status(404).json({message: "doctor not found."})
+      }
+
+      const {password, twoFactorEnabled, twoFactorSecret, ...rest} = doctor._doc
+
+      res.status(200).json({...rest})
+  }catch(err){
+      next(errorHandler(500, 'Internal Server Error'));
+  }
+}
 
 export const getDoctorById = async (req, res, next) => {
   try {
@@ -124,85 +147,52 @@ export const updateDoctor = async (req, res, next) => {
           return res.status(400).json({ errors: errors.array() });
       }
 
+      const { firstName, lastName, email, password, confirmPassword, taxId, specialization, about, city, workShifts, nonAvailability, phoneNumber, profilePicture } = req.body;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+
       // Initialize an empty object to store the fields to be updated
       const updateFields = {};
-      let qrCodeData;
 
-      if (req.body.firstName) {
-        updateFields.firstName = req.body.firstName;
-      }
-  
-      if (req.body.lastName) {
-        updateFields.lastName = req.body.lastName;
-      }
+      if (firstName) updateFields.firstName = firstName;
+      if (lastName) updateFields.lastName = lastName;
 
-      if(req.body.email) {
-        // Check if the new email already exists for another doctor
-        const existingEmail = await Doctor.findOne({ email: req.body.email, _id: { $ne: req.params.id } });
-        if (existingEmail) {
-          return res.status(409).json({ message: "Email already exists" });
-        }
-        updateFields.email = req.body.email;
+      if (taxId) {
+        const existingTaxId = await User.findOne({ taxId, _id: { $ne: req.params.id } });
+        if (existingTaxId) return res.status(409).json({ message: 'TaxId already exists' });
+        updateFields.taxId = taxId;
       }
 
-      if(req.body.password){
-        updateFields.password = bcryptjs.hashSync(req.body.password, 10);
+      if (email) {
+          const existingEmail = await Doctor.findOne({ email, _id: { $ne: req.params.id } });
+          if (existingEmail) return res.status(409).json({ message: 'Email already exists' });
+          updateFields.email = email;
       }
 
-      if (req.body.specialization) {
-        updateFields.specialization = req.body.specialization;
-      }
-
-      if (req.body.about){
-        updateFields.about = req.body.about;
-      }
-
-      if (req.body.city) {
-        updateFields.city = req.body.city;
-      }
-
-      if (req.body.profilePicture) {
-        updateFields.profilePicture = req.body.profilePicture;
-      }
-
-      if (req.body.phoneNumber) {
-        updateFields.phoneNumber = req.body.phoneNumber;
-      }
-
-      if (req.body.workShifts){
-        updateFields.workShifts = req.body.workShifts
-      }
-
-      if (req.body.nonAvailability){
-        updateFields.nonAvailability = req.body.nonAvailability;
-      }
-
-      if (req.body.twoFactorEnabled !== undefined) {
-        updateFields.twoFactorEnabled = req.body.twoFactorEnabled;
-        
-        // If two-factor authentication is enabled, generate a new temporary secret
-        if (req.body.twoFactorEnabled) {
-          const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
-          updateFields.twoFactorSecret = tempSecret.base32;
-          
-          // Generate a QR code for the new two-factor authentication setup
-          qrCodeData = await qrcode.toDataURL(tempSecret.otpauth_url);
+      if (password) {
+        if (password !== confirmPassword) {
+            return res.status(400).json({ message: 'Password and Confirm Password do not match' });
+        } else if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number' });
         } else {
-          updateFields.twoFactorSecret = undefined;
+            updateFields.password = bcryptjs.hashSync(password, 10);
         }
       }
 
-      const updatedDoctor = await Doctor.findByIdAndUpdate(
-        req.params.id,
-        { $set: updateFields },    
-        { new: true }
-      );
+      if (specialization) updateFields.specialization = specialization;
+      if (about) updateFields.about = about;
+      if (city) updateFields.city = city;
+      if (phoneNumber) updateFields.phoneNumber = phoneNumber;
+      if (profilePicture) updateFields.profilePicture = profilePicture;
+      if (workShifts) updateFields.workShifts = workShifts;
+      if (nonAvailability) updateFields.nonAvailability = nonAvailability;
+
+      const updatedDoctor = await Doctor.findByIdAndUpdate(req.params.id, { $set: updateFields }, { new: true });
 
       if (!updatedDoctor) {
         return next(errorHandler(404, "Doctor not found"));
       }
 
-      const {password, ...rest} = updatedDoctor._doc;
+      const {password: userPassword, ...rest} = updatedDoctor._doc;
 
       res.status(200).json({ user: rest, qrCode: qrCodeData });
     } catch (err) {

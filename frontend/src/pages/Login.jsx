@@ -4,7 +4,7 @@ import Spinner from '../components/Utils/Spinner';
 import Alert from '../components/Utils/Alert';
 import { useLogin } from '../hooks/auth/useLogin';
 
-const Login = () => {
+const Login = ({ model }) => {
   const {login, error, isLoading} = useLogin()
   const [formData, setFormData] = useState({
     email: '',
@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const userData = await login({ formData });
+      const userData = await login({ formData, model });
       if (userData.requiresTwoFactor) {
         setIsTwoFactorEnabled(true);
       } 
@@ -108,7 +108,7 @@ const Login = () => {
             </p>
             <p className='mt-2 text-gray-400 text-center text-lg'>
               Forgot your password?
-              <Link to='/password-reset' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+              <Link to={`/${model === 'doctor' ? 'doctor' : 'user'}/password-reset`} className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
                 Click Here
               </Link>
             </p>

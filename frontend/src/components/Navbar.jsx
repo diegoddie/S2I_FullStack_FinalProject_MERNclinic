@@ -56,7 +56,7 @@ const Navbar = () => {
               {token && user ? (
                 <>
                   <div className="relative inline-block rounded-full overflow-hidden border-2 border-secondary mr-3" >
-                    <Link to={`/profile/${user._id}`}>
+                    <Link to={user.specialization ? `/doctor/profile/${user._id}` : `/profile/${user._id}`}>
                       <img src={user.profilePicture} alt="User" className="w-14 h-14 object-cover cursor-pointer" />
                     </Link>
                   </div>

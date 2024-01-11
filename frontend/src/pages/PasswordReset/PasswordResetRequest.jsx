@@ -3,7 +3,7 @@ import axios from 'axios';
 import Alert from '../../components/Utils/Alert';
 import Spinner from '../../components/Utils/Spinner';
 
-const PasswordResetRequest = () => {
+const PasswordResetRequest = ({ model }) => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ const PasswordResetRequest = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3000/password-reset-request', formData);
+      const response = await axios.post(`http://localhost:3000/${model}/password-reset-request`, formData);
       setMessage(response.data.message);
       setError('');
     } catch (error) {

@@ -12,7 +12,7 @@ export const sendWelcomeEmail = async (email, password) => {
         },
       });
   
-      const resetPasswordUrl = 'http://localhost:3000/doctor/sign-in'; 
+      const resetPasswordUrl = 'http://localhost:3001/doctor/login'; 
       const mailOptions = {
         from: process.env.GMAIL,
         to: email,

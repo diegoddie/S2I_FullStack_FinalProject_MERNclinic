@@ -1,5 +1,5 @@
 import express from 'express'
-import { passwordReset, passwordResetRequest, signUp, signOut, userSignIn } from '../controllers/authController.js';
+import { signUp, signOut } from '../controllers/authController.js';
 import { check } from 'express-validator';
 
 const router = express.Router();
@@ -15,18 +15,6 @@ router.post(
     ],
     signUp
 );
-
-router.post(
-    '/sign-in',
-    [
-      check('email').notEmpty().isEmail().withMessage('Valid email is required'),
-      check('password').notEmpty().withMessage('Password is required'),
-    ],
-    userSignIn
-);
-
-router.post('/password-reset-request', passwordResetRequest)
-router.post('/password-reset/:token', passwordReset)
 
 router.get('/sign-out', signOut)
 

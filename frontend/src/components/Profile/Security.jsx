@@ -4,9 +4,9 @@ import { MdClose } from "react-icons/md";
 import QRCode from 'qrcode.react';
 import Spinner from '../Utils/Spinner';
 import Alert from '../Utils/Alert';
-import { use2FA } from '../../hooks/users/use2FA';
+import { use2FA } from '../../hooks/auth/use2FA';
 
-const Security = () => {
+const Security = ({ model }) => {
     const { generate2FA, verify2FA, disable2FA, error, isLoading } = use2FA();
     const { user } = useAuthContext();
 
@@ -20,7 +20,7 @@ const Security = () => {
         try {
           setIsModalOpen(true);
           if (!user.twoFactorEnabled) {
-            const otpauthURL = await generate2FA();
+            const otpauthURL = await generate2FA(model);
             setTwoFactorSecret(otpauthURL);
           }
         } catch (err) {
@@ -37,13 +37,13 @@ const Security = () => {
 
     const handleVerifyAndEnable2FA = (e) => {
         e.preventDefault()
-        verify2FA(tempSecretCode);
+        verify2FA(tempSecretCode, model);
         setIsModalOpen(false);
     };
 
     const handleDisable2FA = (e) => {
         e.preventDefault()
-        disable2FA(password, confirmPassword);
+        disable2FA(password, confirmPassword, model);
         setIsModalOpen(false);
     };
 

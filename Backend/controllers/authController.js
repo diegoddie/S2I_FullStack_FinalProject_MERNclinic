@@ -6,8 +6,9 @@ import jwt from 'jsonwebtoken'
 import { generateResetToken } from "../utils/passwordReset/generateResetToken.js";
 import { sendResetPasswordEmail } from "../utils/passwordReset/sendResetPswEmail.js";
 import Doctor from "../models/doctorModel.js";
-import speakeasy from 'speakeasy'
 import verifyOTP from "../utils/auth/verifyOTP.js";
+import generateTokenPayload from "../utils/auth/generateTokenPayload.js";
+import speakeasy from 'speakeasy'
 
 export const signUp = async(req,res,next) => {
     try{
@@ -46,117 +47,62 @@ export const signUp = async(req,res,next) => {
     }
 }
 
-export const userSignIn = async (req, res, next) => {
-    const { email, password, twoFactorCode } = req.body;
-  
-    try {
+const signIn = async (req, res, next, Model) => {
+  try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-  
-      const validUser = await User.findOne({ email });
-      if (!validUser) {
-        return next(errorHandler(404, 'User not found'));
-      }
-  
-      // Compare the provided password with the stored hashed password
-      const validPassword = bcryptjs.compareSync(password, validUser.password);
-      if (!validPassword) {
-        return res.status(401).json({message:'Wrong credentials. Please check your email and password.'}) 
+          return res.status(400).json({ errors: errors.array() });
       }
 
-      // Verify two-factor authentication code if enabled
+      const { email, password, twoFactorCode } = req.body;
+      const validUser = await Model.findOne({ email });
+
+      if (!validUser) {
+          return next(errorHandler(404, `${Model.modelName} not found`));
+      }
+
+      const validPassword = bcryptjs.compareSync(password, validUser.password);
+      if (!validPassword) {
+          return res.status(401).json({ message: 'Wrong credentials. Please check your email and password.' });
+      }
+
       if (validUser.twoFactorEnabled) {
-        if (!twoFactorCode) {
-          return res.status(200).json({ codeRequested: true });
-        }
-        
-        const isValidOTP = verifyOTP(validUser, twoFactorCode)
-      
-        if (!isValidOTP) {
-          return next(errorHandler(401, 'Invalid two-factor authentication code.'));
-        }
+          if (!twoFactorCode) {
+              return res.status(200).json({ codeRequested: true });
+          }
+
+          const isValidOTP = verifyOTP(validUser, twoFactorCode);
+
+          if (!isValidOTP) {
+              return next(errorHandler(401, 'Invalid two-factor authentication code.'));
+          }
       } else if (twoFactorCode) {
-        return next(errorHandler(400, 'Two-factor authentication is not enabled for this user.'));
+          return next(errorHandler(400, 'Two-factor authentication is not enabled for this user.'));
       }
-      
+
       // Generate JWT token for authentication
-      const tokenPayload = { 
-        id: validUser._id 
-      };
-  
-      if (validUser.isAdmin) {
-        tokenPayload.role = 'admin';
-      }
-  
+      const tokenPayload = generateTokenPayload(validUser, validUser.isAdmin ? 'admin' : undefined);
+
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
       const { password: hashedPassword, ...rest } = validUser._doc;
-      const expiryDate = new Date(Date.now() + 3000000);
-  
-      // Set the token as an HTTP-only cookie and respond with user details
+      const expiryDate = new Date(Date.now() + (validUser.isAdmin ? 3000000 : 3600000));
+
       res
-        .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
-        .status(200)
-        .json({ user: rest, token: token, expiration: expiryDate.getTime()});
-    } catch (err) {
-        next(errorHandler(500, 'Internal Server Error'));
-    }
+          .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+          .status(200)
+          .json({ user: rest, token, expiration: expiryDate.getTime() });
+  } catch (err) {
+      next(errorHandler(500, 'Internal Server Error'));
+      console.log(err)
+  }
+};
+
+export const userSignIn = async (req, res, next) => {
+  await signIn(req, res, next, User);
 };
 
 export const doctorSignIn = async (req, res, next) => {
-  const { email, password, twoFactorCode } = req.body;
-
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const validDoctor = await Doctor.findOne({ email });
-    if (!validDoctor) {
-      return next(errorHandler(404, 'Doctor not found'));
-    }
-
-    // Compare the provided password with the stored hashed password
-    const validPassword = bcryptjs.compareSync(password, validDoctor.password);
-    if (!validPassword) {
-      return next(errorHandler(401, 'Wrong credentials. Please check your email and password.'));
-    }
-
-    // Verify two-factor authentication code if enabled
-    if (validDoctor.twoFactorEnabled) {
-      if (!twoFactorCode) {
-        return next(errorHandler(400, 'Two-factor authentication code is required.'));
-      }
-      
-      const isValidOTP = speakeasy.totp.verify({
-        secret: validDoctor.twoFactorSecret,
-        encoding: 'base32',
-        token: twoFactorCode,
-      });
-    
-      if (!isValidOTP) {
-        return next(errorHandler(401, 'Invalid two-factor authentication code.'));
-      }
-    } else if (twoFactorCode) {
-      return next(errorHandler(400, 'Two-factor authentication is not enabled for this user.'));
-    }
-
-    // Generate JWT token for authentication
-    const tokenPayload = { id: validDoctor._id };
-
-    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
-    const { password: hashedPassword, ...rest } = validDoctor._doc;
-    const expiryDate = new Date(Date.now() + 3600000);
-
-    res
-      .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
-      .status(200)
-      .json(rest);
-  } catch (err) {
-      next(errorHandler(500, 'Internal Server Error'));
-  }
+  await signIn(req, res, next, Doctor);
 };
 
 export const signOut = async (req, res) => {
@@ -184,20 +130,20 @@ export const signOut = async (req, res) => {
   }
 };
 
-export const passwordResetRequest = async (req, res, next) => {
+export const passwordResetRequest = async (req, res, next, Model) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
+    const user = await Model.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: `${Model.modelName} not found` });
     }
 
     // Generate a reset token and send the reset password email
     const resetToken = generateResetToken(user);
     console.log(`Reset token: ${resetToken}`)
 
-    await sendResetPasswordEmail(user.email, resetToken);
+    await sendResetPasswordEmail(user.email, resetToken, Model);
 
     res.status(200).json({ message: 'Password reset email sent successfully', resetToken });
   } catch (err) {
@@ -206,7 +152,7 @@ export const passwordResetRequest = async (req, res, next) => {
   }
 };
 
-export const passwordReset = async (req, res, next) => {
+export const passwordReset = async (req, res, next, Model) => {
   try {
     // Extract token and new password from request parameters and body
     const { token } = req.params;
@@ -229,10 +175,10 @@ export const passwordReset = async (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.RESET_SECRET);
 
     // Find the user from the token
-    const user = await User.findById(decodedToken.userId);
+    const user = await Model.findById(decodedToken.userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: `${Model.modelName} not found` });
     }
 
     // Hash the new password and save it to the user
@@ -246,5 +192,103 @@ export const passwordReset = async (req, res, next) => {
     }
 
     next(errorHandler(500, 'Internal Server Error'));
+  }
+};
+
+export const generate2FA = async (req, res, next, Model) => {
+  if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, 'You can generate 2FA only for your own account'));
+  }
+  try {
+      const user = await Model.findById(req.params.id);
+
+      if (!user) {
+          return next(errorHandler(404, `${Model.modelName} not found`));
+      }
+
+      if (user.twoFactorEnabled) {
+          return res.status(400).json({ message: 'Two-factor authentication is already enabled for this user.' });
+      }
+
+      const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
+
+      await Model.findByIdAndUpdate(req.params.id, { twoFactorSecret: tempSecret.base32 });
+
+      res.status(200).json({ tempSecret: tempSecret.base32 });
+  } catch (err) {
+      console.error(err);
+      next(errorHandler(500, 'Internal Server Error'));
+  }
+};
+
+export const verify2FA = async (req, res, next, Model) => {
+  if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, 'You can verify 2FA only for your own account'));
+  }
+  try {
+      const { tempSecretCode } = req.body;
+
+      if (!tempSecretCode) {
+          return res.status(400).json({ message: 'Temporary secret code is required.' });
+      }
+
+      const user = await Model.findById(req.params.id);
+
+      if (!user) {
+          return next(errorHandler(404, `${Model.modelName} not found`));
+      }
+
+      const isValidTempCode = verifyOTP(user, tempSecretCode)
+
+      if (!isValidTempCode) {
+          return res.status(401).json({ message: 'Invalid temporary secret code.' });
+      }
+
+      await Model.findByIdAndUpdate(req.params.id, { twoFactorEnabled: true });
+
+      res.status(200).json({ message: 'Two-factor authentication verified successfully.' });
+  } catch (err) {
+      console.error(err);
+      next(errorHandler(500, 'Internal Server Error'));
+  }
+};
+
+export const disable2FA = async (req, res, next, Model) => {
+  if (req.user.id !== req.params.id) {
+      return next(errorHandler(401, 'You can disable 2FA only for your own account'));
+  }
+
+  try {
+      const { password, confirmPassword } = req.body;
+
+      if (!password || !confirmPassword) {
+          return res.status(400).json({ message: 'Both password and confirmPassword are required for 2FA disable verification.' });
+      }
+
+      if (password !== confirmPassword) {
+          return res.status(400).json({ message: 'Password and confirmPassword must match.' });
+      }
+
+      const user = await Model.findById(req.params.id);
+
+      if (!user) {
+          return next(errorHandler(404, `${Model.modelName} not found`));
+      }
+
+      if (!user.twoFactorEnabled) {
+          return res.status(400).json({ message: 'Two-factor authentication is not enabled for this user.' });
+      }
+
+      const validPassword = bcryptjs.compareSync(password, user.password);
+      if (!validPassword) {
+          return res.status(401).json({ message: 'Invalid password for 2FA disable verification.' });
+      }
+
+      await Model.findByIdAndUpdate(req.params.id, { twoFactorEnabled: false, twoFactorSecret: "" });
+
+      res.status(200).json({ message: 'Two-factor authentication disabled successfully.' });
+  } catch (err) {
+      console.error(err);
+      next(errorHandler(500, 'Internal Server Error'));
   }
 };

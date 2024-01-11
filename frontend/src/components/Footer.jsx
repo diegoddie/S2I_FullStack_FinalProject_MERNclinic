@@ -1,14 +1,10 @@
 import React from 'react'
-import { FaLocationDot } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import logo from '../assets/MYClinic.png';
 import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
-import { FaPhoneAlt } from 'react-icons/fa';
+import { FaPhoneAlt, FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { MdEmail } from "react-icons/md";
-import { FaFacebook } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
+import { FaLocationDot } from 'react-icons/fa6'
 
 const Footer = () => {
   const navItems = [

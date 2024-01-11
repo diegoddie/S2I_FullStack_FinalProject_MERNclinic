@@ -1,17 +1,9 @@
 import express from 'express';
-import {
-  createDoctor,
-  getAllDoctors,
-  getDoctorById,
-  getDoctorsBySpecialization,
-  getDoctorsByLastName,
-  updateDoctor,
-  deleteDoctor,
-  getDoctorsByCity,
-} from '../controllers/doctorController.js';
-import { verifyToken, verifyAdmin } from '../middleware/middleware.js';
+import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile } from '../controllers/doctorController.js';
+import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA } from '../controllers/authController.js';
+import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
-import { doctorSignIn } from '../controllers/authController.js';
+import Doctor from '../models/doctorModel.js';
 
 const router = express.Router();
 
@@ -31,6 +23,7 @@ router.post(
   [
     check('firstName').notEmpty().escape().withMessage('First name is required'),
     check('lastName').notEmpty().escape().withMessage('Last name is required'),
+    check('taxId').notEmpty().withMessage('Valid TaxID is required').isLength({ min: 16, max: 16 }).withMessage('TaxID must be exactly 16 characters').isAlphanumeric().withMessage('TaxID must contain only alphanumeric characters').escape(),
     check('email').notEmpty().isEmail().escape().withMessage('Valid email is required'),
     check('phoneNumber').notEmpty().withMessage('Phone number is required'),
     check('specialization').notEmpty().escape().withMessage('Specialization is required'),
@@ -89,24 +82,14 @@ router.post(
   createDoctor
 );
 
-
 router.put(
     '/update/:id', 
-    verifyToken, 
+    verifyToken,
+    cloudinaryMiddleware,
     [
-      check('firstName').optional().notEmpty().escape().withMessage('First name is required'),
-      check('lastName').optional().notEmpty().escape().withMessage('Last name is required'),
+      check('taxId').optional().notEmpty().withMessage('Valid TaxID is required').isLength({ min: 16, max: 16 }).withMessage('TaxID must be exactly 16 characters').isAlphanumeric().withMessage('TaxID must contain only alphanumeric characters').escape(),
       check('email').optional().isEmail().escape().withMessage('Valid email is required'),
       check('password').optional().notEmpty().withMessage('Password is required').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-      check('phoneNumber').optional().notEmpty().withMessage('Phone number is required'),
-      check('specialization').optional().notEmpty().escape().withMessage('Specialization is required'),
-      check('city').optional().notEmpty().escape().withMessage('City is required'),
-      check('profilePicture').optional().custom((value, { req }) => {
-        if (!value.match(/\.(jpg|jpeg)$/)) {
-          throw new Error('Profile picture must be a valid JPEG image');
-        }
-        return true;
-      }),
       check('workShifts').optional().isArray().withMessage('Work shifts must be an array'),
       check('workShifts.*.dayOfWeek').optional().notEmpty().isIn(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]).escape().withMessage('Invalid day of the week for work shift'),
       check('workShifts.*.startTime').optional().isString().withMessage('Start time must be a string').custom((value, { req }) => {
@@ -155,10 +138,26 @@ router.put(
     updateDoctor
 );
 
+router.post('/password-reset-request', (req, res, next) => passwordResetRequest(req, res, next, Doctor));
+router.post('/password-reset/:token', (req, res, next) => passwordReset(req, res, next, Doctor));
+
+router.post('/generate2FA/:id', verifyToken, (req, res, next) => generate2FA(req, res, next, Doctor));
+
+router.post('/verify2FA/:id', verifyToken, [
+    check('userId').notEmpty().withMessage('Doctor ID is required'),
+    check('tempSecretCode').notEmpty().withMessage('Temporary secret code is required'),
+], (req, res, next) => verify2FA(req, res, next, Doctor));
+
+router.post('/disable2FA/:id', verifyToken, [
+    check('password').notEmpty().withMessage('Password is required for 2FA disable verification'),
+    check('confirmPassword').notEmpty().withMessage('Confirm password is required for 2FA disable verification'),
+], (req, res, next) => disable2FA(req, res, next, Doctor));
+
 router.delete('/delete/:id', verifyToken, deleteDoctor);
 
 router.get('/', getAllDoctors);
 router.get('/:id', getDoctorById);
+router.get('/profile/:id', verifyToken, getDoctorProfile);
 router.get('/specialization/:specialization', getDoctorsBySpecialization);
 router.get('/lastname/:lastname', getDoctorsByLastName);
 router.get('/city/:city', getDoctorsByCity);

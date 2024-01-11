@@ -13,7 +13,7 @@ import Dashboard from '../components/Admin/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
 
-const Profile = () => {
+const Profile = ({ model }) => {
   const navigate = useNavigate();
   const { token } = useAuthContext();
   const { id } = useParams();
@@ -24,6 +24,7 @@ const Profile = () => {
   const [selectedSection, setSelectedSection] = useState('MyVisits');
 
   const isAdmin = data.isAdmin;
+  const isDoctor = model === 'doctor';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,7 @@ const Profile = () => {
         setLoading(true);
         setError([]);
 
-        const res = await axios.get(`http://localhost:3000/user/${id}`, {
+        const res = await axios.get(`http://localhost:3000/${model}/profile/${id}`, {
           headers: {
             Authorization: `Bearer ${token.token}`,
           },
@@ -79,14 +80,15 @@ const Profile = () => {
             <Sidebar 
               data={data}
               isAdmin={isAdmin}
+              isDoctor={isDoctor}
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />
             <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
               {selectedSection === 'MyVisits' && <MyVisits />}
-              {selectedSection === 'Bookings' && <Bookings />}
+              {selectedSection === 'Bookings' && !isDoctor && <Bookings />}
               {selectedSection === 'Update' && <UpdateProfile />}
-              {selectedSection === 'Security' && <Security />}
+              {selectedSection === 'Security' && <Security model={model}/>}
               {selectedSection === 'Create Doctor' && <CreateDoctor />}
               {selectedSection === 'Dashboard' && <Dashboard />}
             </div>

@@ -4,7 +4,7 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import Alert from '../Utils/Alert';
 import Spinner from '../Utils/Spinner';
 
-const Settings = () => {
+const UpdateProfile = () => {
     const { updateUser, isLoading, error } = useUpdateUser();
     const { user } = useAuthContext();
 
@@ -194,4 +194,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default UpdateProfile;

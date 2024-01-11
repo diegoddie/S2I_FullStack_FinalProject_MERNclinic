@@ -61,6 +61,7 @@ export const createVisit = async (req, res, next) => {
       doctor: {
         firstName: doctorDetails.firstName,
         lastName: doctorDetails.lastName,
+        taxId: doctorDetails.taxId,
         specialization: doctorDetails.specialization
       },
     };
@@ -81,7 +82,7 @@ export const getAllVisits = async (req, res, next) => {
   try {
     const visits = await Visit.find().populate({
       path: 'user doctor',
-      select: 'firstName lastName email phoneNumber specialization city profilePicture',
+      select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',
     });
     res.status(200).json(visits);
   } catch (err) {
@@ -93,7 +94,7 @@ export const getVisitById = async (req, res, next) => {
   try {
     const visit = await Visit.findById(req.params.id).populate({
       path: 'user doctor',
-      select: 'firstName lastName email phoneNumber specialization city profilePicture',
+      select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',
     });
 
     if (!visit) {
@@ -115,7 +116,7 @@ export const getVisitsByDoctorId = async (req, res, next) => {
       const { doctorId } = req.params;
       const visits = await Visit.find({ doctor: doctorId }).populate({
         path: 'user doctor',
-        select: 'firstName lastName email phoneNumber specialization city profilePicture',
+        select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',
       });
       res.status(200).json(visits);
     } catch (err) {
@@ -133,7 +134,7 @@ export const getVisitsByUserId = async (req, res, next) => {
 
     const visits = await Visit.find({ user: userId }).populate({
       path: 'user doctor',
-      select: 'firstName lastName email phoneNumber specialization city profilePicture',
+      select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',
     });
     res.status(200).json(visits);
   } catch (err) {
@@ -210,6 +211,7 @@ export const updateVisit = async (req, res, next) => {
             doctor: {
                 firstName: doctorDetails.firstName,
                 lastName: doctorDetails.lastName,
+                taxId: doctorDetails.taxId,
                 specialization: doctorDetails.specialization,
             },
             patient: {
@@ -257,6 +259,7 @@ export const deleteVisit = async (req, res, next) => {
         doctor: {
           firstName: doctorDetails.firstName,
           lastName: doctorDetails.lastName,
+          taxId: doctorDetails.taxId,
           specialization: doctorDetails.specialization,
         },
         patient: {

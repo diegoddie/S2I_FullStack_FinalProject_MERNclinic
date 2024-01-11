@@ -31,6 +31,11 @@ const doctorSchema = new mongoose.Schema({
         type: String,
         required: [true, "Last name is required"]
     },
+    taxId: {
+        type: String,
+        required: [true, "Your TaxID is required"],
+        unique: true,
+    },
     email: {
         type: String,
         required: [true, "An email address is required"],
@@ -61,7 +66,8 @@ const doctorSchema = new mongoose.Schema({
         default: "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
     },
     twoFactorSecret: {
-        type: String
+        type: String,
+        default: "",
     }, 
     twoFactorEnabled: {
         type: Boolean,

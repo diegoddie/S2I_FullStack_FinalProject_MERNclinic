@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import Alert from '../components/Utils/Alert';
-import { useSignup } from '../hooks/auth/useSignup';
+import { useSignup } from '../hooks/users/useSignup';
 
 const SignUp = () => {
   const {signup, error, isLoading} = useSignup()

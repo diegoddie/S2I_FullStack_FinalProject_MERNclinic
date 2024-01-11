@@ -4,7 +4,7 @@ import axios from 'axios';
 import Alert from '../../components/Utils/Alert';
 import Spinner from '../../components/Utils/Spinner';
 
-const PasswordReset = () => {
+const PasswordReset = ({ model }) => {
     const { token } = useParams();
     const [formData, setFormData] = useState({
         newPassword: '',
@@ -25,7 +25,7 @@ const PasswordReset = () => {
             setSuccessMessage('');
             setIsLoading(true);
             setError([])
-            const res = await axios.post(`http://localhost:3000/password-reset/${token}`, formData);
+            const res = await axios.post(`http://localhost:3000/${model}/password-reset/${token}`, formData);
 
             if(res.status === 200){
                 setIsLoading(false)
@@ -44,6 +44,14 @@ const PasswordReset = () => {
             }
         } 
     };
+
+    const getLoginPath = (model) => {
+        if (model === 'user') {
+            return '/login';
+        } else if (model === 'doctor') {
+            return '/doctor/login';
+        }
+    }
 
     return (
         <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>
@@ -103,7 +111,7 @@ const PasswordReset = () => {
                     <p className='mt-4 text-green-500 text-lg font-bold text-center'>{successMessage}</p>
                     <p className='mt-2 text-gray-400 text-center text-lg'>
                     Please
-                        <Link to='/login' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+                        <Link to={getLoginPath(model)} className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
                             Login Here
                         </Link>
                     </p>

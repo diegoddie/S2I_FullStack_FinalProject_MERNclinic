@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useAuthContext } from '../auth/useAuthContext';
+import { useAuthContext } from './useAuthContext';
 import { useNavigate } from "react-router-dom";
 
 export const use2FA = () => {
@@ -10,12 +10,12 @@ export const use2FA = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
-    const generate2FA = async () => {
+    const generate2FA = async (model) => {
         try {
             setIsLoading(true);
             setError([]);
 
-            const res = await axios.post(`http://localhost:3000/user/generate2FA/${user._id}`, {},
+            const res = await axios.post(`http://localhost:3000/${model}/generate2FA/${user._id}`, {},
                 {
                     headers: {
                         Authorization: `Bearer ${token.token}`
@@ -44,12 +44,12 @@ export const use2FA = () => {
         } 
     };
 
-    const verify2FA = async (tempSecretCode) => {
+    const verify2FA = async (tempSecretCode, model) => {
         try {
             setIsLoading(true);
             setError([]);
 
-            const res = await axios.post(`http://localhost:3000/user/verify2FA/${user._id}`, { tempSecretCode }, {
+            const res = await axios.post(`http://localhost:3000/${model}/verify2FA/${user._id}`, { tempSecretCode }, {
                 headers: {
                     Authorization: `Bearer ${token.token}`,
                 },
@@ -74,12 +74,12 @@ export const use2FA = () => {
         }
     };
 
-    const disable2FA = async (password, confirmPassword) => {
+    const disable2FA = async (password, confirmPassword, model) => {
         try {
             setIsLoading(true);
             setError([]);
 
-            const res = await axios.post(`http://localhost:3000/user/disable2FA/${user._id}`, { password, confirmPassword }, {
+            const res = await axios.post(`http://localhost:3000/${model}/disable2FA/${user._id}`, { password, confirmPassword }, {
                 headers: {
                     Authorization: `Bearer ${token.token}`,
                 },

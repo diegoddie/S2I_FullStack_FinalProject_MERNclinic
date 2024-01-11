@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-import { MdMenuOpen } from "react-icons/md";
-import { MdHealthAndSafety } from "react-icons/md";
-import { MdSecurity } from "react-icons/md";
+import { MdMenuOpen, MdHealthAndSafety, MdSecurity, MdDashboard } from "react-icons/md";
 import { FaUserDoctor } from "react-icons/fa6";
-import { MdDashboard } from "react-icons/md";
 import { FaHospital } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 
-const Sidebar = ({ data, isAdmin, selectedSection, handleMenuItemClick }) => {
+const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick }) => {
     const [open, setOpen] = useState(true);
 
     const menuItems = [
         { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety /> },
-        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital /> },
+        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, hideForDoctor: true },
         { title: 'Update Profile', section: 'Update', icon: <CgProfile />},
         { title: 'Security', section: 'Security', icon: <MdSecurity />},
         { title: 'Create Doctor', section: 'CreateDoctor', icon: <FaUserDoctor />, adminOnly: true },
-        { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />,adminOnly: true },
+        { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, adminOnly: true },
     ];
 
     return (
@@ -35,7 +32,7 @@ const Sidebar = ({ data, isAdmin, selectedSection, handleMenuItemClick }) => {
             <div className="pt-4 md:pt-8 flex flex-wrap md:flex-col gap-2 justify-center">
                 <ul className='flex flex-wrap md:flex-col gap-2 justify-center'>
                     {menuItems.map((menu, index) => (
-                        (isAdmin || !menu.adminOnly) && (
+                        (isAdmin || !menu.adminOnly) && !(isDoctor && menu.hideForDoctor) && (
                             <li
                                 key={index}
                                 className={`flex flex-wrap text-white rounded-md hover:bg-[#85cdc0] items-center my-2 cursor-pointer p-2 font-semibold ${selectedSection === menu.section ? 'bg-[#85cdc0] text-slate-500' : ''}`}

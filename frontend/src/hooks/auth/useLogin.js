@@ -9,12 +9,12 @@ export const useLogin = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = useAuthContext()
 
-    const login = async({formData}) => {
+    const login = async({ formData, model }) => {
         try{
             setIsLoading(true)
             setError([])
 
-            const res = await axios.post('http://localhost:3000/sign-in', formData, { withCredentials: true });
+            const res = await axios.post(`http://localhost:3000/${model}/sign-in`, formData, { withCredentials: true });
             const { codeRequested, ...json } = res.data;
 
             if (res.status === 200 && !codeRequested){
@@ -31,7 +31,10 @@ export const useLogin = () => {
 
                 setIsLoading(false)
                 const userId = json.user._id;
-                navigate(`/profile/${userId}`);
+
+                const profilePath = model === 'user' ? 'profile' : 'doctor/profile';
+
+                navigate(`/${profilePath}/${userId}`);
 
                 return json
             }else if(codeRequested){

@@ -31,12 +31,22 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/doctor/:id" element={<DoctorDetails />} />
-            <Route path="/login" element={!user && !token ? <Login /> : <Navigate to="/" />} />
+
             <Route path="/sign-up" element={!user && !token ? <SignUp /> : <Navigate to="/" />} />
-            <Route exact path="/profile/:id" element={user && token ? <Profile /> : <Navigate to="/login" />} />
-            <Route path="/password-reset" element={<PasswordResetRequest />} />
-            <Route path="/password-reset/:token" element={<PasswordReset />} />
+            <Route path="/login" element={!user && !token ? <Login model="user"/> : <Navigate to="/" />} />
+            <Route path="/doctor/login" element={!user && !token ? <Login model="doctor"/> : <Navigate to="/" />} />
+            
+            <Route exact path="/profile/:id" element={user && token ? <Profile model="user"/> : <Navigate to="/login" />} />
+            <Route exact path="/doctor/profile/:id" element={user && token ? <Profile model="doctor"/> : <Navigate to="/login" />} />
+
+            <Route path="/doctor/:id" element={<DoctorDetails />} />
+
+            <Route path="/user/password-reset" element={<PasswordResetRequest model="user" />} />
+            <Route path="/doctor/password-reset" element={<PasswordResetRequest model="doctor" />} />
+
+            <Route path="/user/password-reset/:token" element={<PasswordReset model="user" />} />
+            <Route path="/doctor/password-reset/:token" element={<PasswordReset model="doctor" />} />
+
             <Route path="*" element={<NotFound />}/>
           </Routes>
           <Footer />

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export const sendResetPasswordEmail = async (email, resetToken) => {
+export const sendResetPasswordEmail = async (email, resetToken, Model) => {
     try {
         const transporter = nodemailer.createTransport({
             service: 'gmail', 
@@ -10,7 +10,7 @@ export const sendResetPasswordEmail = async (email, resetToken) => {
             },
         });
 
-        const resetTokenLink = `http://localhost:3001/password-reset/${resetToken}`;
+        const resetTokenLink = `http://localhost:3001/${Model.modelName.toLowerCase()}/password-reset/${resetToken}`;
 
         const mailOptions = {
             from: process.env.GMAIL,
