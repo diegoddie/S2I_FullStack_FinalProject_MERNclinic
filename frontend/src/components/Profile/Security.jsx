@@ -5,6 +5,7 @@ import QRCode from 'qrcode.react';
 import Spinner from '../Utils/Spinner';
 import Alert from '../Utils/Alert';
 import { use2FA } from '../../hooks/auth/use2FA';
+import DeleteButton from '../Auth/DeleteButton';
 
 const Security = ({ model }) => {
     const { generate2FA, verify2FA, disable2FA, error, isLoading } = use2FA();
@@ -76,13 +77,14 @@ const Security = ({ model }) => {
                                     you'll need to provide a verification code in addition to your password during login.
                                     This helps protect your account from unauthorized access.
                                 </p>
-                                <div className='flex justify-center mb-4'>
+                                <div className='flex justify-center mb-4 gap-2'>
                                     <button
                                         onClick={handleOpenModal}
                                         className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-[#ffc8dd] hover:bg-[#fa7fac]'
                                     >
                                         Enable 2FA
                                     </button>
+                                    <DeleteButton model={model} />
                                 </div>
                             </>
                         )}
@@ -97,6 +99,7 @@ const Security = ({ model }) => {
                                 >
                                     Disable 2FA
                                 </button>
+                                <DeleteButton model={model} />
                             </div>
                         )}
                         {isModalOpen && (
