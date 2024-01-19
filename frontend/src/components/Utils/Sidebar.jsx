@@ -8,12 +8,12 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
     const [open, setOpen] = useState(true);
 
     const menuItems = [
-        { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety /> },
-        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, hideForDoctor: true },
-        { title: 'Update Profile', section: 'Update', icon: <CgProfile />},
-        { title: 'Security', section: 'Security', icon: <MdSecurity />},
-        { title: 'Create Doctor', section: 'CreateDoctor', icon: <FaUserDoctor />, adminOnly: true },
         { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, adminOnly: true },
+        { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, adminOnly: true },
+        { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety />, hideForAdmin: true },
+        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, hideForDoctor: true },
+        { title: 'Update Profile', section: 'Update', icon: <CgProfile /> },
+        { title: 'Security', section: 'Security', icon: <MdSecurity /> },
     ];
 
     return (
@@ -32,7 +32,7 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
             <div className="pt-4 md:pt-8 flex flex-wrap md:flex-col gap-2 justify-center">
                 <ul className='flex flex-wrap md:flex-col gap-2 justify-center'>
                     {menuItems.map((menu, index) => (
-                        (isAdmin || !menu.adminOnly) && !(isDoctor && menu.hideForDoctor) && (
+                        (!menu.adminOnly || isAdmin) && !(isDoctor && menu.hideForDoctor) && !(isAdmin && menu.hideForAdmin) && (
                             <li
                                 key={index}
                                 className={`flex flex-wrap text-white rounded-md hover:bg-[#85cdc0] items-center my-2 cursor-pointer p-2 font-semibold ${selectedSection === menu.section ? 'bg-[#85cdc0] text-slate-500' : ''}`}

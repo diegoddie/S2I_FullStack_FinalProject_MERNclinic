@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useDoctorContext } from './useDoctorContext';
 
 export const useGetDoctors = () => {
-    const { dispatch } = useDoctorContext();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState([]);
 
@@ -11,13 +9,11 @@ export const useGetDoctors = () => {
         try {
             setLoading(true);
             setError([])
-
             const res = await axios.get('http://localhost:3000/doctor');
-
             if(res.status === 200){
                 setLoading(false)
                 const doctors = res.data;
-                dispatch({ type: 'SET_DOCTORS', payload: { doctors } });
+                return doctors
             }
         } catch (error) {
             console.error('Error getting doctors:', error);

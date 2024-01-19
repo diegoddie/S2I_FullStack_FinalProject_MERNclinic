@@ -33,7 +33,7 @@ export const cloudinaryMiddleware = async(req,res,next) =>{
         if (req.body.profilePicture) {
             const result = await cloudinary.uploader.upload(req.body.profilePicture, {
                 folder: "users",
-                allowed_formats: ["png", "jpg", "jpeg"]
+                allowed_formats: ["png", "jpg", "jpeg", "avif"]
             });
     
             req.body.profilePicture = result.secure_url;
@@ -41,7 +41,6 @@ export const cloudinaryMiddleware = async(req,res,next) =>{
         next();
     } catch (err) {
         console.log(err);
-
-        return res.status(500).json({ message: 'Error uploading profile picture' });
+        return res.status(500).json({ message: 'Error uploading profile picture. Check the image format.' });
     }
 }

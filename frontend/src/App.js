@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -11,19 +11,9 @@ import NotFound from "./pages/NotFound.jsx";
 import { useAuthContext } from "./hooks/auth/useAuthContext.js";
 import PasswordResetRequest from "./pages/PasswordReset/PasswordResetRequest.jsx";
 import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
-import { useGetDoctors } from "./hooks/doctors/useGetDoctors.js";
 
 const App = () => {
-  const { user,token } = useAuthContext()
-  const { getDoctors } = useGetDoctors()
-
-  useEffect(()=>{
-    try{
-      getDoctors()
-    }catch(err){
-      console.log(err)
-    }
-  }, [])
+  const { user, token } = useAuthContext()
 
   return (
     <div className="App font-body bg-teal-50">

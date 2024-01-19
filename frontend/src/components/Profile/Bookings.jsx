@@ -1,14 +1,26 @@
-import React, { useState } from 'react'
-import { useDoctorContext } from '../../hooks/doctors/useDoctorContext'
+import React, { useEffect, useState } from 'react'
 import { useGetDoctors } from '../../hooks/doctors/useGetDoctors'
 import DoctorCard from '../Doctors/DoctorCard'
 import Alert from '../Utils/Alert'
 import Spinner from '../Utils/Spinner'
 
 const Bookings = () => {
-  const { doctors } = useDoctorContext()
-  const { error, isLoading } = useGetDoctors()
+  const { getDoctors, error, loading } = useGetDoctors()
+  const [doctors, setDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const doctorsData = await getDoctors();
+        setDoctors(doctorsData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -30,12 +42,12 @@ const Bookings = () => {
             ))}
           </div>
         )}
-        {isLoading && 
+        {loading && 
           <div className='flex items-center justify-center mx-auto py-10'>
             <Spinner />
           </div>
         }
-        {!isLoading && (
+        {!loading && (
           <>
             <div className='font-semibold flex items-center mx-auto justify-center mt-3'>
               <h3 className='text-4xl leading-[30px] text-[#168aad] text-center px-3'>

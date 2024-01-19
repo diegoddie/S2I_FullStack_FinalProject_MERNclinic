@@ -8,6 +8,7 @@ const UpdateProfile = () => {
     const { updateUser, isLoading, error } = useUpdateUser();
     const { user } = useAuthContext();
 
+    const [imageError, setImageError] = useState('');
     const [isFormModified, setIsFormModified] = useState(false);
     const [formData, setFormData] = useState({
         firstName: user.firstName,
@@ -32,6 +33,11 @@ const UpdateProfile = () => {
       const file = e.target.files[0];
 
       if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+          setImageError('File size must be less than 10MB.');
+          return;
+        }
+
         setIsFormModified(true);
         const reader = new FileReader();
         reader.onload = () => {
@@ -39,6 +45,7 @@ const UpdateProfile = () => {
             ...formData,
             profilePicture: reader.result
           });
+          setImageError('');
         };
         reader.onerror = (err) =>{
           console.log("Error: ", err)
@@ -97,10 +104,13 @@ const UpdateProfile = () => {
                   >
                     <div className='flex flex-col items-center justify-center py-5 px-2'>
                       <p className="mb-2 text-sm text-gray-600 text-center"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                      <p className="text-xs text-gray-600">PNG, JPG only</p>
+                      <p className="text-xs text-gray-600">PNG, JPEG or JPG (max. 10MB)</p>
                     </div>
                     <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept='.jpeg, .png, .jpg'/>
                   </label>
+                  {imageError && (
+                    <p className="text-red-500 text-sm ml-2">{imageError}</p>
+                  )}
                 </div>
               </div>
               <div className='grid grid-cols-1 sm:grid-cols-2 my-8 gap-8 items-center justify-center mx-auto px-10'>

@@ -8,10 +8,10 @@ import Spinner from '../components/Utils/Spinner';
 import MyVisits from '../components/Profile/MyVisits';
 import Bookings from '../components/Profile/Bookings';
 import UpdateProfile from '../components/Profile/UpdateProfile';
-import CreateDoctor from '../components/Admin/CreateDoctor';
 import Dashboard from '../components/Admin/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
+import ManageDoctors from '../components/Admin/ManageDoctors';
 
 const Profile = ({ model }) => {
   const navigate = useNavigate();
@@ -23,7 +23,8 @@ const Profile = ({ model }) => {
   const [error, setError] = useState([]);
   const [selectedSection, setSelectedSection] = useState('MyVisits');
 
-  const isAdmin = data.isAdmin;
+  const isAdmin = data?.isAdmin;
+
   const isDoctor = model === 'doctor';
 
   useEffect(() => {
@@ -85,12 +86,12 @@ const Profile = ({ model }) => {
               handleMenuItemClick={handleMenuItemClick}
             />
             <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
+              {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
+              {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
               {selectedSection === 'MyVisits' && <MyVisits />}
               {selectedSection === 'Bookings' && !isDoctor && <Bookings />}
               {selectedSection === 'Update' && <UpdateProfile />}
               {selectedSection === 'Security' && <Security model={model}/>}
-              {selectedSection === 'Create Doctor' && <CreateDoctor />}
-              {selectedSection === 'Dashboard' && <Dashboard />}
             </div>
           </>
         )}  

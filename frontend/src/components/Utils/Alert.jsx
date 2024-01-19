@@ -7,11 +7,11 @@ const Alert = ({ type, message }) => {
     <>
       {visible && (
         <div
-          className='border border-red-400 text-red-700 bg-red-100 text-lg font-semibold rounded p-4 my-2 items-center justify-between mx-auto flex'
+          className='border border-red-400 text-red-700 bg-red-100 font-semibold rounded p-4 my-2 items-center justify-between mx-auto flex'
         >
           <span className=''>{message}</span>
           <button
-            className="text-3xl cursor-pointer"
+            className="text-2xl cursor-pointer"
             onClick={() => {
               setVisible(false);
             }}

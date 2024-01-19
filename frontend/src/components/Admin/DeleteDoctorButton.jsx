@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import { MdClose } from 'react-icons/md';
-import Alert from '../Utils/Alert';
-import Spinner from '../Utils/Spinner';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../hooks/auth/useAuthContext';
+import { MdClose } from 'react-icons/md';
+import axios from 'axios';
+import Spinner from '../Utils/Spinner';
+import Alert from '../Utils/Alert';
 
-const DeleteButton = ({ model }) => {
+const DeleteDoctorButton = ({doctors}) => {
     const navigate = useNavigate()
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDoctor, setSelectedDoctor] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
-    const { user, dispatch } = useAuthContext();
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -22,33 +20,38 @@ const DeleteButton = ({ model }) => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setPassword('');
-        setError('');
+        setSelectedDoctor('')
     };
 
     const handleDelete = async () => {
         try {
+            setPassword('')
             setIsLoading(true);
             setError([]);
+
+            if (!selectedDoctor) {
+                setIsLoading(false);
+                setError(['Please choose a doctor to delete.']);
+                return;
+            }
 
             if (!password) {
                 setIsLoading(false);
                 setError(['Please enter your password to confirm deletion.']);
                 return;
             }
-
-            const res = await axios.delete(`http://localhost:3000/${model}/delete/${user._id}`, { withCredentials: true });
+            const res = await axios.delete(`http://localhost:3000/doctor/delete/${selectedDoctor}`, { withCredentials: true });
 
             if (res.status === 200) {
                 setIsLoading(false);
-                handleCloseModal();
-                dispatch({ type: 'LOGOUT' });
+                handleCloseModal()
                 navigate('/')
+                window.location.reload();
             }
         } catch (err) {
             setIsLoading(false);
 
-            console.error('Error deleting account:', err);
+            console.error('Error deleting doctor:', err);
             if (err.response && err.response.data && err.response.data.errors) {
                 setError(err.response.data.errors.map((e) => e.msg));
             } else if (err.response && err.response.data && err.response.data.message) {
@@ -56,28 +59,27 @@ const DeleteButton = ({ model }) => {
             } else {
                 setError(['Something went wrong.']);
             }
-        }
+        } 
     };
 
     return (
         <>
             <button
+                className='px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-red-500 hover:bg-red-600'
                 onClick={handleOpenModal}
-                className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
             >
-                Delete Account
+                Delete Doctor
             </button>
-
             {isModalOpen && (
-                <div className='px-2 py-2 md:px-0 fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50 flex items-center justify-center'>
-                    <div className='bg-white p-8 rounded-lg shadow my-auto'>
+                <div className='px-2 md:px-0 fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50 flex items-center justify-center'>
+                    <div className='bg-white p-4 rounded-lg shadow my-auto'>
                         <div className='flex justify-end'>
                             <button onClick={handleCloseModal} className='text-gray-600 hover:text-gray-800'>
                                 <MdClose className='text-xl' />
                             </button>
                         </div>
                         <div className='w-full items-center mx-auto justify-center text-center'>
-                            <h3 className='text-2xl font-semibold mb-4'>Delete Account</h3>
+                            <h3 className='text-2xl font-semibold'>Delete Doctor</h3>
                         </div>
                         <div className='p-2 space-y-4'>
                             {isLoading && (
@@ -92,9 +94,28 @@ const DeleteButton = ({ model }) => {
                             )}
                             {!isLoading && (
                                 <>
-                                    <p className='text-center text-gray-700 mb-2 text-lg md:text-xl font-semibold'>
-                                        Are you sure you want to delete your account? This action is irreversible.
+                                    <p className='text-center text-lg md:text-xl font-semibold'>
+                                       Please choose a doctor do delete.
                                     </p>
+                                    <div className='mb-2'>
+                                        <label htmlFor='doctorDropdown' className='text-sm mb-1 block'>
+                                            Select Doctor:
+                                        </label>
+                                        <select
+                                            id='doctorDropdown'
+                                            name='doctorDropdown'
+                                            value={selectedDoctor}
+                                            onChange={(e) => setSelectedDoctor(e.target.value)}
+                                            className='border rounded p-2 w-full'
+                                        >
+                                            <option value=''>Select a doctor</option>
+                                            {doctors.map((doctor) => (
+                                                <option key={doctor._id} value={doctor._id}>
+                                                    {doctor.firstName} {doctor.lastName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                     <div>
                                         <p className='text-sm mb-2'>To confirm, please enter your password:</p>
                                         <div>
@@ -108,8 +129,14 @@ const DeleteButton = ({ model }) => {
                                                 className='border rounded p-2 w-full mb-2'
                                             />
                                         </div>
+                                        <p className='text-sm text-red-500 font-semibold'>
+                                            Please note that deleting a doctor will result in the removal of all associated appointments,  
+                                        </p>
+                                        <p className='text-sm mb-2 text-red-500 font-semibold'>
+                                            and cancellation emails will be sent to affected patients.
+                                        </p>
                                         <button
-                                            className='bg-red-500 text-white py-2 px-4 mt-4 rounded'
+                                            className='bg-red-400 text-white py-2 px-4 mt-4 rounded justify-center mx-auto flex hover:bg-red-500'
                                             onClick={handleDelete}
                                         >
                                             Confirm Deletion
@@ -125,4 +152,4 @@ const DeleteButton = ({ model }) => {
     );
 };
 
-export default DeleteButton;
+export default DeleteDoctorButton;

@@ -16,7 +16,7 @@ export const createDoctor = async (req, res, next) => {
         return res.status(400).json({errors: errors.array()}) 
       }
       const { firstName, lastName, taxId, email, specialization, city, profilePicture, about, phoneNumber, workShifts, nonAvailability } = req.body;
-
+      console.log(profilePicture)
       // Check if a doctor with the same email already exists
       const existingTaxId = await Doctor.findOne({ taxId });
       const existingDoctor = await Doctor.findOne({ email });

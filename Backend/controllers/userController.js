@@ -17,7 +17,7 @@ export const getUserProfile = async(req,res,next) => {
             return res.status(404).json({message: "user not found."})
         }
 
-        const {password, twoFactorEnabled, twoFactorSecret, isAdmin, ...rest} = user._doc
+        const {password, twoFactorEnabled, twoFactorSecret, ...rest} = user._doc
 
         res.status(200).json({...rest})
     }catch(err){

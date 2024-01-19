@@ -19,7 +19,8 @@ router.post(
 router.post(
   '/create', 
   verifyToken, 
-  verifyAdmin, 
+  verifyAdmin,
+  cloudinaryMiddleware,
   [
     check('firstName').notEmpty().escape().withMessage('First name is required'),
     check('lastName').notEmpty().escape().withMessage('Last name is required'),
@@ -28,14 +29,8 @@ router.post(
     check('phoneNumber').notEmpty().withMessage('Phone number is required'),
     check('specialization').notEmpty().escape().withMessage('Specialization is required'),
     check('city').notEmpty().escape().withMessage('City is required'),
-    check('profilePicture').optional().custom((value, { req }) => {
-        if (!value.match(/\.(jpg|jpeg)$/)) {
-        throw new Error('Profile picture must be a valid JPEG image');
-        }
-        return true;
-    }),
     check('workShifts').optional().isArray().withMessage('Work shifts must be an array'),
-    check('workShifts.*.dayOfWeek').notEmpty().isIn(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]).escape().withMessage('Invalid day of the week for work shift'),
+    check('workShifts.*.dayOfWeek').optional().notEmpty().isIn(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]).escape().withMessage('Invalid day of the week for work shift'),
     check('workShifts.*.startTime').optional().isString().withMessage('Start time must be a string').custom((value, { req }) => {
       if (value) {
           const startTime = new Date(`1970-01-01T${value}`);
@@ -104,8 +99,8 @@ router.put(
       check('workShifts.*.endTime').optional().isString().withMessage('End time must be a string').custom((value, { req }) => {
         if (value) {
             const endTime = new Date(`1970-01-01T${value}`);
-            if (endTime > new Date('1970-01-01T20:00:00')) {
-                throw new Error('End time must be before 20:00');
+            if (endTime > new Date('1970-01-01T19:00:00')) {
+                throw new Error('End time must be before 19:00');
             }
         }
         return true;
