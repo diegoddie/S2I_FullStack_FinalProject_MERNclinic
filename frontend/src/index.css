@@ -11,5 +11,8 @@ body{
   font-family: 'Jost', sans-serif;
 }
 
-
+input[type=time]::-webkit-datetime-edit-ampm-field,
+input[type="time"]::-webkit-datetime-edit-ampm-text {
+  display: none;
+}
 

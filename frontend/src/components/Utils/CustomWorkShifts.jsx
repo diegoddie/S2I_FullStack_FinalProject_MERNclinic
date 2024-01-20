@@ -34,14 +34,14 @@ const CustomWorkShifts = ({ workingDays, customWorkShifts, handleCustomWorkShift
             </span>
             <input
               type='time'
-              placeholder='Start Time'
+              step="600"
               value={shift.startTime || ''}
               onChange={(e) => handleCustomWorkShiftChange(shift.dayOfWeek, e.target.value, shift.endTime)}
               className='font-semibold text-lg px-4 py-2 text-gray-700 bg-gray-100 border-2 border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring mr-2'
             />
             <input
               type='time'
-              placeholder='End Time'
+              step="600"
               value={shift.endTime || ''}
               onChange={(e) => handleCustomWorkShiftChange(shift.dayOfWeek, shift.startTime, e.target.value)}
               className='font-semibold text-lg px-4 py-2 text-gray-700 bg-gray-100 border-2 border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring'

@@ -48,9 +48,9 @@ const ManageDoctors = () => {
               <CreateDoctorButton  />
               <DeleteDoctorButton doctors={doctors} />
             </div>
-            <div className='flex flex-wrap mt-8 mx-auto justify-center items-center'>
+            <div className='flex flex-wrap mt-8 mx-auto justify-center items-center gap-2'>
               {doctors.map((doctor, id) => (
-                <div key={id} className='my-2 2xl:w-[350px] w-[340px]'>
+                <div key={id} className='my-2 2xl:w-[350px] w-[340px] mb-8'>
                   <DoctorCard doctor={doctor} />          
                 </div>
               ))}

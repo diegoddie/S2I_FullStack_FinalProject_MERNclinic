@@ -252,7 +252,7 @@ const CreateDoctorButton = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='flex flex-col justify-center mx-auto items-center py-4'>
+                                    <div className='flex flex-col justify-center mx-auto items-center pt-4 pb-2'>
                                         <label className='text-xl leading-[20px] text-[#168aad] font-semibold mb-2'>
                                           Work Shifts
                                         </label>
@@ -288,7 +288,7 @@ const CreateDoctorButton = () => {
                                           )}
                                         </div>
                                       </div>
-                                    <div className='flex justify-center mt-2 mx-auto'>
+                                    <div className='flex justify-center mx-auto'>
                                       <button type="submit" className='bg-[#45aece] text-white py-2 px-4 rounded text-lg font-semibold hover:bg-[#168aad]'>
                                         Add A New Doctor
                                       </button>
