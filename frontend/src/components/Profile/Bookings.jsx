@@ -34,7 +34,7 @@ const Bookings = () => {
   });
 
   return (
-    <div className=''>
+    <div className='mb-10'>
         {error.length > 0 && (
           <div className='w-full max-w-[570px]'>
             {error.map((error, index) => (
@@ -63,7 +63,7 @@ const Bookings = () => {
                 className='w-full p-2 border border-gray-300 rounded-md bg-gray-200'
               />
             </div>
-            <div className='flex flex-wrap mt-5 mx-auto justify-center items-center gap-2'>
+            <div className='flex flex-wrap mt-5 mx-auto justify-center items-center'>
               {filteredDoctors.map((doctor, id) => (
                 <div key={id} className='my-2 w-[350px]'>
                   <DoctorCard doctor={doctor} />          

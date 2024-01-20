@@ -6,7 +6,7 @@ const DoctorCard = ({ doctor }) => {
   const { firstName, lastName, specialization, profilePicture, _id, city } = doctor;
 
   return (
-    <div className='mx-2'>
+    <div className='mx-3'>
       <div className='relative overflow-hidden h-[250px] 2xl:h-[330px] rounded-t-xl'>
         <img src={profilePicture} alt='doctor' className='w-full h-full object-cover rounded-t-xl' />
       </div>

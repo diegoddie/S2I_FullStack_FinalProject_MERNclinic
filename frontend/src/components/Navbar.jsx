@@ -3,7 +3,6 @@ import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom'; 
 import logo from '../assets/MYClinic.png';
-import Button from './Utils/Button';
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
@@ -64,8 +63,12 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Button label='Login' color='primary' hoverColor='[#48cae4]' to='/login' />
-                  <Button label='Sign Up' color='[#ffc8dd]' hoverColor='[#fa7fac]' to='/sign-up' />
+                  <Link to='/login' className='bg-[#7FC7D9] py-2 px-4 transition-all duration-300 rounded-xl hover:bg-[#5cb6cd]'>
+                    Login
+                  </Link>
+                  <Link to='/sign-up' className='bg-[#ffc8dd] py-2 px-4 transition-all duration-300 rounded-xl hover:bg-[#fa7fac]'>
+                    Sign Up
+                  </Link>
                 </>
               )}
             </div>
