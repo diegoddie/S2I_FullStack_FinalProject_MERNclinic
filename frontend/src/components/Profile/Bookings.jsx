@@ -63,9 +63,9 @@ const Bookings = () => {
                 className='w-full p-2 border border-gray-300 rounded-md bg-gray-200'
               />
             </div>
-            <div className='flex flex-wrap mt-5 mx-auto justify-center items-center'>
+            <div className='flex flex-wrap mt-5 mx-auto justify-center items-center gap-2'>
               {filteredDoctors.map((doctor, id) => (
-                <div key={id} className='p-2 mx-2 my-2 md:mx-0 object-cover md:w-[350px] md:h-[350px] 2xl:w-[430px] 2xl:h-[430px]'>
+                <div key={id} className='my-2 w-[350px]'>
                   <DoctorCard doctor={doctor} />          
                 </div>
               ))}

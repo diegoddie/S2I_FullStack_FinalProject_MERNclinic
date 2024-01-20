@@ -24,7 +24,7 @@ const Footer = () => {
   return (
     <section id="contact">
       <footer className='bg-secondary text-white'>
-        <div className='container mx-auto py-12'>
+        <div className='container mx-auto py-6'>
           <div className='flex flex-col xl:flex-row gap-x-5 gap-y-10 px-4'>
             <div className='flex-1 items-center mx-auto flex flex-col'>
               <Link to="/" className='justify-center font-semibold flex items-center text-white' onClick={handleReturnToStart}>

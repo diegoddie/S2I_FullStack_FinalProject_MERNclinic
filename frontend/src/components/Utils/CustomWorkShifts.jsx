@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const CustomWorkShifts = ({ workingDays, customWorkShifts, handleCustomWorkShiftChange }) => {
   const sortedCustomWorkShifts = [...customWorkShifts].sort((a, b) => {

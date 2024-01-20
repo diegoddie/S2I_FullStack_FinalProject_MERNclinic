@@ -26,26 +26,32 @@ const Doctors = () => {
 
     const settings = {
         dots: true,
-        infinite: true,
         speed: 500,
-        slidesToShow: 3, 
-        slidesToScroll: 1,
+        centerPadding: "0",
+        slidesToShow: 4, 
+        slidesToScroll: 4,
         responsive: [
           {
-            breakpoint: 1024,
+            breakpoint: 1662,
             settings: {
-              slidesToShow: 2,
-              slidesToScroll: 1,
-              infinite: true,
+              slidesToShow: 3,
+              slidesToScroll: 3,
               dots: true,
             },
           },
           {
-            breakpoint: 600,
+            breakpoint: 1242,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2,
+              dots: true,
+            },
+          },
+          {
+            breakpoint: 857,
             settings: {
               slidesToShow: 1,
               slidesToScroll: 1,
-              infinite: true,
               dots: true,
             },
           },
@@ -77,11 +83,11 @@ const Doctors = () => {
                           At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                       </p>
                   </div>
-                  <div className="gap-10 px-8 items-center justify-center mx-auto my-10">
+                  <div className="px-8 items-center justify-center mx-auto my-10">
                       <Slider {...settings}>
-                          {doctors?.map((doctor, id) => (
+                        {doctors?.map((doctor, id) => (
                               <DoctorCard key={id} doctor={doctor} />
-                          ))}
+                        ))}
                       </Slider>
                   </div>
                 </>

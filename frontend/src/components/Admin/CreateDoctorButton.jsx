@@ -3,7 +3,7 @@ import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
 import Alert from '../Utils/Alert';
 import { useCreateDoctor } from '../../hooks/doctors/useCreateDoctor';
-import defaultProfilePicture from '../../assets/default-user.png'
+import defaultProfilePicture from '../../assets/default-user.jpg'
 import CustomWorkShifts from '../Utils/CustomWorkShifts';
 
 const CreateDoctorButton = () => {
@@ -135,7 +135,7 @@ const CreateDoctorButton = () => {
                                     <div className='flex justify-center items-center gap-4 mx-auto pt-4'>
                                       <div className='flex items-center justify-center'>
                                         <figure className='w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full border-2 border-solid border-secondary flex items-center justify-center'>
-                                          <img src={formData.profilePicture} alt='' className='w-full h-full rounded-full' />
+                                          <img src={formData.profilePicture} alt='' className='w-full h-full rounded-full object-cover' />
                                         </figure>
                                       </div>
                                       <div className='flex items-center justify-center'>

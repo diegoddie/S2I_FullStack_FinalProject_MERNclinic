@@ -24,7 +24,7 @@ const ManageDoctors = () => {
     }, []);
 
     return (
-      <div className=''>
+      <div className='mb-10'>
         {error.length > 0 && (
           <div className='w-full max-w-[570px]'>
             {error.map((error, index) => (
@@ -48,9 +48,9 @@ const ManageDoctors = () => {
               <CreateDoctorButton  />
               <DeleteDoctorButton doctors={doctors} />
             </div>
-            <div className='flex flex-wrap mt-5 mx-auto justify-center items-center'>
+            <div className='flex flex-wrap mt-8 mx-auto justify-center items-center gap-2'>
               {doctors.map((doctor, id) => (
-                <div key={id} className='p-2 mx-2 my-2 md:mx-0 object-cover md:w-[350px] md:h-[350px] 2xl:w-[430px] 2xl:h-[430px]'>
+                <div key={id} className='my-2 2xl:w-[350px] w-[340px]'>
                   <DoctorCard doctor={doctor} />          
                 </div>
               ))}
