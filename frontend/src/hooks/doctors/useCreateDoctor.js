@@ -11,7 +11,7 @@ export const useCreateDoctor = () => {
         try {
             setIsLoading(true);
             setError([]);
-            const res = await axios.post('http://localhost:3000/doctor/create', formData, { withCredentials: true });;
+            const res = await axios.post('http://localhost:3000/doctor/create', formData, { withCredentials: true });
 
             if(res.status === 201){
                 window.location.reload();

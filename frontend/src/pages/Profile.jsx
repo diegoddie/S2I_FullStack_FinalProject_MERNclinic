@@ -12,6 +12,7 @@ import Dashboard from '../components/Admin/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
 import ManageDoctors from '../components/Admin/ManageDoctors';
+import LeaveManagement from '../components/Doctors/LeaveManagement';
 
 const Profile = ({ model }) => {
   const navigate = useNavigate();
@@ -85,12 +86,13 @@ const Profile = ({ model }) => {
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />
-            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
+            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md overflow-x-auto'>
               {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
               {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
               {selectedSection === 'MyVisits' && <MyVisits />}
               {selectedSection === 'Bookings' && !isDoctor && <Bookings />}
-              {selectedSection === 'Update' && <UpdateProfile />}
+              {selectedSection === 'LeaveManagement' && (isDoctor || isAdmin) && <LeaveManagement model={model} />}
+              {selectedSection === 'Update' && <UpdateProfile model={model}/>}
               {selectedSection === 'Security' && <Security model={model}/>}
             </div>
           </>

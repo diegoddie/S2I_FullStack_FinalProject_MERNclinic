@@ -7,17 +7,16 @@ export const useUpdateUser = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
-    const updateUser = async ({ formData }) => {
+    const updateUser = async ({ formData, model }) => {
         try {
             setIsLoading(true);
             setError([]);
 
-            const res = await axios.put(`http://localhost:3000/user/update/${user._id}`, formData, {
+            const res = await axios.put(`http://localhost:3000/${model}/update/${user._id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token.token}`
                 },
             });
-            console.log(res)
 
             if (res.status === 200) {
                 window.location.reload();

@@ -84,9 +84,16 @@ const doctorSchema = new mongoose.Schema({
             { dayOfWeek: "Saturday", endTime: "13:00" },  
         ]
     },
-    nonAvailability: {
+    leaveRequests: {
         type: [{
-            _id: false,
+            createdAt: {
+                type: Date,
+                default: Date.now,
+            },
+            typology: {
+                type: String,
+                required: true,
+            },
             startDate: {
                 type: Date,
                 required: true,
@@ -94,6 +101,10 @@ const doctorSchema = new mongoose.Schema({
             endDate: {
                 type: Date,
                 required: true,
+            },
+            isApproved: {
+                type: Boolean,
+                default: null,
             },
         }],
         default: []
@@ -125,11 +136,12 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
         return visitDate >= lunchBreakStartTime && visitDate < lunchBreakEndTime;
     };
 
-    // Utility function to check if the doctor is non available
-    const isNonAvailable = () => this.nonAvailability.some(nonAvailable => visitDate >= nonAvailable.startDate && visitDate <= nonAvailable.endDate);
+    const isOnLeave = () => {
+        return this.leaveRequests.some(leave => visitDate >= leave.startDate && visitDate <= leave.endDate && leave.isApproved);
+    };
 
     // Return true if the doctor is available (during work shift, not on vacation, and not during lunch break)
-    return isDuringWorkShift() && !isNonAvailable() && !isDuringLunchBreak();
+    return isDuringWorkShift() && !isOnLeave() && !isDuringLunchBreak();
 };
 
 doctorSchema.methods.checkExistingVisits = async function (visitDate) {

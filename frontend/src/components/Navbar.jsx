@@ -34,7 +34,7 @@ const Navbar = () => {
   ];  
 
   return (
-      <header className='py-4 lg:pt-2 lg:pb-14 lg:px-8 '>
+      <header className='py-4 lg:pt-2 lg:pb-14 lg:px-8'>
         <div className='container mx-auto lg:relative flex flex-col lg:flex-row lg:justify-between gap-y-4 lg:gap-y-0'>
           <div className='flex justify-center lg:justify-normal '>
             <Link to="/" className='font-semibold flex items-center text-secondary mr-2' onClick={handleReturnToStart}>

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile } from '../controllers/doctorController.js';
+import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest } from '../controllers/doctorController.js';
 import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA } from '../controllers/authController.js';
 import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
@@ -133,6 +133,8 @@ router.put(
     updateDoctor
 );
 
+router.put('/:id/approve/:leaveRequestId', verifyToken, verifyAdmin, approveLeaveRequest);
+
 router.post('/password-reset-request', (req, res, next) => passwordResetRequest(req, res, next, Doctor));
 router.post('/password-reset/:token', (req, res, next) => passwordReset(req, res, next, Doctor));
 
@@ -149,6 +151,7 @@ router.post('/disable2FA/:id', verifyToken, [
 ], (req, res, next) => disable2FA(req, res, next, Doctor));
 
 router.delete('/delete/:id', verifyToken, deleteDoctor);
+router.delete('/:id/leave-requests/:leaveRequestId', verifyToken, deleteLeaveRequest);
 
 router.get('/', getAllDoctors);
 router.get('/:id', getDoctorById);

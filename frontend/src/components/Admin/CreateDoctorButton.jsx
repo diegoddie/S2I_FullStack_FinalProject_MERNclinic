@@ -18,8 +18,8 @@ const CreateDoctorButton = () => {
     const [formData, setFormData] = useState({
       firstName: '',
       lastName: '',
-      email: '',
       taxId: '',
+      email: '',
       profilePicture: defaultProfilePicture,
       phoneNumber: '',
       specialization: '',

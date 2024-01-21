@@ -8,6 +8,7 @@ import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
+import { sendLeaveApprovalEmail } from "../utils/doctors/doctorLeaveRequestApproval.js";
 
 export const createDoctor = async (req, res, next) => {
   try {
@@ -15,8 +16,8 @@ export const createDoctor = async (req, res, next) => {
       if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()}) 
       }
-      const { firstName, lastName, taxId, email, specialization, city, profilePicture, about, phoneNumber, workShifts, nonAvailability } = req.body;
-      console.log(profilePicture)
+      const { firstName, lastName, taxId, email, specialization, city, profilePicture, about, phoneNumber, workShifts } = req.body;
+
       // Check if a doctor with the same email already exists
       const existingTaxId = await Doctor.findOne({ taxId });
       const existingDoctor = await Doctor.findOne({ email });
@@ -32,7 +33,7 @@ export const createDoctor = async (req, res, next) => {
       // Generate a temporary secret for two-factor authentication
       const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
 
-      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts, nonAvailability });
+      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts });
 
       // Send a welcome email to the new doctor
       await sendWelcomeEmail(newDoctor.email, randomPassword);
@@ -147,7 +148,7 @@ export const updateDoctor = async (req, res, next) => {
           return res.status(400).json({ errors: errors.array() });
       }
 
-      const { firstName, lastName, email, password, confirmPassword, taxId, specialization, about, city, workShifts, nonAvailability, phoneNumber, profilePicture } = req.body;
+      const { firstName, lastName, email, password, confirmPassword, taxId, specialization, about, city, workShifts, leaveRequests, phoneNumber, profilePicture } = req.body;
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
       // Initialize an empty object to store the fields to be updated
@@ -184,7 +185,31 @@ export const updateDoctor = async (req, res, next) => {
       if (phoneNumber) updateFields.phoneNumber = phoneNumber;
       if (profilePicture) updateFields.profilePicture = profilePicture;
       if (workShifts) updateFields.workShifts = workShifts;
-      if (nonAvailability) updateFields.nonAvailability = nonAvailability;
+      if (leaveRequests) {
+        const existingLeaveRequests = await Doctor.findById(req.params.id).select('leaveRequests');
+        for (const newRequest of leaveRequests) {
+            const isDuplicate = existingLeaveRequests.leaveRequests.some(existingRequest =>
+                new Date(newRequest.startDate).getTime() === new Date(existingRequest.startDate).getTime() &&
+                new Date(newRequest.endDate).getTime() === new Date(existingRequest.endDate).getTime()
+                
+            );
+    
+            if (isDuplicate) {
+                return res.status(400).json({ message: 'Duplicate leave request found with the same start and end times.' });
+            }
+        }
+    
+        updateFields.leaveRequests = existingLeaveRequests.leaveRequests.concat(leaveRequests);
+    
+        for (const request of leaveRequests) {
+            if (!request.typology) {
+                return res.status(400).json({ message: 'The "typology" field is required for each leave request.' });
+            }
+            if (request.typology.toLowerCase() !== 'vacation' && request.typology.toLowerCase() !== 'leaves') {
+                return res.status(400).json({ message: 'The "typology" field must be either "vacations" or "leaves".' });
+            }
+        }
+      }
 
       const updatedDoctor = await Doctor.findByIdAndUpdate(req.params.id, { $set: updateFields }, { new: true });
 
@@ -194,8 +219,9 @@ export const updateDoctor = async (req, res, next) => {
 
       const {password: userPassword, ...rest} = updatedDoctor._doc;
 
-      res.status(200).json({ user: rest, qrCode: qrCodeData });
+      res.status(200).json({ user: rest });
     } catch (err) {
+      console.log(err)
       next(errorHandler(500, 'Internal Server Error'));
     }
 };
@@ -265,3 +291,65 @@ export const deleteDoctor = async (req, res, next) => {
   }
 };
 
+export const approveLeaveRequest = async(req,res,next) => {
+  try {
+    const doctorId = req.params.id;
+    const leaveRequestId = req.params.leaveRequestId;
+
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const leaveRequest = doctor.leaveRequests.id(leaveRequestId);
+
+    if (!leaveRequest) {
+      throw new Error('Leave request not found');
+    }
+
+    if (leaveRequest.isApproved !== null) {
+      throw new Error('Leave request has already been processed');
+    }
+
+    leaveRequest.isApproved = true;
+    await sendLeaveApprovalEmail(doctor.email, leaveRequest);
+    await doctor.save();
+
+    res.status(200).json({ message: 'Leave request approved' });
+  } catch (error) {
+    console.error('Error approving leave request:', error);
+    next(errorHandler(500, 'Internal Server Error'))
+  }
+}
+
+export const deleteLeaveRequest = async (req,res,next) => {
+  if(req.user.id !== req.params.id){
+    return next(errorHandler(401, 'You can delete only your leaves/vacations'))
+  }
+
+  try{
+    const doctorId = req.params.id;
+    const leaveRequestId = req.params.leaveRequestId;
+
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const leaveRequest = doctor.leaveRequests.id(leaveRequestId);
+
+    if (!leaveRequest) {
+      return res.status(404).json({ message: 'Leave request not found' });
+    }
+
+    leaveRequest.deleteOne();
+    await doctor.save();
+
+    res.status(200).json({ message: 'Leave request successfully deleted' });
+  } catch(err){
+    console.error('Error deleting leave request:', err);
+    next(errorHandler(500, 'Internal Server Error'))
+  }
+};

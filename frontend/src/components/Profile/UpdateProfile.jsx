@@ -4,7 +4,7 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import Alert from '../Utils/Alert';
 import Spinner from '../Utils/Spinner';
 
-const UpdateProfile = () => {
+const UpdateProfile = ({ model }) => {
     const { updateUser, isLoading, error } = useUpdateUser();
     const { user } = useAuthContext();
 
@@ -13,12 +13,15 @@ const UpdateProfile = () => {
     const [formData, setFormData] = useState({
         firstName: user.firstName,
         lastName: user.lastName,
+        taxId: user.taxId,
         email: user.email,
         password: '', 
         confirmPassword: '',
-        taxId: user.taxId,
+        profilePicture: user.profilePicture,
         phoneNumber: user.phoneNumber,
-        profilePicture: user.profilePicture
+        specialization: user.specialization,
+        city: user.city,
+        about: user.about
     });
 
     const handleChange = (e) => {
@@ -63,7 +66,7 @@ const UpdateProfile = () => {
       }
     
       try {
-        await updateUser({ formData });
+        await updateUser({ formData, model });
       } catch (error) {
         console.error('Update User Error:', error);
       }
@@ -87,14 +90,14 @@ const UpdateProfile = () => {
           <>
             <div className='font-semibold flex items-center mx-auto justify-center mt-3'>
               <h3 className='text-4xl leading-[30px] text-[#168aad] text-center px-3 mb-3'>
-                Settings
+                Update Profile
               </h3>
             </div>
             <form onSubmit={handleSubmit} className=''>
               <div className='flex justify-center items-center gap-4 mx-auto pt-4'>
                 <div className='flex items-center justify-center'>
                   <figure className='w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full border-2 border-solid border-secondary flex items-center justify-center'>
-                    <img src={formData.profilePicture} alt='' className='w-full h-full rounded-full' />
+                    <img src={formData.profilePicture} alt='' className='w-full h-full rounded-full object-cover' />
                   </figure>
                 </div>
                 <div className='flex items-center justify-center'>
@@ -140,6 +143,18 @@ const UpdateProfile = () => {
                 </div>
                 <div>
                   <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
+                    TaxId
+                    <input
+                      type="text"
+                      name="taxId"
+                      value={formData.taxId}
+                      onChange={handleChange}
+                      className='font-semibold text-lg w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border-2 border-gray-400 rounded-md  focus:border-blue-500 focus:outline-none focus:ring'
+                    />
+                  </label>
+                </div>
+                <div>
+                  <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
                     Email
                     <input
                       type="email"
@@ -162,6 +177,45 @@ const UpdateProfile = () => {
                     />
                   </label>
                 </div>
+                {model === 'doctor' && (
+                  <>
+                    <div>
+                      <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
+                        Specialization
+                        <input
+                          type="text"
+                          name="specialization"
+                          value={formData.specialization}
+                          onChange={handleChange}
+                          className='font-semibold text-lg w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border-2 border-gray-400 rounded-md  focus:border-blue-500 focus:outline-none focus:ring'
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
+                        City
+                        <input
+                          type="text"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleChange}
+                          className='font-semibold text-lg w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border-2 border-gray-400 rounded-md  focus:border-blue-500 focus:outline-none focus:ring'
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
+                        About
+                        <textarea
+                          name="about"
+                          value={formData.about}
+                          onChange={handleChange}
+                          className='font-semibold text-lg w-full px-4 py-2 mt-2 text-gray-700 bg-gray-200 border-2 border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring'
+                        />
+                      </label>
+                    </div>
+                  </>
+                )}
                 <div>
                   <label className='text-xl leading-[20px] text-[#168aad] font-bold'>
                     Change Password

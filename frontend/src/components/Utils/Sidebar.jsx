@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MdMenuOpen, MdHealthAndSafety, MdSecurity, MdDashboard } from "react-icons/md";
-import { FaUserDoctor } from "react-icons/fa6";
+import { FaUserDoctor, FaRegPenToSquare } from "react-icons/fa6";
 import { FaHospital } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 
@@ -11,17 +11,18 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
         { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, adminOnly: true },
         { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, adminOnly: true },
         { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety />, hideForAdmin: true },
+        { title: 'Leave Management', section: 'LeaveManagement', icon: <FaRegPenToSquare />, doctorOnly: true, adminOnly: true },
         { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, hideForDoctor: true },
         { title: 'Update Profile', section: 'Update', icon: <CgProfile /> },
         { title: 'Security', section: 'Security', icon: <MdSecurity /> },
     ];
 
     return (
-        <div className={`bg-secondary rounded-md py-4 md:py-8 md:px-3 mx-auto w-full duration-200 relative ${open ? 'md:w-[300px]' : 'md:w-[120px]'}`}>
+        <div className={`bg-secondary rounded-md py-4 md:py-8 md:px-3 mx-auto w-full duration-200 relative ${open ? 'md:w-[280px]' : 'md:w-[120px]'}`}>
             <MdMenuOpen className={`bg-white hidden md:flex absolute cursor-pointer duration-300 rounded-full -right-3 top-14 w-8 h-8 border-4 border-secondary text-3xl ${!open && 'rotate-180'}`} onClick={()=>setOpen(!open)}/>
             <div className="flex items-center justify-center">
                 <figure className={`w-[100px] h-[100px] ${open ? 'md:w-[120px] md:h-[120px]' : 'md:w-[80px] md:h-[80px]'} rounded-full duration-300 border-2 border-solid border-pink-500`}>
-                    <img src={data.profilePicture} alt="user" className="w-full h-full rounded-full" />
+                    <img src={data.profilePicture} alt="user" className="w-full h-full rounded-full object-cover" />
                 </figure>
             </div>
             <div className={`text-center mt-2 text-white duration-700 ${!open && 'hidden'}`}>
@@ -32,7 +33,7 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
             <div className="pt-4 md:pt-8 flex flex-wrap md:flex-col gap-2 justify-center">
                 <ul className='flex flex-wrap md:flex-col gap-2 justify-center'>
                     {menuItems.map((menu, index) => (
-                        (!menu.adminOnly || isAdmin) && !(isDoctor && menu.hideForDoctor) && !(isAdmin && menu.hideForAdmin) && (
+                        ((!menu.adminOnly || isAdmin) || (!menu.doctorOnly || isDoctor)) && !(isDoctor && menu.hideForDoctor) && !(isAdmin && menu.hideForAdmin) && (
                             <li
                                 key={index}
                                 className={`flex flex-wrap text-white rounded-md hover:bg-[#85cdc0] items-center my-2 cursor-pointer p-2 font-semibold ${selectedSection === menu.section ? 'bg-[#85cdc0] text-slate-500' : ''}`}
