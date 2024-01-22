@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { format, compareDesc } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { FaLongArrowAltUp, FaLongArrowAltDown } from "react-icons/fa";
@@ -9,6 +9,21 @@ import Spinner from './Spinner';
 const Table = ({ doctorsData }) => {
     const { approveLeaveRequest, declineLeaveRequest, isLoading, error } = useManageLeaveRequests()
     const [sortOrder, setSortOrder] = useState('desc');
+    const [pendingRequests, setPendingRequests] = useState([])
+
+    useEffect(() => {
+        const calculatePendingRequests = () => {
+            const pendingRequestsArray = doctorsData.reduce((acc, doctor) => {
+                const doctorPendingRequests = doctor.leaveRequests.filter(
+                    (leaveRequest) => leaveRequest.isApproved === null
+                );
+                return acc.concat(doctorPendingRequests);
+            }, []);
+            setPendingRequests(pendingRequestsArray);
+        };
+
+        calculatePendingRequests();
+    }, [doctorsData]);
 
     const toggleSortOrder = () => {
         setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -48,12 +63,11 @@ const Table = ({ doctorsData }) => {
                         <Spinner />
                     </div>
                 )}
-                {doctorsData.length === 0 || 
-                    !doctorsData.some((doctor) => 
-                        doctor.leaveRequests.some((leaveRequest) => leaveRequest.isApproved === null)
-                    ) ? (
-                        <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold border-0">No new Leaves Requests</p> 
-                    ) : (
+                {pendingRequests.length === 0 ? (
+                    <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold border-0">
+                        There are no new pending leave requests
+                    </p>
+                ) : (
                         <>
                             <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold">Pending Leaves Requests</p> 
                             <div className="shadow overflow-x-auto border-b sm:rounded-lg">
