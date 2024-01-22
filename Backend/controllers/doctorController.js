@@ -8,7 +8,7 @@ import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
-import { sendLeaveApprovalEmail } from "../utils/doctors/doctorLeaveRequestApproval.js";
+import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail } from "../utils/doctors/leaveManagementEmails.js";
 
 export const createDoctor = async (req, res, next) => {
   try {
@@ -322,6 +322,38 @@ export const approveLeaveRequest = async(req,res,next) => {
     next(errorHandler(500, 'Internal Server Error'))
   }
 }
+
+export const declineLeaveRequest = async (req, res, next) => {
+  try {
+    const doctorId = req.params.id;
+    const leaveRequestId = req.params.leaveRequestId;
+
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const leaveRequest = doctor.leaveRequests.id(leaveRequestId);
+
+    if (!leaveRequest) {
+      throw new Error('Leave request not found');
+    }
+
+    if (leaveRequest.isApproved !== null) {
+      throw new Error('Leave request has already been processed');
+    }
+
+    leaveRequest.isApproved = false;
+    await sendLeaveDeclinalEmail(doctor.email, leaveRequest);
+    await doctor.save();
+
+    res.status(200).json({ message: 'Leave request declined' });
+  } catch (error) {
+    console.error('Error declining leave request:', error);
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+};
 
 export const deleteLeaveRequest = async (req,res,next) => {
   if(req.user.id !== req.params.id){

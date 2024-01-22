@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import { format, compareDesc } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { FaLongArrowAltUp, FaLongArrowAltDown } from "react-icons/fa";
+import { useManageLeaveRequests } from '../../hooks/doctors/useManageLeaveRequests';
+import Alert from './Alert';
+import Spinner from './Spinner';
 
-const Table = ({ doctorsData, approveLeaveRequest }) => {
+const Table = ({ doctorsData }) => {
+    const { approveLeaveRequest, declineLeaveRequest, isLoading, error } = useManageLeaveRequests()
     const [sortOrder, setSortOrder] = useState('desc');
 
     const toggleSortOrder = () => {
@@ -32,98 +36,106 @@ const Table = ({ doctorsData, approveLeaveRequest }) => {
     return (
         <div className="flex flex-col">
             <div className="py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
-                <div className="shadow overflow-x-auto border-b sm:rounded-lg">
-                    <table className="divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    Doctor
-                                </th>
-                                <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    Type
-                                </th>
-                                <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={toggleSortOrder}>
-                                    <div className='flex gap-2'>
-                                        <span>Created At</span>
-                                        <span className='items-center flex text-md'>
-                                            {sortOrder === 'asc' ? (
-                                                <FaLongArrowAltUp className=''/>
-                                            ) : (
-                                                <FaLongArrowAltDown />
-                                            )}
-                                        </span>
-                                    </div>
-                                </th>
-                                <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    From
-                                </th>
-                                <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    To
-                                </th>
-                                <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    Status
-                                </th>
-                                <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {doctorsData.length === 0 || doctorsData.every((doctor) =>
-                                doctor.leaveRequests.every(
-                                    (leaveRequest) => leaveRequest.isApproved !== null
-                                )
-                            ) ? (
-                                <tr>
-                                    <td
-                                        className="px-5 py-4 whitespace-nowrap text-center text-gray-500"
-                                    >
-                                        No new leave requests.
-                                    </td>
-                                </tr>
-                            ) : (
-                                doctorsData.map((doctor) => (
-                                    <React.Fragment key={doctor.id}>
-                                        {sortLeaveRequests(doctor).map((leaveRequest) => (
-                                            <tr key={leaveRequest._id} className="items-center text-center">
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="flex items-center ">
-                                                        <div className="text-sm font-medium text-gray-900">{doctor.firstName} {doctor.lastName}</div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-300' : 'bg-blue-300 '}`}>
-                                                        {leaveRequest.typology}
+                {error.length > 0 && (
+                    <div className="w-full max-w-[570px]">
+                        {error.map((error, index) => (
+                            <Alert key={index} type="error" message={error} />
+                        ))}
+                    </div>
+                )}
+                {isLoading && (
+                    <div className="flex items-center justify-center mx-auto py-10">
+                        <Spinner />
+                    </div>
+                )}
+                {doctorsData.length === 0 || 
+                    !doctorsData.some((doctor) => 
+                        doctor.leaveRequests.some((leaveRequest) => leaveRequest.isApproved === null)
+                    ) ? (
+                        <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold border-0">No new Leaves Requests</p> 
+                    ) : (
+                        <>
+                            <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold">Pending Leaves Requests</p> 
+                            <div className="shadow overflow-x-auto border-b sm:rounded-lg">
+                                <table className="divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                Doctor
+                                            </th>
+                                            <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                Type
+                                            </th>
+                                            <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={toggleSortOrder}>
+                                                <div className='flex gap-2'>
+                                                    <span>Created At</span>
+                                                    <span className='items-center flex text-md'>
+                                                        {sortOrder === 'asc' ? (
+                                                            <FaLongArrowAltUp className=''/>
+                                                        ) : (
+                                                            <FaLongArrowAltDown />
+                                                        )}
                                                     </span>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                                                    {formatDate(leaveRequest.startDate)}
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                                                    {formatDate(leaveRequest.endDate)}
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <span className="px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-yellow-300">
-                                                        Pending
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap border-r">
-                                                    <div className='flex gap-2'>
-                                                        <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => approveLeaveRequest(doctor._id, leaveRequest._id)}>Approve</button>
-                                                        <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300'>Decline</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                </div>
+                                            </th>
+                                            <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                From
+                                            </th>
+                                            <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                To
+                                            </th>
+                                            <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                Status
+                                            </th>
+                                            <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {doctorsData.map((doctor) => (
+                                            <React.Fragment key={doctor.id}>
+                                                {sortLeaveRequests(doctor).map((leaveRequest) => (
+                                                    <tr key={leaveRequest._id} className="items-center text-center">
+                                                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                            <div className="flex items-center ">
+                                                                <div className="text-sm font-medium text-gray-900">{doctor.firstName} {doctor.lastName}</div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                            <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-300' : 'bg-blue-300 '}`}>
+                                                                {leaveRequest.typology}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                            <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
+                                                        </td>
+                                                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                                                            {formatDate(leaveRequest.startDate)}
+                                                        </td>
+                                                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                                                            {formatDate(leaveRequest.endDate)}
+                                                        </td>
+                                                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                            <span className="px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-yellow-300">
+                                                                Pending
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-4 whitespace-nowrap border-r">
+                                                            <div className='flex gap-2'>
+                                                                <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => approveLeaveRequest(doctor._id, leaveRequest._id)}>Approve</button>
+                                                                <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => declineLeaveRequest(doctor._id, leaveRequest._id)}>Decline</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </React.Fragment>
                                         ))}
-                                    </React.Fragment>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </>
+                    )}
             </div>
         </div>
     );

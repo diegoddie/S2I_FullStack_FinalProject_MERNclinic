@@ -1,31 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useUpdateUser } from '../../hooks/users/useUpdateUser';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import Spinner from '../Utils/Spinner';
 import Alert from '../Utils/Alert';
 import PendingLeaveRequests from '../Admin/PendingLeaveRequests';
 
-const LeaveManagement = ({ model }) => {
+const LeaveManagement = () => {
     const { updateUser, isLoading, error } = useUpdateUser();
     const { user } = useAuthContext();
-
-    const [formData, setFormData] = useState({
-        leaveRequests: user.leaveRequests
-    });
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        try {
-          await updateUser({ formData, model });
-        } catch (error) {
-          console.error('Update User Error:', error);
-        }
-    };
 
     return (
         <div className=''>

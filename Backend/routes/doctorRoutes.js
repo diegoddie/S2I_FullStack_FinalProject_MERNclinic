@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest } from '../controllers/doctorController.js';
+import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest, declineLeaveRequest } from '../controllers/doctorController.js';
 import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA } from '../controllers/authController.js';
 import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
@@ -134,6 +134,7 @@ router.put(
 );
 
 router.put('/:id/approve/:leaveRequestId', verifyToken, verifyAdmin, approveLeaveRequest);
+router.put('/:id/decline/:leaveRequestId', verifyToken, verifyAdmin, declineLeaveRequest);
 
 router.post('/password-reset-request', (req, res, next) => passwordResetRequest(req, res, next, Doctor));
 router.post('/password-reset/:token', (req, res, next) => passwordReset(req, res, next, Doctor));

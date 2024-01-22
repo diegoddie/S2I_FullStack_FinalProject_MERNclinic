@@ -12,7 +12,7 @@ import Dashboard from '../components/Admin/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
 import ManageDoctors from '../components/Admin/ManageDoctors';
-import LeaveManagement from '../components/Doctors/LeaveManagement';
+import LeaveManagement from '../components/Profile/LeaveManagement';
 
 const Profile = ({ model }) => {
   const navigate = useNavigate();
