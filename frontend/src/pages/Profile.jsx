@@ -8,7 +8,7 @@ import Spinner from '../components/Utils/Spinner';
 import MyVisits from '../components/Profile/MyVisits';
 import Bookings from '../components/Profile/Bookings';
 import UpdateProfile from '../components/Profile/UpdateProfile';
-import Dashboard from '../components/Admin/Dashboard';
+import Dashboard from '../components/Profile/Dashboard';
 import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
 import ManageDoctors from '../components/Admin/ManageDoctors';
@@ -16,7 +16,7 @@ import LeaveManagement from '../components/Profile/LeaveManagement';
 
 const Profile = ({ model }) => {
   const navigate = useNavigate();
-  const { token } = useAuthContext();
+  const { token, dispatch } = useAuthContext();
   const { id } = useParams();
 
   const [data, setData] = useState([]);
@@ -42,6 +42,7 @@ const Profile = ({ model }) => {
 
         if (res.status === 200) {
           setData(res.data);
+          dispatch({ type: 'LOGIN', payload: { user: res.data, token } });
           setLoading(false);
         }
       } catch (error) {
@@ -81,8 +82,8 @@ const Profile = ({ model }) => {
           <>
             <Sidebar 
               data={data}
-              isAdmin={isAdmin}
-              isDoctor={isDoctor}
+              isAdmin={isAdmin ?? false}
+              isDoctor={isDoctor ?? false}
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />

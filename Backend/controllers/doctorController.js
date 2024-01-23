@@ -8,7 +8,8 @@ import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
-import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail } from "../utils/doctors/leaveManagementEmails.js";
+import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail, sendNewLeaveRequestEmailToAdmin } from "../utils/doctors/leaveManagementEmails.js";
+import { checkDuplicateLeaveRequests, validateLeaveRequests } from "../utils/doctors/leaveRequests.js";
 
 export const createDoctor = async (req, res, next) => {
   try {
@@ -185,29 +186,26 @@ export const updateDoctor = async (req, res, next) => {
       if (phoneNumber) updateFields.phoneNumber = phoneNumber;
       if (profilePicture) updateFields.profilePicture = profilePicture;
       if (workShifts) updateFields.workShifts = workShifts;
-      if (leaveRequests) {
+      if (leaveRequests) { 
+        const existingDoctor = await Doctor.findById(req.params.id)
         const existingLeaveRequests = await Doctor.findById(req.params.id).select('leaveRequests');
-        for (const newRequest of leaveRequests) {
-            const isDuplicate = existingLeaveRequests.leaveRequests.some(existingRequest =>
-                new Date(newRequest.startDate).getTime() === new Date(existingRequest.startDate).getTime() &&
-                new Date(newRequest.endDate).getTime() === new Date(existingRequest.endDate).getTime()
-                
-            );
-    
-            if (isDuplicate) {
-                return res.status(400).json({ message: 'Duplicate leave request found with the same start and end times.' });
-            }
+        
+        const duplicateError = checkDuplicateLeaveRequests(existingLeaveRequests.leaveRequests, leaveRequests);
+        if (duplicateError) {
+          return res.status(400).json({ message: duplicateError });
         }
-    
-        updateFields.leaveRequests = existingLeaveRequests.leaveRequests.concat(leaveRequests);
-    
+
+        const validationError = validateLeaveRequests(leaveRequests);
+        if (validationError) {
+          return res.status(400).json({ message: validationError });
+        }
+
+        updateFields.leaveRequests = existingDoctor.leaveRequests.concat(leaveRequests);
+
         for (const request of leaveRequests) {
-            if (!request.typology) {
-                return res.status(400).json({ message: 'The "typology" field is required for each leave request.' });
-            }
-            if (request.typology.toLowerCase() !== 'vacation' && request.typology.toLowerCase() !== 'leaves') {
-                return res.status(400).json({ message: 'The "typology" field must be either "vacations" or "leaves".' });
-            }
+          request.doctorName = `${existingDoctor.firstName} ${existingDoctor.lastName}`;
+          request.doctorEmail = existingDoctor.email;
+          await sendNewLeaveRequestEmailToAdmin(request);
         }
       }
 

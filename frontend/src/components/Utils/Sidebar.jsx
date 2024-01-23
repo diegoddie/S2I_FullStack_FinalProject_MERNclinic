@@ -8,14 +8,18 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
     const [open, setOpen] = useState(false);
 
     const menuItems = [
-        { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, adminOnly: true },
-        { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, adminOnly: true },
-        { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety />, hideForAdmin: true },
-        { title: 'Leave Management', section: 'LeaveManagement', icon: <FaRegPenToSquare />, doctorOnly: true, adminOnly: true },
-        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, hideForDoctor: true },
-        { title: 'Update Profile', section: 'Update', icon: <CgProfile /> },
-        { title: 'Security', section: 'Security', icon: <MdSecurity /> },
+        { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, user: [isAdmin] },
+        { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, user: [isAdmin] },
+        { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety />, user: [isDoctor, !isAdmin] },
+        { title: 'Leave Management', section: 'LeaveManagement', icon: <FaRegPenToSquare />, user: [isDoctor, isAdmin] },
+        { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, user: [!isDoctor] },
+        { title: 'Update Profile', section: 'Update', icon: <CgProfile />, user: [isDoctor, isAdmin, !isAdmin]},
+        { title: 'Security', section: 'Security', icon: <MdSecurity />, user: [isDoctor, isAdmin, !isAdmin] },
     ];
+
+    const filteredMenuItems = menuItems.filter((menuItem) => {
+        return menuItem.user.some((condition) => condition);
+    });
 
     return (
         <div className={`bg-secondary rounded-md py-4 md:py-8 md:px-3 mx-auto w-full duration-200 relative ${open ? 'md:w-[280px]' : 'md:w-[120px]'}`}>
@@ -32,17 +36,15 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
             </div>
             <div className="pt-4 md:pt-8 flex flex-wrap md:flex-col gap-2 justify-center">
                 <ul className='flex flex-wrap md:flex-col gap-2 justify-center'>
-                    {menuItems.map((menu, index) => (
-                        ((!menu.adminOnly || isAdmin) || (!menu.doctorOnly || isDoctor)) && !(isDoctor && menu.hideForDoctor) && !(isAdmin && menu.hideForAdmin) && (
-                            <li
-                                key={index}
-                                className={`flex flex-wrap text-white rounded-md hover:bg-[#85cdc0] items-center my-2 cursor-pointer p-2 font-semibold ${selectedSection === menu.section ? 'bg-[#85cdc0] text-slate-500' : ''}`}
-                                onClick={() => handleMenuItemClick(menu.section)}
-                            >
-                                <span className={`text-3xl duration-300 ${!open && 'justify-center items-center flex mx-auto'}`}>{menu.icon}</span>
-                                <span className={`${!open && 'hidden'} ml-2 duration-300 text-xl`}>{menu.title}</span>
-                            </li>
-                        )
+                    {filteredMenuItems.map((menu, index) => (
+                        <li
+                            key={index}
+                            className={`flex flex-wrap text-white rounded-md hover:bg-[#85cdc0] items-center my-2 cursor-pointer p-2 font-semibold ${selectedSection === menu.section ? 'bg-[#85cdc0] text-slate-500' : ''}`}
+                            onClick={() => handleMenuItemClick(menu.section)}
+                        >
+                            <span className={`text-3xl duration-300 ${!open && 'justify-center items-center flex mx-auto'}`}>{menu.icon}</span>
+                            <span className={`${!open && 'hidden'} ml-2 duration-300 text-xl`}>{menu.title}</span>
+                        </li>
                     ))}
                 </ul>
             </div>
