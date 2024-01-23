@@ -4,19 +4,58 @@ import LeaveManagementTable from '../Utils/LeaveManagementTable';
 import { useGetDoctors } from '../../hooks/doctors/useGetDoctors';
 import Spinner from '../Utils/Spinner';
 import Alert from '../Utils/Alert';
+import CreateLeaveRequest from '../Doctors/CreateLeaveRequest';
 
 const LeaveManagement = () => {
     const { getDoctors, error, loading } = useGetDoctors();
     const { user } = useAuthContext();
 
-    const isAdmin = user.isAdmin
-
     const [pendingLeaveRequestsData, setPendingLeaveRequestsData] = useState([]);
-    const [selectedTab, setSelectedTab] = useState('pending');
+    const [allLeaveRequestsData, setAllLeaveRequestsData] = useState([]);
+    const [selectedTab, setSelectedTab] = useState('pendingRequests');
+
+    const isAdmin = user.isAdmin
 
     const handleTabChange = (tab) => {
         setSelectedTab(tab);
     }
+
+    const fetchAllData = async () => {
+        try {
+            if (user.isAdmin) {
+                const allDoctors = await getDoctors();
+
+                const allUserLeaveRequests = allDoctors.reduce((acc, doctor) => {
+                    const { firstName, lastName, _id } = doctor;
+                    const leaveRequests = doctor.leaveRequests.map(request => ({
+                        firstName,
+                        lastName,
+                        doctorId: _id,
+                        ...request,
+                    }));
+
+                    if (leaveRequests.length > 0) {
+                        acc.push(...leaveRequests);
+                    }
+
+                    return acc;
+                }, []);
+
+                setAllLeaveRequestsData(allUserLeaveRequests);
+            } else {
+                const allUserLeaveRequests = user.leaveRequests.map(request => ({
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    doctorId: user._id,
+                    ...request,
+                }));
+
+                setAllLeaveRequestsData(allUserLeaveRequests);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -59,6 +98,7 @@ const LeaveManagement = () => {
 
     useEffect(() => {
         fetchData();
+        fetchAllData();
     }, []);
 
     return (
@@ -82,7 +122,24 @@ const LeaveManagement = () => {
             )}
             {!loading && (
                 <div className='overflow-x-auto'>
-                    <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} />
+                    {isAdmin ? (
+                        <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
+                    ) : (
+                        <>
+                        <div className="flex gap-2 justify-center pt-4">
+                            <button onClick={() => handleTabChange('pendingRequests')} className="px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">Pending Requests</button>
+                            <button onClick={() => handleTabChange('allRequests')} className="px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">All Requests</button>
+                            <CreateLeaveRequest />
+                        </div>
+                        {selectedTab === 'pendingRequests' && (
+                            <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
+                        )}
+
+                        {selectedTab === 'allRequests' && (
+                            <LeaveManagementTable isAdmin={isAdmin} data={allLeaveRequestsData} title="Requests"/>
+                        )}
+                        </>
+                    )}
                 </div>
             )}
         </div>
