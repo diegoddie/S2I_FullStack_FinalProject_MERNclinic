@@ -28,6 +28,10 @@ const Profile = ({ model }) => {
 
   const isDoctor = model === 'doctor';
 
+  const handleMenuItemClick = (section) => {
+    setSelectedSection(section);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,9 +64,7 @@ const Profile = ({ model }) => {
     fetchData();
   }, [id, token.token, navigate]);
 
-  const handleMenuItemClick = (section) => {
-    setSelectedSection(section);
-  };
+  
 
   return (
       <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-6">
