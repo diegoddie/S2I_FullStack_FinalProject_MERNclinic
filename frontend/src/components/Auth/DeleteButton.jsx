@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { MdClose } from 'react-icons/md';
-import Alert from '../Utils/Alert';
 import Spinner from '../Utils/Spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
+import { toast } from 'react-toastify';
+import errorHandler from '../../hooks/utils/errorHandler';
 
 const DeleteButton = ({ model }) => {
     const navigate = useNavigate()
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [password, setPassword] = useState('');
-    const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const { user, dispatch } = useAuthContext();
@@ -23,17 +23,16 @@ const DeleteButton = ({ model }) => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setPassword('');
-        setError('');
     };
 
     const handleDelete = async () => {
+        setIsLoading(true);
+
         try {
-            setIsLoading(true);
-            setError([]);
 
             if (!password) {
                 setIsLoading(false);
-                setError(['Please enter your password to confirm deletion.']);
+                toast.error('Please enter your password to confirm deletion.');
                 return;
             }
 
@@ -44,18 +43,13 @@ const DeleteButton = ({ model }) => {
                 handleCloseModal();
                 dispatch({ type: 'LOGOUT' });
                 navigate('/')
+                toast.success('Account deleted succesfully.')
             }
-        } catch (err) {
+        } catch (error) {
+            console.error('Error deleting account:', error);
             setIsLoading(false);
 
-            console.error('Error deleting account:', err);
-            if (err.response && err.response.data && err.response.data.errors) {
-                setError(err.response.data.errors.map((e) => e.msg));
-            } else if (err.response && err.response.data && err.response.data.message) {
-                setError([err.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            errorHandler(error)
         }
     };
 
@@ -83,11 +77,6 @@ const DeleteButton = ({ model }) => {
                             {isLoading && (
                                 <div className='flex items-center justify-center mx-auto py-10'>
                                     <Spinner />
-                                </div>
-                            )}
-                            {error.length > 0 && (
-                                <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-                                    <Alert type='error' message={error} />
                                 </div>
                             )}
                             {!isLoading && (

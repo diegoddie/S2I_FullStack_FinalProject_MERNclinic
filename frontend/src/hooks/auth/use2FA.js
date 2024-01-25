@@ -2,18 +2,18 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import errorHandler from "../utils/errorHandler";
 
 export const use2FA = () => {
     const navigate = useNavigate()
 
-    const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
     const generate2FA = async (model) => {
         try {
             setIsLoading(true);
-            setError([]);
 
             const res = await axios.post(`http://localhost:3000/${model}/generate2FA/${user._id}`, {},
                 {
@@ -32,22 +32,16 @@ export const use2FA = () => {
                 return otpauthURL
             }
         } catch (error) {
-            setIsLoading(false);
             console.error('Error during the generation of 2FA Secret:', error);
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            setIsLoading(false);
+            
+            errorHandler(error)
         } 
     };
 
     const verify2FA = async (tempSecretCode, model) => {
         try {
             setIsLoading(true);
-            setError([]);
 
             const res = await axios.post(`http://localhost:3000/${model}/verify2FA/${user._id}`, { tempSecretCode }, {
                 headers: {
@@ -60,24 +54,19 @@ export const use2FA = () => {
                 dispatch({ type: 'LOGIN', payload: { user: updatedUser, token } });
                 setIsLoading(false);
                 navigate('/');
+                toast.success('2FA Enabled succesfully.')
             }
         } catch (error) {
-            setIsLoading(false);
             console.error('Error during 2FA verification:', error);
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            setIsLoading(false);
+            
+            errorHandler(error)
         }
     };
 
     const disable2FA = async (password, confirmPassword, model) => {
         try {
             setIsLoading(true);
-            setError([]);
 
             const res = await axios.post(`http://localhost:3000/${model}/disable2FA/${user._id}`, { password, confirmPassword }, {
                 headers: {
@@ -90,20 +79,16 @@ export const use2FA = () => {
                 dispatch({ type: 'LOGIN', payload: { user: updatedUser, token } });
                 setIsLoading(false);
                 navigate('/');
+                toast.success('2FA Disabled succesfully.')
             }
         } catch (error) {
-            setIsLoading(false);
             console.error('Error during 2FA disable:', error);
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            setIsLoading(false);
+            
+            errorHandler(error)
         }
     };
 
-    return { generate2FA, verify2FA, disable2FA, isLoading, error };
+    return { generate2FA, verify2FA, disable2FA, isLoading };
 };
 

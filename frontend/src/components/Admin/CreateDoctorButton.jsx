@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
-import Alert from '../Utils/Alert';
 import { useCreateDoctor } from '../../hooks/doctors/useCreateDoctor';
 import defaultProfilePicture from '../../assets/default-user.jpg'
 import CustomWorkShifts from '../Utils/CustomWorkShifts';
 
 const CreateDoctorButton = () => {
     const workingDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const {createDoctor, error, isLoading} = useCreateDoctor()
+    const {createDoctor, isLoading} = useCreateDoctor()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [imageError, setImageError] = useState('');
@@ -84,6 +83,7 @@ const CreateDoctorButton = () => {
             workShifts: isCustomWorkShifts ? customWorkShifts : undefined,
           },
         });
+        handleCloseModal()
       } catch (error) {
         console.error('Error adding a new doctor:', error);
       }
@@ -121,13 +121,6 @@ const CreateDoctorButton = () => {
                                 <div className='flex items-center justify-center mx-auto py-10'>
                                     <Spinner />
                                 </div>
-                            )}
-                            {error.length > 0 && (
-                              <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-                                  {error.map((errorMsg, index) => (
-                                      <Alert key={index} type='error' message={errorMsg} />
-                                  ))}
-                              </div>
                             )}
                             {!isLoading && (
                                 <>

@@ -17,7 +17,7 @@ export const getUserProfile = async(req,res,next) => {
             return res.status(404).json({message: "user not found."})
         }
 
-        const {password, twoFactorEnabled, twoFactorSecret, ...rest} = user._doc
+        const {password, ...rest} = user._doc
 
         res.status(200).json({...rest})
     }catch(err){
@@ -35,7 +35,6 @@ export const getAllUsers = async(req,res,next) => {
 }
 
 export const updateUser = async(req,res,next) => {
-    // Check if the user is trying to update their own account
     if(req.user.id !== req.params.id){
         return next(errorHandler(401, 'You can update only your account'))
     }
@@ -49,7 +48,6 @@ export const updateUser = async(req,res,next) => {
         const { firstName, lastName, email, password, confirmPassword, taxId, phoneNumber, profilePicture } = req.body;
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-        // Initialize an empty object to store the fields to be updated
         const updateFields = {};
         
         if (firstName) updateFields.firstName = firstName;

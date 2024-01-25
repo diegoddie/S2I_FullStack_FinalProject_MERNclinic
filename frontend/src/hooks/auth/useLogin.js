@@ -3,17 +3,17 @@ import { useAuthContext } from "./useAuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import errorHandler from "../utils/errorHandler";
 
 export const useLogin = () => {
     const navigate = useNavigate()
-    const [error, setError] = useState([])
+
     const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = useAuthContext()
 
     const login = async({ formData, model }) => {
         try{
             setIsLoading(true)
-            setError([])
 
             const res = await axios.post(`http://localhost:3000/${model}/sign-in`, formData, { withCredentials: true });
             const { codeRequested, ...json } = res.data;
@@ -29,14 +29,12 @@ export const useLogin = () => {
                         }
                     },
                 })
-
+                
                 setIsLoading(false)
+
                 const userId = json.user._id;
-
                 const profilePath = model === 'user' ? 'profile' : 'doctor/profile';
-
                 navigate(`/${profilePath}/${userId}`);
-
                 toast.success(`Welcome back, ${json.user.firstName}!`);
 
                 return json
@@ -48,14 +46,8 @@ export const useLogin = () => {
             console.error('Error during login', error);
             setIsLoading(false);
           
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            errorHandler(error)
         }      
     }
-    return { login, isLoading, error }
+    return { login, isLoading }
 }

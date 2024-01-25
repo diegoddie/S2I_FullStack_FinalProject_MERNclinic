@@ -69,7 +69,7 @@ export const getDoctorProfile = async(req,res,next) => {
           return res.status(404).json({message: "doctor not found."})
       }
 
-      const {password, twoFactorEnabled, twoFactorSecret, ...rest} = doctor._doc
+      const {password, ...rest} = doctor._doc
 
       res.status(200).json({...rest})
   }catch(err){

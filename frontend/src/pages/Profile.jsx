@@ -20,7 +20,7 @@ const Profile = ({ model }) => {
   const { id } = useParams();
 
   const [data, setData] = useState([]);
-  console.log(data)
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState([]);
   const [selectedSection, setSelectedSection] = useState('MyVisits');
@@ -47,6 +47,7 @@ const Profile = ({ model }) => {
 
         if (res.status === 200) {
           setData(res.data);
+
           dispatch({ type: 'LOGIN', payload: { user: res.data, token } });
           setLoading(false);
         }
@@ -65,8 +66,6 @@ const Profile = ({ model }) => {
     };
     fetchData();
   }, [id, token.token, navigate]);
-
-  
 
   return (
       <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-6">

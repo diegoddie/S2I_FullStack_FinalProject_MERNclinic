@@ -10,7 +10,7 @@ import Spinner from './Spinner';
 import Pagination from './Pagination';
 
 const LeaveManagementTable = ({ title, data, isAdmin }) => {
-  const { approveLeaveRequest, declineLeaveRequest, deleteLeaveRequest, isLoading, error } = useManageLeaveRequests();
+  const { approveLeaveRequest, declineLeaveRequest, deleteLeaveRequest, isLoading } = useManageLeaveRequests();
 
   const [sortColumn, setSortColumn] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
@@ -68,13 +68,6 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
   return (
     <div className="flex flex-col">
       <div className="py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
-        {error.length > 0 && (
-          <div className="w-full max-w-[570px]">
-            {error.map((error, index) => (
-              <Alert key={index} type="error" message={error} />
-            ))}
-          </div>
-        )}
         {isLoading && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />

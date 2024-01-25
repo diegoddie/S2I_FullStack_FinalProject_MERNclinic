@@ -2,17 +2,17 @@ import axios from "axios";
 import { useAuthContext } from "./useAuthContext"
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import errorHandler from "../utils/errorHandler";
+import { toast } from 'react-toastify';
 
 export const useLogout = () => {
     const navigate = useNavigate()
-    const [error, setError] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = useAuthContext()
 
     const logout = async() => {
         try{
             setIsLoading(true)
-            setError([])
 
             const res = await axios.get('http://localhost:3000/sign-out', { withCredentials: true });
 
@@ -22,11 +22,14 @@ export const useLogout = () => {
                 localStorage.removeItem('user')
                 localStorage.removeItem('token')
                 navigate('/');
+                toast.success('Logout successful!');
             }
         }catch(error){
-            setIsLoading(false);
             console.error('Error during logout:', error);
+            setIsLoading(false);
+        
+            errorHandler(error)
         }
     }
-    return { logout, isLoading, error }
+    return { logout, isLoading }
 }

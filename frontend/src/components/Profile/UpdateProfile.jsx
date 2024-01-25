@@ -5,7 +5,7 @@ import Alert from '../Utils/Alert';
 import Spinner from '../Utils/Spinner';
 
 const UpdateProfile = ({ model }) => {
-    const { updateUser, isLoading, error } = useUpdateUser();
+    const { updateUser, isLoading } = useUpdateUser();
     const { user } = useAuthContext();
 
     const [imageError, setImageError] = useState('');
@@ -79,13 +79,6 @@ const UpdateProfile = ({ model }) => {
             <Spinner />
           </div>
         }
-        {error.length > 0 && (
-          <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-            {error.map((error, index) => (
-              <Alert key={index} type='error' message={error} />
-            ))}
-          </div>
-        )}
         {!isLoading && (
           <>
             <div className='font-semibold flex items-center mx-auto justify-center mt-3'>

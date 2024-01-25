@@ -1,16 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuthContext } from "../auth/useAuthContext";
+import errorHandler from "../utils/errorHandler";
+import { toast } from 'react-toastify';
 
 export const useUpdateUser = () => {
-    const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
     const updateUser = async ({ formData, model }) => {
         try {
             setIsLoading(true);
-            setError([]);
 
             const res = await axios.put(`http://localhost:3000/${model}/update/${user._id}`, formData, {
                 headers: {
@@ -19,23 +19,19 @@ export const useUpdateUser = () => {
             });
 
             if (res.status === 200) {
-                window.location.reload();
+                setIsLoading(false);
                 const updatedUser = res.data.user;
                 dispatch({ type: 'LOGIN', payload: { user: updatedUser, token } });
-                setIsLoading(false);
+
+                toast.success('User updated successfully.');
             }
         } catch (error) {
-            setIsLoading(false);
             console.error('Error during update:', error);
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            setIsLoading(false);
+            
+            errorHandler(error)
         }
     };
 
-    return { updateUser, isLoading, error };
+    return { updateUser, isLoading };
 };

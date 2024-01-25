@@ -58,7 +58,7 @@ const signIn = async (req, res, next, Model) => {
       const validUser = await Model.findOne({ email });
 
       if (!validUser) {
-          return next(errorHandler(404, `${Model.modelName} not found`));
+          return res.status(404).json({message: `${Model.modelName} not found`});
       }
 
       const validPassword = bcryptjs.compareSync(password, validUser.password);
@@ -74,10 +74,10 @@ const signIn = async (req, res, next, Model) => {
           const isValidOTP = verifyOTP(validUser, twoFactorCode);
 
           if (!isValidOTP) {
-              return next(errorHandler(401, 'Invalid two-factor authentication code.'));
+              return res.status(401).json({message: 'Invalid two-factor authentication code.'})
           }
       } else if (twoFactorCode) {
-          return next(errorHandler(400, 'Two-factor authentication is not enabled for this user.'));
+          return res.status(400).json({message: 'Two-factor authentication is not enabled for this user.'})
       }
 
       // Generate JWT token for authentication
@@ -261,12 +261,8 @@ export const disable2FA = async (req, res, next, Model) => {
   try {
       const { password, confirmPassword } = req.body;
 
-      if (!password || !confirmPassword) {
-          return res.status(400).json({ message: 'Both password and confirmPassword are required for 2FA disable verification.' });
-      }
-
       if (password !== confirmPassword) {
-          return res.status(400).json({ message: 'Password and confirmPassword must match.' });
+          return res.status(400).json({ message: 'Passwords do not match.' });
       }
 
       const user = await Model.findById(req.params.id);

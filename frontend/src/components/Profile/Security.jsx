@@ -3,14 +3,13 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import { MdClose } from "react-icons/md";
 import QRCode from 'qrcode.react';
 import Spinner from '../Utils/Spinner';
-import Alert from '../Utils/Alert';
 import { use2FA } from '../../hooks/auth/use2FA';
 import DeleteButton from '../Auth/DeleteButton';
 
 const Security = ({ model }) => {
-    const { generate2FA, verify2FA, disable2FA, error, isLoading } = use2FA();
+    const { generate2FA, verify2FA, disable2FA, isLoading } = use2FA();
     const { user } = useAuthContext();
-
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [tempSecretCode, setTempSecretCode] = useState('');
     const [twoFactorSecret, setTwoFactorSecret] = useState(null)
@@ -55,13 +54,6 @@ const Security = ({ model }) => {
                     <Spinner />
                 </div>
             }
-            {error.length > 0 && (
-                <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-                    {error.map((error, index) => (
-                        <Alert key={index} type='error' message={error} />
-                    ))}
-                </div>
-            )}
             {!isLoading && (
                 <>
                     <div className='font-semibold flex mx-auto justify-center mt-3'>
@@ -93,13 +85,16 @@ const Security = ({ model }) => {
                                 <p className='text-center text-gray-700 mb-4 text-lg md:text-xl font-semibold'>
                                     You have already enabled two-factor authentication.
                                 </p>
-                                <button
-                                    onClick={handleOpenModal}
-                                    className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
-                                >
-                                    Disable 2FA
-                                </button>
-                                <DeleteButton model={model} />
+                                <div className='flex justify-center mb-4 gap-2'>
+                                    <button
+                                        onClick={handleOpenModal}
+                                        className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
+                                    >
+                                        Disable 2FA
+                                    </button>
+                                    <DeleteButton model={model} />
+                                </div>
+
                             </div>
                         )}
                         {isModalOpen && (

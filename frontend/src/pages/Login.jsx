@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
-import Alert from '../components/Utils/Alert';
 import { useLogin } from '../hooks/auth/useLogin';
 
 const Login = ({ model }) => {
-  const {login, error, isLoading} = useLogin()
+  const {login, isLoading} = useLogin()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -33,13 +32,6 @@ const Login = ({ model }) => {
 
   return (
     <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>
-      {error.length > 0 && (
-        <div className='w-full max-w-[570px]'>
-          {error.map((error, index) => (
-            <Alert key={index} type='error' message={error} />
-          ))}
-        </div>
-      )}
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
         <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
           Hello, <span>Welcome</span> Back

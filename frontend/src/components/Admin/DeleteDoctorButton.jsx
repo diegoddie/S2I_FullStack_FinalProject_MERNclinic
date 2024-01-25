@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
 import axios from 'axios';
 import Spinner from '../Utils/Spinner';
-import Alert from '../Utils/Alert';
+import { toast } from 'react-toastify';
+import errorHandler from '../../hooks/utils/errorHandler';
 
 const DeleteDoctorButton = ({doctors}) => {
     const navigate = useNavigate()
@@ -11,7 +12,6 @@ const DeleteDoctorButton = ({doctors}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleOpenModal = () => {
@@ -27,17 +27,16 @@ const DeleteDoctorButton = ({doctors}) => {
         try {
             setPassword('')
             setIsLoading(true);
-            setError([]);
 
             if (!selectedDoctor) {
                 setIsLoading(false);
-                setError(['Please choose a doctor to delete.']);
+                toast.error('Please choose a doctor to delete.');
                 return;
             }
 
             if (!password) {
                 setIsLoading(false);
-                setError(['Please enter your password to confirm deletion.']);
+                toast.error('Please enter your password to confirm deletion.');
                 return;
             }
             const res = await axios.delete(`http://localhost:3000/doctor/delete/${selectedDoctor}`, { withCredentials: true });
@@ -45,20 +44,13 @@ const DeleteDoctorButton = ({doctors}) => {
             if (res.status === 200) {
                 setIsLoading(false);
                 handleCloseModal()
-                navigate('/')
+                toast.success('Doctor deleted succesfully.')
                 window.location.reload();
             }
-        } catch (err) {
+        } catch (error) {
             setIsLoading(false);
 
-            console.error('Error deleting doctor:', err);
-            if (err.response && err.response.data && err.response.data.errors) {
-                setError(err.response.data.errors.map((e) => e.msg));
-            } else if (err.response && err.response.data && err.response.data.message) {
-                setError([err.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+            errorHandler(error)
         } 
     };
 
@@ -85,11 +77,6 @@ const DeleteDoctorButton = ({doctors}) => {
                             {isLoading && (
                                 <div className='flex items-center justify-center mx-auto py-10'>
                                     <Spinner />
-                                </div>
-                            )}
-                            {error.length > 0 && (
-                                <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-                                    <Alert type='error' message={error} />
                                 </div>
                             )}
                             {!isLoading && (

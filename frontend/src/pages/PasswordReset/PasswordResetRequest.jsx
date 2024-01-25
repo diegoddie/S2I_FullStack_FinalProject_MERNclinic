@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Alert from '../../components/Utils/Alert';
+import { useNavigate } from "react-router-dom";
 import Spinner from '../../components/Utils/Spinner';
+import errorHandler from '../../hooks/utils/errorHandler';
+import { toast } from 'react-toastify';
 
 const PasswordResetRequest = ({ model }) => {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState([]);
+  const navigate = useNavigate()
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -21,33 +23,24 @@ const PasswordResetRequest = ({ model }) => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:3000/${model}/password-reset-request`, formData);
-      setMessage(response.data.message);
-      setError([]);
+      const res = await axios.post(`http://localhost:3000/${model}/password-reset-request`, formData);
+
+      if (res.status === 200){
+        setIsLoading(false)
+        navigate('/')
+        toast.success(res.data.message)
+      }     
+      
     } catch (error) {
       console.error('Error during the password reset request', error);
-
-      if (error.response && error.response.data && error.response.data.errors) {
-          setError(error.response.data.errors.map((err) => err.msg));
-      } else if (error.response && error.response.data && error.response.data.message) {
-          setError([error.response.data.message]);
-      } else {
-          setError(['Something went wrong.']);
-      }
-    } finally {
       setIsLoading(false);
+
+      errorHandler(error)
     }
   };
 
   return (
     <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>
-      {error.length > 0 && (
-        <div className='w-full max-w-[570px]'>
-          {error.map((error, index) => (
-            <Alert key={index} type='error' message={error} />
-          ))}
-        </div>
-      )}
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
         <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
           Password Reset Request
@@ -82,7 +75,6 @@ const PasswordResetRequest = ({ model }) => {
             </div>
           </form>
         )}
-        {message && <p className='mt-4 text-green-500 text-lg font-bold text-center'>{message}</p>}
       </div>
     </section>
   );

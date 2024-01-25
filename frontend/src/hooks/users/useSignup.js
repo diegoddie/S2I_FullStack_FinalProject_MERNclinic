@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import errorHandler from "../utils/errorHandler";
 
 export const useSignup = () => {
     const navigate = useNavigate()
@@ -19,8 +20,10 @@ export const useSignup = () => {
                 navigate('/login')
             }            
         } catch (error) {
+            console.error('Error during sign-up:', error);
             setIsLoading(false);
-            toast.error(error.response.data.message)
+            
+            errorHandler(error)
         }
     };
 

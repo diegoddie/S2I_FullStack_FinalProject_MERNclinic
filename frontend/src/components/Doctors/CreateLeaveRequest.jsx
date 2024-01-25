@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const CreateLeaveRequest = () => {
-  const { updateDoctor, error, isLoading } = useUpdateDoctor();
+  const { updateDoctor, isLoading } = useUpdateDoctor();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -52,6 +52,7 @@ const CreateLeaveRequest = () => {
       await updateDoctor({
         formData,
       });
+      handleCloseModal()
     } catch (error) {
       console.error("Error updating the doctor's leave requests:", error);
     }
@@ -88,13 +89,6 @@ const CreateLeaveRequest = () => {
               {isLoading && (
                 <div className='flex items-center justify-center mx-auto py-10'>
                   <Spinner />
-                </div>
-              )}
-              {error.length > 0 && (
-                <div className='w-full max-w-[570px] items-center justify-center text-center mx-auto'>
-                  {error.map((errorMsg, index) => (
-                    <Alert key={index} type='error' message={errorMsg} />
-                  ))}
                 </div>
               )}
               {!isLoading && (
