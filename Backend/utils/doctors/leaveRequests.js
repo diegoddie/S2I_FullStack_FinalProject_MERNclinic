@@ -4,7 +4,7 @@ export const validateLeaveRequests = (leaveRequests) => {
             return 'The "typology" field is required for each leave request.';
         }
         if (request.typology.toLowerCase() !== 'vacation' && request.typology.toLowerCase() !== 'leaves') {
-            return 'The "typology" field must be either "vacations" or "leaves".';
+            return 'The "typology" field must be either "vacation" or "leaves".';
         }
     }
     return null;

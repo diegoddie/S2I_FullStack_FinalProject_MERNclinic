@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { format, compareDesc, startOfMonth, endOfMonth } from 'date-fns';
+import { format, compareDesc, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { FaLongArrowAltUp, FaLongArrowAltDown, FaTrash } from "react-icons/fa";
 import { useManageLeaveRequests } from '../../hooks/doctors/useManageLeaveRequests';
@@ -51,10 +51,13 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
       ? data.filter((leaveRequest) => {
           const leaveStartDate = new Date(leaveRequest.startDate);
           const leaveEndDate = new Date(leaveRequest.endDate);
-          return leaveStartDate >= startDate && leaveEndDate <= endDate;
+  
+          return isWithinInterval(leaveStartDate, { start: startDate, end: endDate }) ||
+                 isWithinInterval(leaveEndDate, { start: startDate, end: endDate }) ||
+                 isWithinInterval(startDate, { start: leaveStartDate, end: leaveEndDate });
         })
       : data;
-
+  
     setFilteredData(sortLeaveRequests(filteredData));
   };
 
