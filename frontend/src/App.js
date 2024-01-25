@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound.jsx";
 import { useAuthContext } from "./hooks/auth/useAuthContext.js";
 import PasswordResetRequest from "./pages/PasswordReset/PasswordResetRequest.jsx";
 import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const { user, token } = useAuthContext()
@@ -18,6 +20,7 @@ const App = () => {
   return (
     <div className="App font-body bg-teal-50">
       <BrowserRouter>
+          <ToastContainer />
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />

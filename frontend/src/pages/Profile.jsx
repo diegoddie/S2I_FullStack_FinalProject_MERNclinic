@@ -20,6 +20,7 @@ const Profile = ({ model }) => {
   const { id } = useParams();
 
   const [data, setData] = useState([]);
+  console.log(data)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState([]);
   const [selectedSection, setSelectedSection] = useState('MyVisits');
@@ -54,6 +55,7 @@ const Profile = ({ model }) => {
 
         if (error.response.status === 401) {
           navigate('*');
+          dispatch({ type: 'LOGOUT' });
         }
 
         setError(error.response?.data?.errors?.map((err) => err.msg) || ['Something went wrong.']);

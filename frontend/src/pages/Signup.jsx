@@ -5,7 +5,7 @@ import Alert from '../components/Utils/Alert';
 import { useSignup } from '../hooks/users/useSignup';
 
 const SignUp = () => {
-  const {signup, error, isLoading} = useSignup()
+  const {signup, isLoading} = useSignup()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -31,13 +31,6 @@ const SignUp = () => {
 
   return (
     <section className='flex flex-col items-center justify-center md:h-full px-3 md:px-0 py-10 md:py-20'>
-      {error.length > 0 && (
-        <div className="w-full max-w-[570px]">
-          {error.map((error, index) => (
-            <Alert key={index} type="error" message={error} />
-          ))}
-        </div>
-      )}
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
         <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
           Create an Account

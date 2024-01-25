@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 export const useLogin = () => {
     const navigate = useNavigate()
@@ -35,6 +36,8 @@ export const useLogin = () => {
                 const profilePath = model === 'user' ? 'profile' : 'doctor/profile';
 
                 navigate(`/${profilePath}/${userId}`);
+
+                toast.success(`Welcome back, ${json.user.firstName}!`);
 
                 return json
             }else if(codeRequested){
