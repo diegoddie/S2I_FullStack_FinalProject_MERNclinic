@@ -1,6 +1,6 @@
 import express from 'express';
 import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest, declineLeaveRequest } from '../controllers/doctorController.js';
-import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA } from '../controllers/authController.js';
+import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA, verifyPassword } from '../controllers/authController.js';
 import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
 import Doctor from '../models/doctorModel.js';
@@ -76,6 +76,8 @@ router.post(
   ],
   createDoctor
 );
+
+router.post('/verify-password', verifyToken, (req, res, next) => verifyPassword(req, res, next, Doctor))
 
 router.put(
     '/update/:id', 

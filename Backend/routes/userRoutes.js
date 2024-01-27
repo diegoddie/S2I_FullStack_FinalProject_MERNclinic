@@ -2,7 +2,7 @@ import express from 'express'
 import { check } from 'express-validator';
 import { updateUser, deleteUser, getAllUsers, getUserProfile } from '../controllers/userController.js';
 import { cloudinaryMiddleware, verifyAdmin, verifyToken } from '../middleware/middleware.js';
-import { passwordReset, passwordResetRequest, userSignIn, generate2FA, verify2FA, disable2FA  } from '../controllers/authController.js';
+import { passwordReset, passwordResetRequest, userSignIn, generate2FA, verify2FA, disable2FA, verifyPassword } from '../controllers/authController.js';
 import User from '../models/userModel.js';
 const router = express.Router();
 
@@ -14,6 +14,8 @@ router.post(
     ],
     userSignIn
 );
+
+router.post('/verify-password', verifyToken, (req, res, next) => verifyPassword(req, res, next, User))
 
 router.get('/', verifyToken, verifyAdmin, getAllUsers)
 router.get('/profile/:id', verifyToken, getUserProfile)

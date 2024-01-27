@@ -105,6 +105,32 @@ export const doctorSignIn = async (req, res, next) => {
   await signIn(req, res, next, Doctor);
 };
 
+export const verifyPassword = async(req,res,next,Model)=>{
+  try{
+      const { password } = req.body;
+
+      if (!password) {
+          return res.status(400).json({ message: 'Password is required' });
+      }
+  
+      const validUser = await Model.findById(req.user.id);
+
+      if (!validUser) {
+          return res.status(404).json({message: 'not found'});
+      }
+  
+      const validPassword = bcryptjs.compareSync(password, validUser.password);
+      if (!validPassword) {
+          return res.status(401).json({ message: 'Wrong credentials. Please check your password.' });
+      }
+
+      return res.status(200).json({ message: 'Correct Password' });
+  }catch(error){
+      console.error(error);
+      next(errorHandler(500, 'Internal Server Error'));
+  }
+}
+
 export const signOut = async (req, res) => {
   try {
     // Extract the access token cookie from the request

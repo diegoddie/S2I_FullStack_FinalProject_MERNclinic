@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MdClose } from 'react-icons/md';
 import axios from 'axios';
 import Spinner from '../Utils/Spinner';
@@ -7,8 +6,6 @@ import { toast } from 'react-toastify';
 import errorHandler from '../../hooks/utils/errorHandler';
 
 const DeleteDoctorButton = ({doctors}) => {
-    const navigate = useNavigate()
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [password, setPassword] = useState('');
@@ -25,34 +22,49 @@ const DeleteDoctorButton = ({doctors}) => {
 
     const handleDelete = async () => {
         try {
-            setPassword('')
+            setPassword('');
             setIsLoading(true);
-
+      
             if (!selectedDoctor) {
                 setIsLoading(false);
                 toast.error('Please choose a doctor to delete.');
                 return;
             }
-
+      
             if (!password) {
                 setIsLoading(false);
                 toast.error('Please enter your password to confirm deletion.');
                 return;
             }
-            const res = await axios.delete(`http://localhost:3000/doctor/delete/${selectedDoctor}`, { withCredentials: true });
-
-            if (res.status === 200) {
+      
+            try {
+                await axios.post('http://localhost:3000/user/verify-password', { password }, { withCredentials: true });
+            } catch (error) {
                 setIsLoading(false);
-                handleCloseModal()
-                toast.success('Doctor deleted succesfully.')
-                window.location.reload();
+                toast.error('Password verification failed. Please check your password.');
+                return;
             }
-        } catch (error) {
+      
+            try{
+                const res = await axios.delete(`http://localhost:3000/doctor/delete/${selectedDoctor}`, { withCredentials: true });
+
+                if (res.status === 200) {
+                    setIsLoading(false);
+                    handleCloseModal();
+                    toast.success('Doctor deleted successfully.');
+                    window.location.reload();
+                }
+            }catch(error){
+                setIsLoading(false);
+                errorHandler(error);
+            } 
+        } catch(error){
+            console.error('Error deleting doctor:', error);
             setIsLoading(false);
 
-            errorHandler(error)
-        } 
-    };
+            errorHandler(error);
+        }
+    }
 
     return (
         <>

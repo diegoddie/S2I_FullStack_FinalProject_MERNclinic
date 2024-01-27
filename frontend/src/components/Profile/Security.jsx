@@ -4,7 +4,7 @@ import { MdClose } from "react-icons/md";
 import QRCode from 'qrcode.react';
 import Spinner from '../Utils/Spinner';
 import { use2FA } from '../../hooks/auth/use2FA';
-import DeleteButton from '../Auth/DeleteButton';
+import DeleteAccountButton from '../Auth/DeleteAccountButton';
 
 const Security = ({ model }) => {
     const { generate2FA, verify2FA, disable2FA, isLoading } = use2FA();
@@ -76,7 +76,7 @@ const Security = ({ model }) => {
                                     >
                                         Enable 2FA
                                     </button>
-                                    <DeleteButton model={model} />
+                                    <DeleteAccountButton model={model} />
                                 </div>
                             </>
                         )}
@@ -92,7 +92,7 @@ const Security = ({ model }) => {
                                     >
                                         Disable 2FA
                                     </button>
-                                    <DeleteButton model={model} />
+                                    <DeleteAccountButton model={model} />
                                 </div>
 
                             </div>

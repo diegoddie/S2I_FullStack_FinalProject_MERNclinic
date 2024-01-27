@@ -230,7 +230,7 @@ export const deleteDoctor = async (req, res, next) => {
       const { id: authUserId, role } = req.user;
 
       const doctorToDelete = await Doctor.findById(doctorId);
-
+        
       if (!doctorToDelete) {
           return next(errorHandler(404, "Doctor not found"));
       }
@@ -281,11 +281,11 @@ export const deleteDoctor = async (req, res, next) => {
 
           res.status(200).json({ message: "Doctor and future appointments deleted successfully" });
       } else {
-          return next(errorHandler(404, "Doctor not found"));
+          return res.status(404).json({message: "Doctor not found"})
       }
   } catch (err) {
       console.log(err);
-      next(errorHandler(500, 'Internal Server Error'));
+      next(errorHandler(500, 'Internal Server Error: ' + err.message));
   }
 };
 

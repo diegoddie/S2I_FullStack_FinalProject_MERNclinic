@@ -7,7 +7,7 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import { toast } from 'react-toastify';
 import errorHandler from '../../hooks/utils/errorHandler';
 
-const DeleteButton = ({ model }) => {
+const DeleteAccountButton = ({ model }) => {
     const navigate = useNavigate()
     
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,9 +26,9 @@ const DeleteButton = ({ model }) => {
     };
 
     const handleDelete = async () => {
-        setIsLoading(true);
-
         try {
+            setPassword('');
+            setIsLoading(true);
 
             if (!password) {
                 setIsLoading(false);
@@ -36,14 +36,27 @@ const DeleteButton = ({ model }) => {
                 return;
             }
 
-            const res = await axios.delete(`http://localhost:3000/${model}/delete/${user._id}`, { withCredentials: true });
-
-            if (res.status === 200) {
+            try {
+                await axios.post(`http://localhost:3000/${model}/verify-password`, { password }, { withCredentials: true });
+            } catch (error) {
                 setIsLoading(false);
-                handleCloseModal();
-                dispatch({ type: 'LOGOUT' });
-                navigate('/')
-                toast.success('Account deleted succesfully.')
+                toast.error('Password verification failed. Please check your password.');
+                return;
+            }
+
+            try{
+                const res = await axios.delete(`http://localhost:3000/${model}/delete/${user._id}`, { withCredentials: true });
+
+                if (res.status === 200) {
+                    setIsLoading(false);
+                    handleCloseModal();
+                    dispatch({ type: 'LOGOUT' });
+                    navigate('/')
+                    toast.success('Account deleted successfully.');
+                }
+            }catch(error){
+                setIsLoading(false);
+                errorHandler(error);
             }
         } catch (error) {
             console.error('Error deleting account:', error);
@@ -114,4 +127,4 @@ const DeleteButton = ({ model }) => {
     );
 };
 
-export default DeleteButton;
+export default DeleteAccountButton;
