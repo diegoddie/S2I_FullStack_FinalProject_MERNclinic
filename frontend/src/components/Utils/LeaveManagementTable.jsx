@@ -5,7 +5,6 @@ import { format, compareDesc, startOfMonth, endOfMonth, isWithinInterval } from 
 import { it } from 'date-fns/locale';
 import { FaLongArrowAltUp, FaLongArrowAltDown, FaTrash } from "react-icons/fa";
 import { useManageLeaveRequests } from '../../hooks/doctors/useManageLeaveRequests';
-import Alert from './Alert';
 import Spinner from './Spinner';
 import Pagination from './Pagination';
 
@@ -39,12 +38,19 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
       return 0;
     });
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const formattedDate = format(date, 'dd/MM/yyyy', { locale: it });
-    const formattedTime = format(date, 'HH:mm', { locale: it });
-    return `${formattedDate} ${formattedTime}`;
-  };
+    const formatDate = (dateString, typology) => {
+      const date = new Date(dateString);
+      
+      if (typology === 'vacation') {
+        // Se la tipologia è 'VACATION', mostra solo la data senza l'orario
+        return format(date, 'dd/MM/yyyy', { locale: it });
+      } else {
+        // Altrimenti, mostra la data completa con l'orario
+        const formattedDate = format(date, 'dd/MM/yyyy', { locale: it });
+        const formattedTime = format(date, 'HH:mm', { locale: it });
+        return `${formattedDate} ${formattedTime}`;
+      }
+    };
 
   const handleFilter = () => {
     const filteredData = title !== 'Pending Requests'
@@ -173,10 +179,10 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                         <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                        {formatDate(leaveRequest.startDate)}
+                        {formatDate(leaveRequest.startDate, leaveRequest.typology.toLowerCase())}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                        {formatDate(leaveRequest.endDate)}
+                        {formatDate(leaveRequest.endDate, leaveRequest.typology.toLowerCase())}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap border-r">
                       <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full ${leaveRequest.isApproved === null ? "bg-yellow-300" : leaveRequest.isApproved ? "bg-green-500" : "bg-red-500" }`}>

@@ -7,6 +7,7 @@ import Visit from "../models/visitModel.js";
 import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import speakeasy from 'speakeasy'
+import { format, startOfDay, endOfMonth, addDays, addHours, addMonths, isSunday, isAfter, isBefore, addMinutes } from 'date-fns';
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
 import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail, sendNewLeaveRequestEmailToAdmin } from "../utils/doctors/leaveManagementEmails.js";
 import { checkDuplicateLeaveRequests, validateLeaveRequests } from "../utils/doctors/leaveRequests.js";
@@ -81,7 +82,7 @@ export const getDoctorById = async (req, res, next) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
     if (!doctor) {
-      return next(errorHandler(404, "Doctor not found"));
+      return res.status(404).json({ message: 'Doctor not found' });
     }
     res.status(200).json(doctor);
   } catch (err) {
@@ -137,6 +138,89 @@ export const getDoctorsByCity = async (req, res, next) => {
     next(errorHandler(500, 'Internal Server Error'));
   }
 };
+
+export const getDoctorAvailabilityForSpecificDate = async (req, res, next) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const visitDate = req.query.visitDate;
+
+    if (!visitDate) {
+      return res.status(400).json({ message: 'Visit date is required' });
+    }
+
+    const currentDate = new Date();
+    
+    if (new Date(visitDate) < currentDate) {
+      return res.status(400).json({ message: 'Visit date must be in the future' });
+    }
+
+    const minutes = new Date(visitDate).getMinutes();
+    if (minutes % 30 !== 0) {
+      return res.status(400).json({ message: "Visit must be scheduled in half-hour intervals" });
+    }
+
+    const isAvailable = await doctor.isAvailable(new Date(visitDate));
+    const hasExistingVisits = await doctor.checkExistingVisits(new Date(visitDate));
+
+    res.json({ isAvailable, hasExistingVisits });
+  } catch (error) {
+    console.error('Error getting doctor availability:', error);
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+};
+
+export const getDoctorMonthlyAvailability = async (req,res,next) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    let currentDate = startOfDay(addDays(new Date(), 1));
+    const endDate = addDays(currentDate, 6);
+
+    const availableSlots = [];
+
+    while (currentDate <= endDate) {
+      const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+
+      const workShift = doctor.workShifts.find(shift => shift.dayOfWeek === dayOfWeek);
+    
+      if (workShift) {
+        let startTime = addHours(currentDate, parseInt(workShift.startTime.split(':')[0]));
+        const endTime = addHours(currentDate, parseInt(workShift.endTime.split(':')[0]));
+
+        // Itera nelle fasce orarie comprese tra START TIME e END TIME
+        while (startTime < endTime) {
+          const isAvailable = await doctor.isAvailable(startTime);
+          const hasExistingVisits = await doctor.checkExistingVisits(startTime);
+
+          // Se è disponibile e non ci sono visite esistenti, aggiungi alla lista di slot disponibili
+          if (isAvailable && !hasExistingVisits) {
+            availableSlots.push(startTime);
+          }
+
+          // Incrementa di mezz'ora
+          startTime = addMinutes(startTime, 30);
+        }
+      }
+    
+      // Incrementa la data di mezz'ora
+      currentDate = addDays(currentDate, 1);
+    }
+
+    res.json({ availableSlots });
+  } catch(error){
+    console.error('Error getting doctor availability:', error);
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+}
 
 export const updateDoctor = async (req, res, next) => {
     if(req.user.id !== req.params.id){

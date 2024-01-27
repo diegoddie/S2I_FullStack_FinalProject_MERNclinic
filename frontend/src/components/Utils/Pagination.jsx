@@ -9,8 +9,8 @@ const Pagination = ({ setCurrentPage, currentPage, totalPages }) => {
         setCurrentPage(selected + 1);
     };
 
-    const showNextButton = currentPage !== totalPages - 1
-    const showPrevButton = currentPage !== 0
+    const showNextButton = currentPage !== totalPages
+    const showPrevButton = currentPage !== 1
 
     return (
         <div>

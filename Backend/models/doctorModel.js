@@ -115,9 +115,10 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
     // If the doctor is not scheduled to work on the chosen day, return false
     // Extract the day of the week (e.g., "Monday") from the visitDate
     const dayOfWeek = visitDate.toLocaleDateString('en-US', { weekday: 'long' });
+
     // Find the work shift for the specific day of the week in the doctor's schedule
     const workDay = this.workShifts.find(shift => shift.dayOfWeek === dayOfWeek);
-
+    
     if (!workDay) {
         return false;
     }
@@ -129,10 +130,16 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
         return visitDate >= startTime && visitDate < endTime;
     };
 
-    // Utility function to check if the visit is during the lunch break
     const isDuringLunchBreak = () => {
-        const lunchBreakStartTime = new Date(`${visitDate.toISOString().split('T')[0]} 13:00`);
-        const lunchBreakEndTime = new Date(`${visitDate.toISOString().split('T')[0]} 14:00`);
+        // Estrai la data in formato ISO (escludendo l'orario) dalla data della visita
+        const visitDateISO = visitDate.toISOString().split('T')[0];
+        // Costruisci un oggetto Date per l'inizio del break pranzo (alle 13:00) utilizzando la data della visita e l'orario fisso
+        const lunchBreakStartTime = new Date(`${visitDateISO} 13:00`);
+    
+        // Costruisci un oggetto Date per la fine del break pranzo (alle 14:00) utilizzando la data della visita e l'orario fisso
+        const lunchBreakEndTime = new Date(`${visitDateISO} 14:00`);
+    
+        // Verifica se la data della visita è compresa tra l'inizio e la fine del break pranzo
         return visitDate >= lunchBreakStartTime && visitDate < lunchBreakEndTime;
     };
 
@@ -140,7 +147,6 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
         return this.leaveRequests.some(leave => visitDate >= leave.startDate && visitDate <= leave.endDate && leave.isApproved);
     };
 
-    // Return true if the doctor is available (during work shift, not on vacation, and not during lunch break)
     return isDuringWorkShift() && !isOnLeave() && !isDuringLunchBreak();
 };
 

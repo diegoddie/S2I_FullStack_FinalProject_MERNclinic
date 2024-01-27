@@ -1,42 +1,69 @@
-import React from 'react';
-import { format, addMinutes, addDays } from 'date-fns';
-import itLocale from 'date-fns/locale/it';
+import React, { useEffect, useState } from 'react';
 import VisitTimeSlot from './VisitTimeSlot';
+import { useAuthContext } from '../../hooks/auth/useAuthContext';
+import axios from 'axios';
+import Spinner from '../Utils/Spinner';
 
-const VisitBook = () => {
-  const today = new Date();
+const VisitBook = ({ doctor }) => {
+  const { user } = useAuthContext();
 
-  const timeSlots = [];
-for (let i = 0; i < 7; i++) {
-  const currentDate = addDays(today, i);
-  for (let j = 9 * 60; j < 17 * 60; j++) { // Incrementa a intervalli di 1 minuto
-    const timeSlotDate = addMinutes(currentDate, j);
-    const formattedDate = format(timeSlotDate, 'dd/MM/yyyy', { locale: itLocale });
-    const formattedTime = format(timeSlotDate, 'H:mm', { locale: itLocale });
+  const [isLoading, setIsLoading] = useState(false)
+  const [availableSlots, setAvailableSlots] = useState([]);
+  console.log(availableSlots)
 
-    timeSlots.push({
-      day: formattedDate,
-      timeSlot: formattedTime,
-    });
+  useEffect(() => {
+    const fetchAvailableSlots = async () => {
+      try {
+        setIsLoading(true);
 
-    if (timeSlots.length >= 7) {
-      break;
-    }
-  }
-}
+        // Esegui la chiamata API per ottenere gli slot disponibili dal backend
+        const res = await axios.get(`http://localhost:3000/doctor/${doctor._id}/monthlyAvailability`);
+
+        if(res.status === 200){
+          setIsLoading(false)
+          setAvailableSlots(res.data.availableSlots);
+      }
+      } catch (error) {
+        console.error('Error fetching available slots:', error);
+        setIsLoading(false);
+      }
+    };
+
+    // Chiamata API solo se l'utente è autenticato
+    if (user) {
+      fetchAvailableSlots();
+    };
+  }, [user]);
 
   return (
     <div className=''>
-      <div>
-        <h3 className='text-2xl leading-[30px] text-gray-800 font-semibold flex items-center gap-2 mx-auto justify-center'>
-          Available Time Slots:
-        </h3>
-      </div>
-      <div className='gap-5 flex flex-wrap mt-5 mx-auto justify-center items-center'>
-        {timeSlots.map((slot, index) => (
-          <VisitTimeSlot key={index} day={slot.day} timeSlot={slot.timeSlot} />
-        ))}
-      </div>
+      {!user && (
+        <div>
+          <h3 className='text-xl leading-[30px] text-gray-800 font-semibold flex items-center gap-2'>
+            Please Log In to see availabilities and book your visit.
+          </h3>
+        </div>
+      )}
+      {user && (
+        <>
+          <div className='items-center justify-center mx-auto flex'>
+            <h3 className='text-2xl leading-[30px] font-semibold text-gray-800 mb-4 justify-center items-center mx-auto flex md:block'>
+              Next Availability
+            </h3>
+          </div>
+          {isLoading && 
+            <div className='flex items-center justify-center mx-auto py-10'>
+              <Spinner />
+            </div>
+          }
+          {!isLoading && 
+            <div className='mt-5 mx-auto justify-center items-center'>
+              <VisitTimeSlot data={availableSlots} doctor={doctor} />
+            </div>
+          }
+          
+        </>
+      )}
     </div>
   );
 };

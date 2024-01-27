@@ -18,15 +18,15 @@ const Security = ({ model }) => {
 
     const handleOpenModal = async () => {
         try {
-          setIsModalOpen(true);
-          if (!user.twoFactorEnabled) {
-            const otpauthURL = await generate2FA(model);
-            setTwoFactorSecret(otpauthURL);
-          }
+            setIsModalOpen(true);
+            if (!user.twoFactorEnabled) {
+                const otpauthURL = await generate2FA(model);
+                setTwoFactorSecret(otpauthURL);
+            }
         } catch (err) {
           console.error('Error generating 2FA:', err);
         }
-      };
+    };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);

@@ -30,21 +30,12 @@ export const createVisit = async (req, res, next) => {
     const doctorDetails = await Doctor.findById(doctor);
     const patientDetails = await User.findById(user);
 
-    const minutes = visitDate.getMinutes();
-    if (minutes % 30 !== 0) {
-      return res.status(400).json({ message: "Visit must be scheduled in half-hour intervals" });
-    }
-
     const startTime = visitDate.toISOString(); 
     const endTime = new Date(visitDate.getTime() + 30 * 60000).toISOString();
 
-    const isDoctorAvailable = await doctorDetails.isAvailable(visitDate);
     const hasUserExistingVisits = await patientDetails.checkExistingVisits(visitDate)
-    const hasDocExistingVisits = await doctorDetails.checkExistingVisits(visitDate)
 
-    if (!isDoctorAvailable || hasDocExistingVisits) {
-      return res.status(400).json({ message: "The doctor is not available on that day or time" });
-    }else if(hasUserExistingVisits){
+    if (hasUserExistingVisits){
       return res.status(400).json({ message: "User is not available on that day or time" });
     }
 

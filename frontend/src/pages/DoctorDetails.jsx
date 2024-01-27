@@ -4,15 +4,14 @@ import { animateScroll as scroll } from 'react-scroll';
 import DoctorAbout from '../components/Doctors/DoctorAbout';
 import DoctorContacts from '../components/Doctors/DoctorContacts';
 import VisitBook from '../components/Visits/VisitBook';
-import Alert from '../components/Utils/Alert';
 import Spinner from '../components/Utils/Spinner';
 import axios from 'axios';
+import errorHandler from '../hooks/utils/errorHandler';
 
 const DoctorDetails = () => {
     const { id } = useParams();
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState([]);
     const [doctor, setDoctor] = useState(null);
     const [tab, setTab] = useState('about')
 
@@ -20,7 +19,6 @@ const DoctorDetails = () => {
         const getDoctorDetails = async () => {
             try {
                 setLoading(true);
-                setError([])
 
                 const res = await axios.get(`http://localhost:3000/doctor/${id}`);
 
@@ -32,13 +30,7 @@ const DoctorDetails = () => {
                 console.error('Error getting doctor details:', error);
                 setLoading(false)
 
-                if (error.response && error.response.data && error.response.data.errors) {
-                    setError(error.response.data.errors.map((err) => err.msg));
-                } else if (error.response && error.response.data && error.response.data.message) {
-                    setError([error.response.data.message]);
-                } else {
-                    setError(['Something went wrong.']);
-                }
+                errorHandler(error)
             }
         };
 
@@ -55,13 +47,6 @@ const DoctorDetails = () => {
     return (
         <section className='py-12 h-full'>
             <div className='md:mt-10 px-5 mx-auto'>
-                {error.length > 0 && (
-                    <div className='w-full max-w-[570px]'>
-                        {error.map((error, index) => (
-                        <Alert key={index} type='error' message={error} />
-                        ))}
-                    </div>
-                )}
                 {loading && 
                     <div className='flex items-center justify-center mx-auto py-10'>
                         <Spinner />
@@ -96,7 +81,7 @@ const DoctorDetails = () => {
                                 tab === 'contacts' && <DoctorContacts doctor={doctor}/>
                             }
                             {
-                                tab === 'book' && <VisitBook />
+                                tab === 'book' && <VisitBook doctor={doctor} />
                             }
                         </div>
                     </div>

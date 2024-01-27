@@ -67,6 +67,11 @@ const UpdateProfile = ({ model }) => {
     
       try {
         await updateUser({ formData, model });
+        setFormData({
+          ...formData,
+          password: '',
+          confirmPassword: ''
+        });
       } catch (error) {
         console.error('Update User Error:', error);
       }

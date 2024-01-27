@@ -1,25 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { format, parseISO } from 'date-fns';
+import { it, enUS } from 'date-fns/locale';
+import Pagination from '../Utils/Pagination';
+import BookVisitButton from './BookVisitButton';
 
-const VisitTimeSlot = ({day, timeSlot}) => {
-  return (
-    <div className='shadow-2xl p-5 rounded-md bg-white'>
-        <div className='justify-center items-center mx-auto flex'>
-            <ul className=''>
-                <li className='flex flex-col md:flex-row gap-5 items-center justify-between'>
-                    <p className='text-xl leading-6 text-gray-500 font-semibold'>
-                        {day}
-                    </p>
-                    <p className='text-xl leading-6 text-gray-500 font-semibold'>
-                        {timeSlot}
-                    </p>
-                    <button className='bg-[#6fe288] hover:bg-[#2bad36] py-4 px-5 lg:py-2 lg:px-4 text-xl rounded leading-4 lg:leading-7 font-bold text-gray-800'>
-                        Book
-                    </button>
-                </li>
+
+const VisitTimeSlot = ({ data, doctor }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 16;
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    
+
+    const getAbbreviatedDay = (date) => {
+        return format(date, 'EEE', { locale: enUS });
+    };
+      
+    const getFormattedDateTime = (date) => {
+        const formattedDate = format(date, "dd/MM/yyyy", { locale: enUS });
+        const formattedTime = format(date, 'HH:mm', { locale: it });
+        return { formattedDate, formattedTime };
+    };
+
+    return (
+        <>
+            <ul className='flex flex-wrap gap-8 justify-center'>
+                {currentItems.map((timeSlot, index) => {
+                    const dateObj = parseISO(timeSlot);
+                    const dayOfWeek = getAbbreviatedDay(dateObj);
+                    const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
+
+                    return (
+                        <li key={index} className='gap-5 items-center bg-white py-5 px-4 w-[250px]'>
+                            <div className='flex flex-col md:flex-row justify-center md:mb-3'>
+                                <p className='text-xl leading-6 text-gray-500 font-semibold mx-auto mb-2 md:mb-0 uppercase'>
+                                    {dayOfWeek}
+                                </p>
+                                <p className='text-xl leading-6 text-gray-500 font-semibold mx-auto mb-2 md:mb-0'>
+                                    {formattedDate}
+                                </p>
+                            </div>
+                            <div className='flex flex-col  '>
+                                <p className='text-2xl leading-6 text-gray-700 font-semibold mx-auto mb-3'>
+                                    {formattedTime}
+                                </p>
+                                <BookVisitButton formattedDate={formattedDate} formattedTime={formattedTime} doctor={doctor} visitDate={timeSlot} />
+                            </div>
+                        </li>
+                    );
+                })}  
             </ul>
-        </div>
-    </div>
-  )
-}
+            <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        </>
+    );
+};
 
-export default VisitTimeSlot
+export default VisitTimeSlot;
