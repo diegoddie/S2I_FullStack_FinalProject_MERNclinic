@@ -15,76 +15,28 @@ import ManageDoctors from '../components/Admin/ManageDoctors';
 import LeaveManagement from '../components/Profile/LeaveManagement';
 
 const Profile = ({ model }) => {
-  const navigate = useNavigate();
-  const { token, dispatch } = useAuthContext();
-  const { id } = useParams();
+  const { user } = useAuthContext();
 
-  const [data, setData] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState([]);
   const [selectedSection, setSelectedSection] = useState('MyVisits');
 
-  const isAdmin = data?.isAdmin;
-
+  const isAdmin = user?.isAdmin;
   const isDoctor = model === 'doctor';
 
   const handleMenuItemClick = (section) => {
     setSelectedSection(section);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError([]);
-
-        const res = await axios.get(`http://localhost:3000/${model}/profile/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token.token}`,
-          },
-        });
-
-        if (res.status === 200) {
-          setData(res.data);
-
-          dispatch({ type: 'LOGIN', payload: { user: res.data, token } });
-          setLoading(false);
-        }
-      } catch (error) {
-        setLoading(false);
-
-        if (error.response.status === 401) {
-          navigate('*');
-          dispatch({ type: 'LOGOUT' });
-        }
-
-        setError(error.response?.data?.errors?.map((err) => err.msg) || ['Something went wrong.']);
-      }finally{
-        setLoading(false)
-      }
-    };
-    fetchData();
-  }, [id, token.token, navigate]);
-
   return (
       <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-6">
-        {error.length > 0 && (
-          <div className="w-full max-w-[570px]">
-            {error.map((error, index) => (
-              <Alert key={index} type="error" message={error} />
-            ))}
-          </div>
-        )}
-        {loading && (
+        {!user && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />
           </div>
         )}
-        {!loading && (
+        {user && (
           <>
             <Sidebar 
-              data={data}
+              data={user}
               isAdmin={isAdmin ?? false}
               isDoctor={isDoctor ?? false}
               selectedSection={selectedSection}

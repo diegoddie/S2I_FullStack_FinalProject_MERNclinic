@@ -15,13 +15,7 @@ export const use2FA = () => {
         try {
             setIsLoading(true);
 
-            const res = await axios.post(`http://localhost:3000/${model}/generate2FA/${user._id}`, {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.token}`
-                    },
-                }
-            );
+            const res = await axios.post(`http://localhost:3000/${model}/generate2FA/${user._id}`, {}, { withCredentials: true })
 
             if (res.status === 200) {
                 setIsLoading(false);
@@ -33,9 +27,18 @@ export const use2FA = () => {
             }
         } catch (error) {
             console.error('Error during the generation of 2FA Secret:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
             setIsLoading(false);
-            
-            errorHandler(error)
         } 
     };
 

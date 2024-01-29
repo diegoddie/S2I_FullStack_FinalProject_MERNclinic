@@ -2,9 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 import errorHandler from "../utils/errorHandler";
 import { toast } from 'react-toastify';
+import { useAuthContext } from "../auth/useAuthContext";
 
 export const useManageLeaveRequests = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const { dispatch } = useAuthContext();
 
     const approveLeaveRequest = async(doctorId, leaveRequestId) => {
         try{
@@ -19,9 +21,18 @@ export const useManageLeaveRequests = () => {
             }
         }catch(error){
             console.error('Error approving leave request:', error);
-            setIsLoading(false)
 
-            errorHandler(error)
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false)
         }
     }
 

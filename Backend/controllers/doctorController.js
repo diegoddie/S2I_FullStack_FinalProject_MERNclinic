@@ -174,7 +174,7 @@ export const getDoctorAvailabilityForSpecificDate = async (req, res, next) => {
   }
 };
 
-export const getDoctorMonthlyAvailability = async (req,res,next) => {
+export const getDoctorWeeklyAvailability = async (req,res,next) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
 

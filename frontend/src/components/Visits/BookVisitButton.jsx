@@ -3,6 +3,7 @@ import { useBookVisit } from '../../hooks/users/useBookVisit'
 import { useAuthContext } from '../../hooks/auth/useAuthContext'
 import { MdClose } from 'react-icons/md'
 import Spinner from '../Utils/Spinner'
+import { Link } from 'react-router-dom'
 
 const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) => {
     const { bookVisit, isLoading } = useBookVisit()
@@ -27,7 +28,7 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                 doctor: doctor._id,
                 date: visitDate,
             });
-            console.log(user._id, doctor._id, visitDate)
+
             handleCloseModal();
         }catch(error){
             console.error('Error booking a visit:', error);
@@ -50,7 +51,9 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                                 <MdClose className='text-xl' />
                             </button>
                         </div>
-                        <div className='w-full items-center mx-auto justify-center text-center'>
+                        {user && (
+                            <>
+                            <div className='w-full items-center mx-auto justify-center text-center'>
                             <h3 className='text-2xl font-semibold text-[#168aad]'>Booking Details</h3>
                         </div>
                         <div className='p-6 space-y-4'>
@@ -82,6 +85,15 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                                 </>
                             )}
                         </div>
+                            </>
+                        )}
+                        {!user && (
+                            <div className='flex flex-col justify-center gap-4 mb-4'>
+                                <label className='text-xl leading-[20px] text-[#168aad] font-semibold mx-auto my-8'>
+                                    Please <Link to='/login' className='text-[#173b46]'>login</Link> to book your visit.
+                                </label>
+                            </div>
+                        )}                       
                     </div>
                 </div>
             )}

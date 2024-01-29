@@ -1,8 +1,8 @@
 import { createContext, useReducer, useEffect, useState } from 'react'
 
 const initialState = {
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-    token: localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    token: JSON.parse(localStorage.getItem('token')) || null
 };
 
 export const AuthContext = createContext()
@@ -34,27 +34,24 @@ export const AuthContextProvider = ({children}) => {
 
     }, [state])
 
-    useEffect(()=>{
-        const token = JSON.parse(localStorage.getItem('token'))
-        const user = JSON.parse(localStorage.getItem('user'))
-
-        if(token){
+    useEffect(() => {
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+    
+        if (storedToken && storedUser) {
             const currentTime = Date.now();
-            const isTokenExpired = token.expiration && token.expiration < currentTime;
-
+            const isTokenExpired = storedToken.expiration && storedToken.expiration < currentTime;
+    
             if (isTokenExpired) {
-                localStorage.setItem('token', null);
-                localStorage.setItem('user', null);
-                dispatch({type: 'LOGOUT'});
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
             } else {
-                dispatch({type: 'LOGIN', payload: {user, token}});
+                dispatch({ type: 'LOGIN', payload: { user: storedUser, token: storedToken } });
             }
         }
-
         setLoading(false);
-    }, [])
-
-    console.log('AuthContext state: ', state)
+    }, [dispatch]);
 
     return (
         <AuthContext.Provider value={{user:state.user, token:state.token, dispatch, loading}}>

@@ -29,6 +29,9 @@ export const useLogin = () => {
                         }
                     },
                 })
+
+                localStorage.setItem('user', JSON.stringify(json.user));
+                localStorage.setItem('token', JSON.stringify({ token: json.token, expiration: json.expiration }));
                 
                 setIsLoading(false)
 

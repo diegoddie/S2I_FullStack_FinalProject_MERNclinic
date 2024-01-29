@@ -7,7 +7,7 @@ import { useAuthContext } from "../auth/useAuthContext";
 
 export const useBookVisit = () => {
     const navigate = useNavigate()
-    const { user } = useAuthContext();
+    const { dispatch } = useAuthContext();
     const [isLoading, setIsLoading] = useState(false);
 
     const bookVisit = async ({ user, doctor, date }) => {
@@ -22,9 +22,18 @@ export const useBookVisit = () => {
             }            
         } catch (error) {
             console.error('Error booking the visit', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
             setIsLoading(false);
-            
-            errorHandler(error)
         }
     };
 
