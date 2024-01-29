@@ -70,7 +70,7 @@ const DeleteAccountButton = ({ model }) => {
         <>
             <button
                 onClick={handleOpenModal}
-                className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
+                className='px-7 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl text-white font-semibold bg-red-500 hover:bg-red-600'
             >
                 Delete Account
             </button>
@@ -84,7 +84,7 @@ const DeleteAccountButton = ({ model }) => {
                             </button>
                         </div>
                         <div className='w-full items-center mx-auto justify-center text-center'>
-                            <h3 className='text-2xl font-semibold mb-4'>Delete Account</h3>
+                            <h3 className='text-2xl font-semibold mb-2 text-[#168aad]'>Delete Account</h3>
                         </div>
                         <div className='p-2 space-y-4'>
                             {isLoading && (
@@ -94,7 +94,7 @@ const DeleteAccountButton = ({ model }) => {
                             )}
                             {!isLoading && (
                                 <>
-                                    <p className='text-center text-gray-700 mb-2 text-lg md:text-xl font-semibold'>
+                                    <p className='text-center text-red-500 mb-2 text-lg md:text-xl font-semibold'>
                                         Are you sure you want to delete your account? This action is irreversible.
                                     </p>
                                     <div>
@@ -111,7 +111,7 @@ const DeleteAccountButton = ({ model }) => {
                                             />
                                         </div>
                                         <button
-                                            className='bg-red-500 text-white py-2 px-4 mt-4 rounded'
+                                            className='bg-red-400 text-white py-2 px-4 mt-4 rounded hover:bg-red-500'
                                             onClick={handleDelete}
                                         >
                                             Confirm Deletion

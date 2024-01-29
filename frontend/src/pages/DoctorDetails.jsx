@@ -73,7 +73,7 @@ const DoctorDetails = () => {
                             <button onClick={()=>setTab('contacts')} className={`${tab === 'contacts' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Contacts</button>
                             <button onClick={()=>setTab('book')} className={`${tab === 'book' && 'border-b border-solid border-secondary'} py-2 px-5 mr-5 text-xl leading-7 text-gray-700 font-semibold`}>Book</button>
                         </div>
-                        <div className='mt-[20px] md:mt-[40px]'>
+                        <div className='mt-[20px]'>
                             {
                                 tab === 'about' && <DoctorAbout doctorAbout={doctor.about}/>
                             }

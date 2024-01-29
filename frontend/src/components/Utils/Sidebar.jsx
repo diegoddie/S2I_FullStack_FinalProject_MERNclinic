@@ -23,7 +23,7 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
 
     return (
         <div className={`bg-secondary rounded-md py-4 md:py-8 md:px-3 mx-auto w-full duration-200 relative ${open ? 'md:w-[280px]' : 'md:w-[120px]'}`}>
-            <MdMenuOpen className={`bg-white hidden md:flex absolute cursor-pointer duration-300 rounded-full -right-3 top-14 w-8 h-8 border-4 border-secondary text-3xl ${!open && 'rotate-180'}`} onClick={()=>setOpen(!open)}/>
+            <MdMenuOpen className={`bg-white hidden md:flex absolute cursor-pointer duration-300 rounded-full -right-3 top-14 w-8 h-8 border-4 border-secondary text-gray-700 text-3xl ${!open && 'rotate-180'}`} onClick={()=>setOpen(!open)}/>
             <div className="flex items-center justify-center">
                 <figure className={`w-[100px] h-[100px] ${open ? 'md:w-[120px] md:h-[120px]' : 'md:w-[80px] md:h-[80px]'} rounded-full duration-300 border-2 border-solid border-pink-500`}>
                     <img src={data.profilePicture} alt="user" className="w-full h-full rounded-full object-cover" />

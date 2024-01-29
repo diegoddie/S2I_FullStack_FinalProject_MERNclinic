@@ -64,7 +64,7 @@ const Security = ({ model }) => {
                     <div className='flex flex-col justify-center h-full items-center'>
                         {!user.twoFactorEnabled && (
                             <>
-                                <p className='text-center text-gray-700 mb-8 text-lg md:text-xl font-semibold'>
+                                <p className='text-center text-gray-600 mb-8 text-lg font-semibold'>
                                     Enable Two Factor Authentication (2FA) for an extra layer of security. When 2FA is enabled,
                                     you'll need to provide a verification code in addition to your password during login.
                                     This helps protect your account from unauthorized access.
@@ -72,7 +72,7 @@ const Security = ({ model }) => {
                                 <div className='flex justify-center mb-4 gap-2'>
                                     <button
                                         onClick={handleOpenModal}
-                                        className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-[#ffc8dd] hover:bg-[#fa7fac]'
+                                        className='text-white px-7 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-[#168aad] hover:bg-[#12657f]'
                                     >
                                         Enable 2FA
                                     </button>
@@ -88,7 +88,7 @@ const Security = ({ model }) => {
                                 <div className='flex justify-center mb-4 gap-2'>
                                     <button
                                         onClick={handleOpenModal}
-                                        className='px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
+                                        className='text-white px-7 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold bg-red-500 hover:bg-red-600'
                                     >
                                         Disable 2FA
                                     </button>
@@ -106,7 +106,7 @@ const Security = ({ model }) => {
                                         </button>
                                     </div>
                                     <div className='w-full items-center mx-auto justify-center text-center'> 
-                                        <h3 className='text-2xl font-semibold mb-4'>Two-Factor Authentication (2FA)</h3>
+                                        <h3 className='text-2xl font-semibold mb-4 text-[#168aad]'>Two-Factor Authentication (2FA)</h3>
                                     </div>
                                     <div className="p-2 space-y-4">
                                         {user.twoFactorEnabled ? (
@@ -137,7 +137,7 @@ const Security = ({ model }) => {
                                                         />
                                                     </div>
                                                     <button
-                                                        className="bg-blue-500 text-white py-2 px-4 mt-4 rounded"
+                                                        className="bg-red-400 text-white py-2 px-4 mt-4 rounded hover:bg-red-500"
                                                         onClick={handleDisable2FA}
                                                     >
                                                         Disable 2FA
@@ -184,7 +184,7 @@ const Security = ({ model }) => {
                                                             className='border rounded p-2 w-full'
                                                         />
                                                     </div>
-                                                    <button className='bg-blue-500 text-white py-2 px-4 mt-4 rounded' onClick={handleVerifyAndEnable2FA}>
+                                                    <button className='bg-[#168aad] hover:bg-[#12657f] text-white py-2 px-4 mt-4 rounded' onClick={handleVerifyAndEnable2FA}>
                                                         Verify and Enable 2FA
                                                     </button>
                                                 </div>

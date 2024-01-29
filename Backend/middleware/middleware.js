@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { errorHandler } from "../utils/error.js";
 import cloudinary from "../utils/cloudinary/cloudinary.js";
-import bcryptjs from 'bcryptjs'
 
 export const verifyToken = (req, res, next) => {
     // Extract token from either cookie or Authorization header

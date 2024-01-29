@@ -15,7 +15,7 @@ const Services = () => {
                 <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                     Services
                 </h2>
-                <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-700 px-8">
+                <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-600 px-8">
                     At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                 </p>
             </div>

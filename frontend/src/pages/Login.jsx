@@ -41,7 +41,7 @@ const Login = ({ model }) => {
   return (
     <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
-        <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
+        <h3 className='text-[#168aad] text-2xl leading-9 font-semibold mb-6 text-center'>
           Hello, <span>Welcome</span> Back
         </h3>
 
@@ -95,7 +95,7 @@ const Login = ({ model }) => {
               <button
                 disabled={isLoading}
                 type='submit'
-                className='w-full text-white bg-blue-500 hover:bg-blue-700 text-xl leading-[30px] rounded-lg px-4 py-3'
+                className='w-full text-white bg-[#168aad] hover:bg-[#12657f] text-xl leading-[30px] rounded-lg px-4 py-3'
               >
                 Login
               </button>
@@ -103,14 +103,14 @@ const Login = ({ model }) => {
             {model === 'user' && (
               <p className='mt-5 text-gray-400 text-center text-lg'>
                 Don't have an account?
-                <Link to='/sign-up' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+                <Link to='/sign-up' className='text-[#168aad] hover:text-[#12657f] ml-1 font-semibold'>
                   Register
                 </Link>
               </p>
             )}
             <p className='mt-2 text-gray-400 text-center text-lg'>
               Forgot your password?
-              <Link to={`/${model === 'doctor' ? 'doctor' : 'user'}/password-reset`} className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+              <Link to={`/${model === 'doctor' ? 'doctor' : 'user'}/password-reset`} className='text-[#168aad] hover:text-[#12657f] ml-1 font-semibold'>
                 Click Here
               </Link>
             </p>

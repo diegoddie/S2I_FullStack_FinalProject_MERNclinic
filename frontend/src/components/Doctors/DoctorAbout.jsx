@@ -4,7 +4,7 @@ const DoctorAbout = ({doctorAbout}) => {
   return (
     <div>
         <div>
-            <h3 className='text-xl leading-[30px] text-gray-800 font-semibold flex items-center gap-2'>
+            <h3 className='text-xl leading-[30px] text-gray-600 font-semibold flex items-center gap-2'>
                 {doctorAbout}
             </h3>
         </div>

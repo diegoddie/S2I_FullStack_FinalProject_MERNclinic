@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useGetDoctors } from '../../hooks/doctors/useGetDoctors'
 import DoctorCard from '../Doctors/DoctorCard'
-import Alert from '../Utils/Alert'
 import Spinner from '../Utils/Spinner'
 
 const Bookings = () => {
-  const { getDoctors, error, loading } = useGetDoctors()
+  const { getDoctors, loading } = useGetDoctors()
   const [doctors, setDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -35,13 +34,6 @@ const Bookings = () => {
 
   return (
     <div className='mb-10'>
-        {error.length > 0 && (
-          <div className='w-full max-w-[570px]'>
-            {error.map((error, index) => (
-              <Alert key={index} type='error' message={error} />
-            ))}
-          </div>
-        )}
         {loading && 
           <div className='flex items-center justify-center mx-auto py-10'>
             <Spinner />

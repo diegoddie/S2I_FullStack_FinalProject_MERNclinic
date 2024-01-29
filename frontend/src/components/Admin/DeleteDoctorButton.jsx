@@ -69,7 +69,7 @@ const DeleteDoctorButton = ({doctors}) => {
     return (
         <>
             <button
-                className='px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-red-500 hover:bg-red-600'
+                className='text-white px-5 py-3 leading-4 transition-colors duration-200 transform rounded-lg text-xl font-semibold bg-red-600 hover:bg-red-700'
                 onClick={handleOpenModal}
             >
                 Delete Doctor
@@ -83,7 +83,7 @@ const DeleteDoctorButton = ({doctors}) => {
                             </button>
                         </div>
                         <div className='w-full items-center mx-auto justify-center text-center'>
-                            <h3 className='text-2xl font-semibold'>Delete Doctor</h3>
+                            <h3 className='text-2xl font-semibold text-[#168aad]'>Delete Doctor</h3>
                         </div>
                         <div className='p-2 space-y-4'>
                             {isLoading && (
@@ -135,7 +135,7 @@ const DeleteDoctorButton = ({doctors}) => {
                                             and cancellation emails will be sent to affected patients.
                                         </p>
                                         <button
-                                            className='bg-red-400 text-white py-2 px-4 mt-4 rounded justify-center mx-auto flex hover:bg-red-500'
+                                            className='bg-red-400 text-white py-2 px-4 mt-4 rounded flex hover:bg-red-500'
                                             onClick={handleDelete}
                                         >
                                             Confirm Deletion

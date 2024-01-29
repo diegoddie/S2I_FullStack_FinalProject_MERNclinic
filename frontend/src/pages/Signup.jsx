@@ -39,7 +39,7 @@ const SignUp = () => {
   return (
     <section className='flex flex-col items-center justify-center md:h-full px-3 md:px-0 py-10 md:py-20'>
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
-        <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
+        <h3 className='text-[#168aad] text-2xl leading-9 font-semibold mb-6 text-center'>
           Create an Account
         </h3>
         {isLoading && 
@@ -119,7 +119,7 @@ const SignUp = () => {
               <button
                 disabled={isLoading}
                 type='submit'
-                className='w-full text-white bg-blue-500 hover:bg-blue-700 text-xl leading-[30px] rounded-lg px-4 py-3'
+                className='w-full text-white bg-[#168aad] hover:bg-[#12657f] text-xl leading-[30px] rounded-lg px-4 py-3'
               >
                 Sign Up
               </button>
@@ -128,7 +128,7 @@ const SignUp = () => {
         )}
         <p className='mt-5 text-gray-400 text-center text-lg'>
           Already have an account?
-          <Link to='/login' className='text-blue-500 hover:text-blue-700 ml-1 font-semibold'>
+          <Link to='/login' className='text-[#168aad] hover:text-[#12657f] ml-1 font-semibold'>
             Login
           </Link>
         </p>

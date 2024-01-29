@@ -20,9 +20,9 @@ const DoctorCard = ({ doctor }) => {
         <div className='flex items-center'>
           <Link
             to={`/doctor/${_id}`}
-            className='w-[44px] h-[44px] rounded-full border border-solid border-black flex items-center justify-center group hover:bg-secondary'
+            className='w-[44px] h-[44px] hover:text-white rounded-full border border-solid border-black flex items-center justify-center group hover:bg-secondary'
           >
-            <MdArrowRightAlt className='w-6 h-6' />
+            <MdArrowRightAlt className='w-7 h-7' />
           </Link>
         </div>
       </div>

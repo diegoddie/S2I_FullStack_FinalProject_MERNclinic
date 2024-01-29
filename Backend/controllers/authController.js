@@ -27,7 +27,6 @@ export const signUp = async(req,res,next) => {
             return res.status(400).json({ message: "Password must contain at least one lowercase letter, one uppercase letter, and one number" });
         }
 
-        // Check for existing user with the same TaxID or email
         const existingTaxId = await User.findOne({ taxId });
         const existingUser = await User.findOne({ email });
 
@@ -35,9 +34,7 @@ export const signUp = async(req,res,next) => {
             return res.status(409).json({ message: "User with the same TaxID or email already exists" });
         }
 
-        // Hash the password and generate a temporary two-factor authentication secret
         const hashedPassword = bcryptjs.hashSync(password, 10)
-        
         const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin})
 
         res.status(201).json({ message: "User created successfully", user: newUser });

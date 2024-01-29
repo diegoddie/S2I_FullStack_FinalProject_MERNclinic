@@ -100,7 +100,7 @@ const CreateDoctorButton = () => {
     return (
         <>
             <button
-                className='px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600'
+                className='text-white px-5 py-3 leading-4 transition-colors duration-200 transform rounded-lg text-xl font-semibold bg-green-600 hover:bg-green-700'
                 onClick={handleOpenModal}
             >
                 Add Doctor

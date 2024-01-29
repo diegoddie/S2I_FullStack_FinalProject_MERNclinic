@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useUpdateUser } from '../../hooks/users/useUpdateUser';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
-import Alert from '../Utils/Alert';
 import Spinner from '../Utils/Spinner';
 
 const UpdateProfile = ({ model }) => {
@@ -244,7 +243,7 @@ const UpdateProfile = ({ model }) => {
                 <button 
                   type="submit" 
                   disabled={isLoading || !isFormModified}
-                  className={`px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold ${(!isFormModified) ? 'bg-[#b6a7a7] cursor-not-allowed' : 'bg-[#ffc8dd] hover:bg-[#fa7fac]'}`}
+                  className={`px-8 py-4 leading-5 transition-colors duration-200 transform rounded-full text-xl font-semibold ${(!isFormModified) ? 'bg-[#b6a7a7] cursor-not-allowed' : 'bg-[#168aad] hover:bg-[#12657f] text-white'}`}
                 >
                   UPDATE
                 </button>

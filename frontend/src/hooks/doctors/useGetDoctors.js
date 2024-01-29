@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
+import errorHandler from '../utils/errorHandler';
 
 export const useGetDoctors = () => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState([]);
 
     const getDoctors = async () => {
         try {
             setLoading(true);
-            setError([])
             const res = await axios.get('http://localhost:3000/doctor');
             if(res.status === 200){
                 setLoading(false)
@@ -18,20 +17,13 @@ export const useGetDoctors = () => {
         } catch (error) {
             console.error('Error getting doctors:', error);
             setLoading(false)
-            
-            if (error.response && error.response.data && error.response.data.errors) {
-                setError(error.response.data.errors.map((err) => err.msg));
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setError([error.response.data.message]);
-            } else {
-                setError(['Something went wrong.']);
-            }
+
+            errorHandler(error)
         }
     };
 
     return {
         loading,
-        error,
         getDoctors
     };
 };

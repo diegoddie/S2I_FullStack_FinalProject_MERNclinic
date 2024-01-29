@@ -24,7 +24,7 @@ const Contact = () => {
                     <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                         Contact Us
                     </h2>
-                    <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-700 px-8">
+                    <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-600 px-8">
                         Are you looking to get in touch with us via email? Fill out the form below, and we'll get back to you as soon as possible.
                     </p>
                 </div>

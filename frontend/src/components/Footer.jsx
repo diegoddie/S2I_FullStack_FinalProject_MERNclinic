@@ -24,7 +24,7 @@ const Footer = () => {
   return (
     <section>
       <footer className='bg-secondary text-white mt-auto'>
-        <div className='container mx-auto py-6'>
+        <div className='container mx-auto py-5'>
           <div className='flex flex-col xl:flex-row gap-x-5 gap-y-10 px-4'>
             <div className='flex-1 items-center mx-auto flex flex-col'>
               <Link to="/" className='justify-center font-semibold flex items-center text-white' onClick={handleReturnToStart}>
@@ -47,16 +47,24 @@ const Footer = () => {
               </div>
               <div className='flex gap-[14px] text-[30px]'>
                 <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-blue-700 cursor-pointer transition-all'>
-                  <FaFacebook />
+                  <Link to="https://diego-lauricella.netlify.app/" target="_blank" rel="noopener noreferrer">
+                    <FaFacebook />
+                  </Link>
                 </div>
-                <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-orange-400 cursor-pointer transition-all'>
-                  <FaInstagram />
+                <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-orange-600 cursor-pointer transition-all'>
+                  <Link to="https://diego-lauricella.netlify.app/" target="_blank" rel="noopener noreferrer">
+                    <FaInstagram />
+                  </Link>
                 </div>
-                <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-primary cursor-pointer transition-all'>
-                  <FaTwitter />
+                <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-cyan-400 cursor-pointer transition-all'>
+                  <Link to="https://twitter.com/diegothedev" target="_blank" rel="noopener noreferrer">
+                    <FaTwitter />
+                  </Link>
                 </div>
                 <div className='p-[10px] rounded-[10px] shadow-xl text-gray-200 hover:text-blue-700 cursor-pointer transition-all'>
-                  <FaLinkedin />
+                  <Link to="https://www.linkedin.com/in/diego-lauricella-5059bb290/" target="_blank" rel="noopener noreferrer">
+                    <FaLinkedin />
+                  </Link>
                 </div>
               </div>
             </div>

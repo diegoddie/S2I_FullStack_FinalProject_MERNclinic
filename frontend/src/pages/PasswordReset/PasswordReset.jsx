@@ -52,7 +52,7 @@ const PasswordReset = ({ model }) => {
     return (
         <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>
             <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
-                <h3 className='text-gray-600 text-2xl leading-9 font-bold mb-6 text-center'>
+                <h3 className='text-[#168aad] text-2xl leading-9 font-semibold mb-6 text-center'>
                 Change Password
                 </h3>
                 {isLoading && (
@@ -88,7 +88,7 @@ const PasswordReset = ({ model }) => {
                             <button
                                 disabled={isLoading}
                                 type='submit'
-                                className='w-full text-white bg-blue-500 hover:bg-blue-700 text-xl leading-[30px] rounded-lg px-4 py-3'
+                                className='w-full text-white bg-[#168aad] hover:bg-[#12657f] text-xl leading-[30px] rounded-lg px-4 py-3'
                             >
                                 Reset Password
                             </button>

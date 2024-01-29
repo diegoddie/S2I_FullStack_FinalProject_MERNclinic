@@ -4,9 +4,7 @@ import { validationResult } from 'express-validator';
 import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js";
 import { sendVisitConfirmationEmail } from "../utils/visits/visitConfirmationEmail.js";
-import { sendVisitUpdateEmail } from "../utils/visits/visitUpdateEmail.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
-import { validateVisit } from "../utils/visits/validateVisit.js";
 
 export const createVisit = async (req, res, next) => {
   try {
@@ -31,7 +29,7 @@ export const createVisit = async (req, res, next) => {
     const patientDetails = await User.findById(user);
 
     const startTime = visitDate.toISOString(); 
-    const endTime = new Date(visitDate.getTime() + 30 * 60000).toISOString();
+    const endTime = new Date(visitDate.getTime() + 60 * 60000).toISOString();
 
     const hasUserExistingVisits = await patientDetails.checkExistingVisits(visitDate)
 
@@ -65,7 +63,7 @@ export const createVisit = async (req, res, next) => {
     res.status(201).json({ message: "Visit created successfully", visit: visitDetails });
   } catch (err) {
     console.log(err)
-      next(errorHandler(500, 'Internal Server Error'));
+    next(errorHandler(500, 'Internal Server Error'));
   }
 };
 
@@ -77,7 +75,7 @@ export const getAllVisits = async (req, res, next) => {
     });
     res.status(200).json(visits);
   } catch (err) {
-      next(errorHandler(500, 'Internal Server Error'));
+    next(errorHandler(500, 'Internal Server Error'));
   }
 };
 
@@ -89,13 +87,13 @@ export const getVisitById = async (req, res, next) => {
     });
 
     if (!visit) {
-      return next(errorHandler(404, "Visit not found"));
+      return res.status(404).json({message: "Visit not found"})
     }
 
     if (req.user.role === 'admin' || req.user.id === visit.user.id) {
         res.status(200).json(visit);
     } else {
-        return next(errorHandler(403, 'Permission denied. You can only access your own visits.'));
+        return res.status(403).json({message: "Permission denied."})
     }
   } catch (err) {
       next(errorHandler(500, 'Internal Server Error'));
@@ -120,7 +118,7 @@ export const getVisitsByUserId = async (req, res, next) => {
     const { userId } = req.params;
 
     if (!(req.user.role === 'admin' || req.user.id === userId)) {
-      return next(errorHandler(403, 'Permission denied. You can only access your own visits.'));
+      return res.status(403).json({message: "Permission denied."})
     }
 
     const visits = await Visit.find({ user: userId }).populate({
@@ -144,40 +142,18 @@ export const updateVisit = async (req, res, next) => {
       const authUserId = req.user.id;
 
       const visit = await Visit.findById(visitId);
-      const originalDate = visit.date;
-      const patientDetails = await User.findById(visit.user);
-      const doctorDetails = await Doctor.findById(visit.doctor);
 
       // Check user permissions
-      if (!visit || (visit.user.toString() !== authUserId && visit.doctor.toString() !== authUserId && req.user.role !== 'admin')) {
-          return next(errorHandler(403, 'Permission denied. You can only update your own visits.'));
+      if (!visit || (visit.doctor.toString() !== authUserId && req.user.role !== 'admin')) {
+        return res.status(403).json({message: "Permission denied."})
       }
 
-      const { date, paid, cost } = req.body;
+      const { paid, cost } = req.body;
 
       let updateFields = {};
 
-      if (paid) {
-          updateFields.paid = paid;
-      }
-
-      if (cost) {
-          updateFields.cost = cost;
-      }
-
-      if (date) {
-          const newVisitDate = new Date(date);
-          try {
-              const isNewDateAvailable = await validateVisit(newVisitDate, patientDetails, doctorDetails);
-              if (isNewDateAvailable){
-                updateFields.date = newVisitDate.toISOString();
-                updateFields.startTime = newVisitDate.toISOString();
-                updateFields.endTime = new Date(newVisitDate.getTime() + 30 * 60000).toISOString();
-              }
-          } catch (validationError) {
-              return res.status(400).json({ message: validationError.message });
-          }
-      }
+      if (paid) updateFields.paid = paid;
+      if (cost) updateFields.cost = cost;
 
       const updatedVisit = await Visit.findByIdAndUpdate(
           visitId,
@@ -192,30 +168,7 @@ export const updateVisit = async (req, res, next) => {
           return next(errorHandler(404, "Visit not found"));
       }
 
-      if (date) {
-          const userEmail = patientDetails.email;
-          const doctorEmail = doctorDetails.email;
-
-          const visitDetails = {
-            originalDate: originalDate,
-            newDate: updatedVisit.date,
-            doctor: {
-                firstName: doctorDetails.firstName,
-                lastName: doctorDetails.lastName,
-                taxId: doctorDetails.taxId,
-                specialization: doctorDetails.specialization,
-            },
-            patient: {
-                firstName: patientDetails.firstName,
-                lastName: patientDetails.lastName,
-                taxId: patientDetails.taxId,
-            },
-          }
-
-          await sendVisitUpdateEmail(userEmail, doctorEmail, visitDetails);
-      }
-
-      res.status(201).json({ message: "Visit updated successfully", updatedVisit });
+      res.status(201).json({ message: "Visit data updated successfully", updatedVisit });
   } catch (err) {
       console.log(err);
       next(errorHandler(500, 'Internal Server Error'));
@@ -230,13 +183,13 @@ export const deleteVisit = async (req, res, next) => {
       const visit = await Visit.findById(visitId);
   
       if (!visit || (visit.user.toString() !== authUserId && req.user.role !== 'admin')) {
-        return next(errorHandler(403, 'Permission denied. You can only delete your own visits.'));
+        return res.status(403).json({message:"Permission denied. You can only delete your own visits."})
       }
   
       const deletedVisit = await Visit.findByIdAndDelete(visitId).populate('user doctor');
   
       if (!deletedVisit) {
-        return next(errorHandler(404, "Visit not found"));
+        return res.status(404).json({message:"Visit not found"})
       }
 
       const patientDetails = await User.findById(deletedVisit.user);

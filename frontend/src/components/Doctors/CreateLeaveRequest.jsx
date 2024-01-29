@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useUpdateDoctor } from '../../hooks/doctors/useUpdateDoctor';
 import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
-import Alert from '../Utils/Alert';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 

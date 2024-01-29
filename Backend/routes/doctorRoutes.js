@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDoctor, getAllDoctors, getDoctorById, getDoctorsBySpecialization, getDoctorsByLastName, updateDoctor, deleteDoctor, getDoctorsByCity, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest, declineLeaveRequest, getDoctorAvailabilityForSpecificDate, getDoctorWeeklyAvailability } from '../controllers/doctorController.js';
+import { createDoctor, getAllDoctors, getDoctorById, updateDoctor, deleteDoctor, getDoctorProfile, deleteLeaveRequest, approveLeaveRequest, declineLeaveRequest, getDoctorAvailabilityForSpecificDate, getDoctorWeeklyAvailability } from '../controllers/doctorController.js';
 import { disable2FA, doctorSignIn, generate2FA, passwordReset, passwordResetRequest, verify2FA, verifyPassword } from '../controllers/authController.js';
 import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
@@ -161,9 +161,5 @@ router.get('/:id', getDoctorById);
 router.get('/:id/dateAvailability', getDoctorAvailabilityForSpecificDate);
 router.get('/:id/weeklyAvailability', getDoctorWeeklyAvailability);
 router.get('/profile/:id', verifyToken, getDoctorProfile);
-router.get('/specialization/:specialization', getDoctorsBySpecialization);
-router.get('/lastname/:lastname', getDoctorsByLastName);
-router.get('/city/:city', getDoctorsByCity);
-
 
 export default router;

@@ -3,11 +3,10 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import LeaveManagementTable from '../Utils/LeaveManagementTable';
 import { useGetDoctors } from '../../hooks/doctors/useGetDoctors';
 import Spinner from '../Utils/Spinner';
-import Alert from '../Utils/Alert';
 import CreateLeaveRequest from '../Doctors/CreateLeaveRequest';
 
 const LeaveManagement = () => {
-    const { getDoctors, error, loading } = useGetDoctors();
+    const { getDoctors, loading } = useGetDoctors();
     const { user } = useAuthContext();
 
     const [pendingLeaveRequestsData, setPendingLeaveRequestsData] = useState([]);
@@ -108,13 +107,6 @@ const LeaveManagement = () => {
                     Leave Management
                 </h3>
             </div>
-            {error.length > 0 && (
-                <div className="flex items-center mx-auto justify-center">
-                    {error.map((error, index) => (
-                        <Alert key={index} type="error" message={error} />
-                    ))}
-                </div>
-            )}
             {loading && (
                 <div className="flex items-center justify-center mx-auto py-10">
                     <Spinner />

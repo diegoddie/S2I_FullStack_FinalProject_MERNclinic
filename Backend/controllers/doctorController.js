@@ -6,8 +6,7 @@ import { generateRandomPassword } from "../utils/auth/generateRandomPsw.js";
 import Visit from "../models/visitModel.js";
 import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
-import speakeasy from 'speakeasy'
-import { format, startOfDay, endOfMonth, addDays, addHours, addMonths, isSunday, isAfter, isBefore, addMinutes } from 'date-fns';
+import { startOfDay, addDays, addHours } from 'date-fns';
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
 import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail, sendNewLeaveRequestEmailToAdmin } from "../utils/doctors/leaveManagementEmails.js";
 import { checkDuplicateLeaveRequests, validateLeaveRequests } from "../utils/doctors/leaveRequests.js";
@@ -20,7 +19,6 @@ export const createDoctor = async (req, res, next) => {
       }
       const { firstName, lastName, taxId, email, specialization, city, profilePicture, about, phoneNumber, workShifts } = req.body;
 
-      // Check if a doctor with the same email already exists
       const existingTaxId = await Doctor.findOne({ taxId });
       const existingDoctor = await Doctor.findOne({ email });
 
@@ -28,16 +26,11 @@ export const createDoctor = async (req, res, next) => {
         return res.status(409).json({ message: "A Doctor with the same TaxId or email already exists" });
       }
 
-      // Generate a random password for the new doctor
       const randomPassword = generateRandomPassword();
-      // Hash the random password
       const hashedPassword = bcryptjs.hashSync(randomPassword, 10)
-      // Generate a temporary secret for two-factor authentication
-      const tempSecret = speakeasy.generateSecret({ length: 20, name: 'MyClinic' });
 
-      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, twoFactorSecret: tempSecret.base32, workShifts });
+      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, workShifts });
 
-      // Send a welcome email to the new doctor
       await sendWelcomeEmail(newDoctor.email, randomPassword);
       
       res.status(201).json({ message: "Doctor created successfully and email sent", doctor: newDoctor });
@@ -87,54 +80,6 @@ export const getDoctorById = async (req, res, next) => {
     res.status(200).json(doctor);
   } catch (err) {
     console.log(err)
-    next(errorHandler(500, 'Internal Server Error'));
-  }
-};
-
-export const getDoctorsBySpecialization = async (req, res, next) => {
-  try {
-    const specialization = req.params.specialization;
-
-    if (!specialization) {
-      return next(errorHandler(400, "Specialization parameter is required"));
-    }
-
-    const doctors = await Doctor.find({ specialization: { $regex: new RegExp(specialization, 'i') } });
-
-    res.status(200).json(doctors);
-  } catch (err) {
-    next(errorHandler(500, 'Internal Server Error'));
-  }
-};
-
-export const getDoctorsByLastName = async (req, res, next) => {
-  try {
-    const lastName = req.params.lastname;
-
-    if (!lastName) {
-      return next(errorHandler(400, "LastName parameter is required"));
-    }
-
-    const doctors = await Doctor.find({ lastName: { $regex: new RegExp(lastName, 'i') } });
-
-    res.status(200).json(doctors);
-  } catch (err) {
-    next(errorHandler(500, 'Internal Server Error'));
-  }
-};
-
-export const getDoctorsByCity = async (req, res, next) => {
-  try {
-    const city = req.params.city;
-
-    if (!city) {
-      return next(errorHandler(400, "City parameter is required"));
-    }
-
-    const doctors = await Doctor.find({ city: { $regex: new RegExp(city, 'i') } });
-
-    res.status(200).json(doctors);
-  } catch (err) {
     next(errorHandler(500, 'Internal Server Error'));
   }
 };

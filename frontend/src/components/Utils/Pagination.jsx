@@ -29,9 +29,9 @@ const Pagination = ({ setCurrentPage, currentPage, totalPages }) => {
                         <BsChevronLeft />
                     </span>) : null
                     }
-                    containerClassName='flex items-center justify-center mt-8 mb-4'
-                    pageClassName='block border border-solid border-pink hover:bg-pink-100 w-10 h-10 flex items-center justify-center rounded-md mr-4'
-                    activeClassName='bg-red-200'
+                    containerClassName='cursor-pointer flex items-center justify-center mt-8 mb-4'
+                    pageClassName='block border border-solid border-gray-500 hover:text-white hover:bg-[#168aad] w-10 h-10 flex items-center justify-center rounded-md mr-4'
+                    activeClassName='bg-[#168aad] text-white'
                 />
             )}
         </div>

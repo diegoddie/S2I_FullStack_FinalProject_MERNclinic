@@ -4,11 +4,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import DoctorCard from "../Doctors/DoctorCard.jsx";
 import { useGetDoctors } from "../../hooks/doctors/useGetDoctors.js";
-import Alert from "../Utils/Alert.jsx";
 import Spinner from "../Utils/Spinner.jsx";
 
 const Doctors = () => {
-    const { getDoctors, error, loading } = useGetDoctors()
+    const { getDoctors, loading } = useGetDoctors()
     const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
@@ -61,13 +60,6 @@ const Doctors = () => {
     return (
         <section id='doctors'>
             <div className='py-12 md:py-20 md:px-4 px-2 mx-auto'>
-              {error.length > 0 && (
-                <div className='w-full max-w-[570px]'>
-                  {error.map((error, index) => (
-                    <Alert key={index} type='error' message={error} />
-                  ))}
-                </div>
-              )}
               {loading && 
                 <div className='flex items-center justify-center mx-auto py-10'>
                   <Spinner />
@@ -79,7 +71,7 @@ const Doctors = () => {
                       <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>
                           Our Doctors
                       </h2>
-                      <p className="md:text-center text-lg 2xl:text-xl text-gray-700 px-8 text-justify">
+                      <p className="md:text-center text-lg 2xl:text-xl text-gray-600 px-8 text-justify">
                           At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
                       </p>
                   </div>

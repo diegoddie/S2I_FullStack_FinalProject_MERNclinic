@@ -81,7 +81,7 @@ export const updateUser = async(req,res,next) => {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: updateFields }, { new: true });
 
         if (!updatedUser) {
-            return next(errorHandler(404, "User not found"));
+            return res.status(404).json({message: "User not found"})
         }
 
         const { password: userPassword, ...rest } = updatedUser._doc;
@@ -99,7 +99,7 @@ export const deleteUser = async (req, res, next) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
-            return next(errorHandler(404, 'User not found'));
+            return res.status(404).json({message: "User not found"})
         }
         res.status(200).json({ message: 'User has been deleted' });
     } catch (err) {

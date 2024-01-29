@@ -43,15 +43,15 @@ const Navbar = () => {
             </Link>
           </div>
           <div className='flex flex-col gap-y-4 lg:flex-row lg:gap-x-10 lg:gap-y-0'>
-            <div className='flex justify-center items-center gap-x-2 lg:justify-normal'>
-              <FaLocationDot className='text-xl text-secondary'/>
+            <div className='flex justify-center items-center gap-x-1 lg:justify-normal'>
+              <FaLocationDot className='text-xl text-secondary mb-1'/>
               <div className='text-sm text-secondary'>Via Giuseppe Garibaldi, 54 Flero (BS)</div>
             </div>
             <div className='flex justify-center items-center gap-x-2 lg:justify-normal'>
               <FaPhoneAlt className='text-xl text-secondary'/>
               <div className='text-sm text-secondary'>+39 329-3094304</div>
             </div>
-            <div className='flex justify-center md:mt-0 items-center gap-2 font-bold text-xl text-gray-700'>
+            <div className='flex justify-center md:mt-0 items-center gap-2 font-semibold text-xl text-gray-700'>
               {token && user ? (
                 <>
                   <div className="relative inline-block rounded-full overflow-hidden border-2 border-secondary mr-3" >
@@ -63,10 +63,10 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to='/login' className='bg-[#7FC7D9] py-2 px-4 transition-all duration-300 rounded-xl hover:bg-[#5cb6cd]'>
+                  <Link to='/login' className='bg-[#168aad] hover:bg-[#12657f] text-white py-2 px-4 transition-all duration-300 rounded-lg'>
                     Login
                   </Link>
-                  <Link to='/sign-up' className='bg-[#ffc8dd] py-2 px-4 transition-all duration-300 rounded-xl hover:bg-[#fa7fac]'>
+                  <Link to='/sign-up' className='bg-[#fc81b0] text-white py-2 px-4 transition-all duration-300 rounded-lg hover:bg-[#f873a4]'>
                     Sign Up
                   </Link>
                 </>

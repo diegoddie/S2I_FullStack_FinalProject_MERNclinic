@@ -38,7 +38,7 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
     return (
         <>
             <button
-                className='bg-[#6fe288] hover:bg-[#2bad36] py-4 lg:py-2 md:mx-2 items-center text-xl rounded leading-4 lg:leading-7 font-bold text-gray-800'
+                className='text-white bg-[#168aad] hover:bg-[#12657f] py-4 lg:py-2 md:mx-2 items-center text-xl rounded leading-4 lg:leading-7 font-bold'
                 onClick={handleOpenModal}
             >
                 Book
@@ -64,14 +64,14 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                             )}
                             {!isLoading && (
                                 <>
-                                    <div className='flex flex-col justify-center gap-4 mb-4'>
-                                        <label className='text-lg leading-[20px] text-[#168aad] font-semibold mx-auto mb-1'>
+                                    <div className='flex flex-col justify-center gap-4 mb-4 text-gray-600'>
+                                        <label className='text-lg leading-[20px] font-semibold mx-auto mb-1'>
                                             {formattedDate} {formattedTime}
                                         </label>
-                                        <label className='text-lg leading-[20px] text-[#168aad] font-semibold mx-auto'>
+                                        <label className='text-lg leading-[20px] font-semibold mx-auto'>
                                           Patient: {user.firstName} {user.lastName}
                                         </label>
-                                        <label className='text-lg leading-[20px] text-[#168aad] font-semibold mx-auto'>
+                                        <label className='text-lg leading-[20px] font-semibold mx-auto'>
                                           Doctor: {doctor.firstName} {doctor.lastName} ({doctor.specialization})
                                         </label>
                                     </div>
