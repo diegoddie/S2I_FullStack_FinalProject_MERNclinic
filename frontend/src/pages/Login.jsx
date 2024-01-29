@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import { useLogin } from '../hooks/auth/useLogin';
+import { animateScroll as scroll } from 'react-scroll';
 
 const Login = ({ model }) => {
   const {login, isLoading} = useLogin()
@@ -29,6 +30,13 @@ const Login = ({ model }) => {
       console.error('Error during login', error);
     }
   };
+
+  useEffect(() => {
+    scroll.scrollToTop({
+        duration: 500,
+        smooth: 'easeInOutQuad',
+    });
+  }, []);
 
   return (
     <section className='flex flex-col items-center justify-center md:h-screen px-3 md:px-0 py-10 md:py-20'>

@@ -153,7 +153,7 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
 doctorSchema.methods.checkExistingVisits = async function (visitDate) {
     try {
       const startTime = visitDate.toISOString();
-      const endTime = new Date(visitDate.getTime() + 30 * 60000).toISOString();
+      const endTime = new Date(visitDate.getTime() + 60 * 60000).toISOString();
   
       const existingVisits = await this.model('Visit').find({
         doctor: this._id,

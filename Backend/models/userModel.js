@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.checkExistingVisits = async function (visitDate) {
     try {
       const startTime = visitDate.toISOString();
-      const endTime = new Date(visitDate.getTime() + 30 * 60000).toISOString();
+      const endTime = new Date(visitDate.getTime() + 60 * 60000).toISOString();
   
       const existingVisits = await this.model('Visit').find({
         user: this._id,

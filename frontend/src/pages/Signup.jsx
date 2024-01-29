@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import { useSignup } from '../hooks/users/useSignup';
+import { animateScroll as scroll } from 'react-scroll';
 
 const SignUp = () => {
   const {signup, isLoading} = useSignup()
@@ -27,6 +28,13 @@ const SignUp = () => {
       console.error('Error during sign-up:', error);
     }
   };
+
+  useEffect(() => {
+    scroll.scrollToTop({
+        duration: 500,
+        smooth: 'easeInOutQuad',
+    });
+  }, []);
 
   return (
     <section className='flex flex-col items-center justify-center md:h-full px-3 md:px-0 py-10 md:py-20'>

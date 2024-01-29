@@ -160,8 +160,8 @@ export const getDoctorAvailabilityForSpecificDate = async (req, res, next) => {
     }
 
     const minutes = new Date(visitDate).getMinutes();
-    if (minutes % 30 !== 0) {
-      return res.status(400).json({ message: "Visit must be scheduled in half-hour intervals" });
+    if (minutes % 60 !== 0) {
+      return res.status(400).json({ message: "Visit must be scheduled in one-hour intervals" });
     }
 
     const isAvailable = await doctor.isAvailable(new Date(visitDate));
@@ -206,8 +206,8 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
             availableSlots.push(startTime);
           }
 
-          // Incrementa di mezz'ora
-          startTime = addMinutes(startTime, 30);
+          // Incrementa di un'ora
+          startTime = addHours(startTime, 1);
         }
       }
     
