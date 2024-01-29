@@ -1,9 +1,6 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuthContext } from '../hooks/auth/useAuthContext';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import Alert from '../components/Utils/Alert';
 import Spinner from '../components/Utils/Spinner';
 import MyVisits from '../components/Profile/MyVisits';
 import Bookings from '../components/Profile/Bookings';
