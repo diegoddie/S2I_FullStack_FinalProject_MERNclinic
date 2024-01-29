@@ -22,7 +22,7 @@ const Footer = () => {
   };
 
   return (
-    <section id="contact">
+    <section>
       <footer className='bg-secondary text-white mt-auto'>
         <div className='container mx-auto py-6'>
           <div className='flex flex-col xl:flex-row gap-x-5 gap-y-10 px-4'>
