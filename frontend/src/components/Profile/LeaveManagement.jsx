@@ -113,26 +113,28 @@ const LeaveManagement = () => {
                 </div>
             )}
             {!loading && (
-                <div className='overflow-x-auto'>
-                    {isAdmin ? (
-                        <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
-                    ) : (
-                        <>
-                        <div className="flex gap-2 justify-center pt-4">
-                            <button onClick={() => handleTabChange('pendingRequests')} className="px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">Pending Requests</button>
-                            <button onClick={() => handleTabChange('allRequests')} className="px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">All Requests</button>
-                            <CreateLeaveRequest />
-                        </div>
-                        {selectedTab === 'pendingRequests' && (
+                <>
+                    <div className="flex gap-2 justify-center pt-4">
+                        <button onClick={() => handleTabChange('pendingRequests')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">Pending Requests</button>
+                        <button onClick={() => handleTabChange('allRequests')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600">All Requests</button>
+                        <CreateLeaveRequest />
+                    </div>
+                    <div className='overflow-x-auto'>
+                        {isAdmin ? (
                             <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
-                        )}
+                        ) : (
+                            <>    
+                                {selectedTab === 'pendingRequests' && (
+                                    <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
+                                )}
 
-                        {selectedTab === 'allRequests' && (
-                            <LeaveManagementTable isAdmin={isAdmin} data={allLeaveRequestsData} title="Requests"/>
+                                {selectedTab === 'allRequests' && (
+                                    <LeaveManagementTable isAdmin={isAdmin} data={allLeaveRequestsData} title="Requests"/>
+                                )}
+                            </>
                         )}
-                        </>
-                    )}
-                </div>
+                    </div>
+                </>
             )}
         </div>
     );

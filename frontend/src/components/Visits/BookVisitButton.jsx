@@ -1,18 +1,31 @@
 import React, { useState } from 'react'
-import { useBookVisit } from '../../hooks/users/useBookVisit'
+import { useBookVisit } from '../../hooks/visits/useBookVisit'
 import { useAuthContext } from '../../hooks/auth/useAuthContext'
+import { useGetUsers } from '../../hooks/users/useGetUsers'
 import { MdClose } from 'react-icons/md'
 import Spinner from '../Utils/Spinner'
 import { Link } from 'react-router-dom'
 
 const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) => {
     const { bookVisit, isLoading } = useBookVisit()
+    const { getUsers, loading } = useGetUsers()
     const { user } = useAuthContext()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleOpenModal = () => {
+    const [patients, setPatients] = useState([])
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    console.log(selectedPatient)
+    const handleOpenModal = async () => {
         setIsModalOpen(true);
+
+        if (user.isAdmin){
+            try {
+                const res = await getUsers()
+                setPatients(res);
+            }catch(error){
+                console.error('Error fetching patients:', error);
+            }
+        }
     };
 
     const handleCloseModal = () => {
@@ -24,7 +37,7 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
 
         try{
             await bookVisit({
-                user: user._id,
+                user: user.isAdmin ? selectedPatient : user._id,
                 doctor: doctor._id,
                 date: visitDate,
             });
@@ -53,38 +66,61 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                         </div>
                         {user && (
                             <>
-                            <div className='w-full items-center mx-auto justify-center text-center'>
-                            <h3 className='text-2xl font-semibold text-[#168aad]'>Booking Details</h3>
-                        </div>
-                        <div className='p-6 space-y-4'>
-                            {isLoading && (
-                                <div className='flex items-center justify-center mx-auto py-10'>
-                                    <Spinner />
+                                <div className='w-full items-center mx-auto justify-center text-center'>
+                                    <h3 className='text-2xl font-semibold text-[#168aad]'>Booking Details</h3>
                                 </div>
-                            )}
-                            {!isLoading && (
-                                <>
-                                    <div className='flex flex-col justify-center gap-4 mb-4 text-gray-600'>
-                                        <label className='text-lg leading-[20px] font-semibold mx-auto mb-1'>
-                                            {formattedDate} {formattedTime}
-                                        </label>
-                                        <label className='text-lg leading-[20px] font-semibold mx-auto'>
-                                          Patient: {user.firstName} {user.lastName}
-                                        </label>
-                                        <label className='text-lg leading-[20px] font-semibold mx-auto'>
-                                          Doctor: {doctor.firstName} {doctor.lastName} ({doctor.specialization})
-                                        </label>
-                                    </div>
-                                    <form onSubmit={handleSubmit} className='pt-3'>
-                                        <div className='flex justify-center mx-auto'>
-                                            <button type="submit" className='bg-[#45aece] text-white py-2 px-4 rounded text-lg font-semibold hover:bg-[#168aad]'>
-                                                Confirm
-                                            </button>
+                                <div className='p-6 space-y-4'>
+                                    {isLoading || loading && (
+                                        <div className='flex items-center justify-center mx-auto py-10'>
+                                            <Spinner />
                                         </div>
-                                    </form>
-                                </>
-                            )}
-                        </div>
+                                    )}
+                                    {!isLoading && (
+                                        <>
+                                            <div className='flex flex-col justify-center gap-4 mb-4 text-gray-600'>
+                                                <label className='text-lg leading-[20px] font-semibold mx-auto mb-1'>
+                                                    {formattedDate} {formattedTime}
+                                                </label>
+                                                {user.isAdmin ? (
+                                                    <>  
+                                                        <div className='flex flex-row justify-center items-center gap-2'>
+                                                            <label className='text-lg leading-[20px] font-semibold'>
+                                                                Patient:
+                                                            </label>
+                                                            <select
+                                                                value={selectedPatient}
+                                                                onChange={(e) => setSelectedPatient(e.target.value)}
+                                                                className='p-2 border border-gray-300 rounded w-full'
+                                                            >
+                                                                {patients?.map((patient) => (
+                                                                    <option key={patient._id} value={patient._id}>
+                                                                        {patient.firstName} {patient.lastName} ({patient.taxId})
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        
+                                                    </>
+                                                ) : (
+                                                    <label className='text-lg leading-[20px] font-semibold'>
+                                                        Patient: {user.firstName} {user.lastName}
+                                                    </label>
+                                                )}
+                                                <label className='text-lg leading-[20px] font-semibold'>
+                                                    Doctor: {doctor.firstName} {doctor.lastName} ({doctor.specialization})
+                                                </label>
+                                            </div>
+                                            <form onSubmit={handleSubmit} className='pt-3'>
+                                                <div className='flex justify-center mx-auto'>
+                                                    <button type="submit" className='bg-[#45aece] text-white py-2 px-4 rounded text-lg font-semibold hover:bg-[#168aad]'>
+                                                        Confirm
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </>
+                                    )}
+                                </div>
                             </>
                         )}
                         {!user && (

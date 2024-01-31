@@ -115,98 +115,98 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
           </>
           {filteredData.length > 0 && (
             <>
-            <div className="shadow overflow-x-auto border-b sm:rounded-lg">
-              <table className="divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                      Doctor
-                    </th>
-                    <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                      Type
-                    </th>
-                    <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('createdAt')}>
-                      <div className='flex gap-2 justify-center'>
-                        <span>Created At</span>
-                        <span className='items-center flex text-md'>
-                          {sortOrder === 'asc' && sortColumn === 'createdAt' ? (
-                            <FaLongArrowAltUp className=''/>
-                          ) : (
-                            <FaLongArrowAltDown />
-                          )}
-                        </span>
-                      </div>
-                    </th>
-                    <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('startDate')}>
-                      <div className='flex gap-2 justify-center'>
-                        <span>From</span>
-                        <span className='items-center flex text-md'>
-                          {sortOrder === 'asc' && sortColumn === 'startDate' ? (
-                            <FaLongArrowAltUp className=''/>
-                          ) : (
-                            <FaLongArrowAltDown />
-                          )}
-                        </span>
-                      </div>
-                    </th>
-                    <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                      To
-                    </th>
-                    <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                      Status
-                    </th>
-                    <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {currentItems.map((leaveRequest) => (
-                    <tr key={leaveRequest._id} className="items-center text-center">
-                      <td className="px-5 py-4 whitespace-nowrap border-r">
-                        <div className="flex items-center">
-                          <div className="text-sm font-medium text-gray-900">
-                            {leaveRequest.firstName} {leaveRequest.lastName}
-                          </div>
+              <div className="shadow overflow-x-auto border-b sm:rounded-lg">
+                <table className="divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                        Doctor
+                      </th>
+                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                        Type
+                      </th>
+                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('createdAt')}>
+                        <div className='flex gap-2 justify-center'>
+                          <span>Created At</span>
+                          <span className='items-center flex text-md'>
+                            {sortOrder === 'asc' && sortColumn === 'createdAt' ? (
+                              <FaLongArrowAltUp className=''/>
+                            ) : (
+                              <FaLongArrowAltDown />
+                            )}
+                          </span>
                         </div>
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap border-r">
-                        <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-300' : 'bg-blue-300 '}`}>
-                          {leaveRequest.typology}
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap border-r">
-                        <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                        {formatDate(leaveRequest.startDate, leaveRequest.typology.toLowerCase())}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
-                        {formatDate(leaveRequest.endDate, leaveRequest.typology.toLowerCase())}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap border-r">
-                      <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full ${leaveRequest.isApproved === null ? "bg-yellow-300" : leaveRequest.isApproved ? "bg-green-500" : "bg-red-500" }`}>
-                        {leaveRequest.isApproved === null ? "Pending" : leaveRequest.isApproved ? "Approved" : "Declined"}
-                      </span>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap border-r">
-                        {isAdmin ? (
-                          <div className='flex gap-2'>
-                            <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => approveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
-                            <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => declineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
-                          </div>
-                        ) : (
-                          <div className='flex mx-auto justify-center'>
-                            <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => deleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} />
-                          </div>
-                        )}
-                      </td>
+                      </th>
+                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('startDate')}>
+                        <div className='flex gap-2 justify-center'>
+                          <span>From</span>
+                          <span className='items-center flex text-md'>
+                            {sortOrder === 'asc' && sortColumn === 'startDate' ? (
+                              <FaLongArrowAltUp className=''/>
+                            ) : (
+                              <FaLongArrowAltDown />
+                            )}
+                          </span>
+                        </div>
+                      </th>
+                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                        To
+                      </th>
+                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                        Status
+                      </th>
+                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                        Action
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {currentItems.map((leaveRequest) => (
+                      <tr key={leaveRequest._id} className="items-center text-center">
+                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                          <div className="flex items-center">
+                            <div className="text-sm font-medium text-gray-900">
+                              {leaveRequest.firstName} {leaveRequest.lastName}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                          <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-300' : 'bg-blue-300 '}`}>
+                            {leaveRequest.typology}
+                          </span>
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                          <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                          {formatDate(leaveRequest.startDate, leaveRequest.typology.toLowerCase())}
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                          {formatDate(leaveRequest.endDate, leaveRequest.typology.toLowerCase())}
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                        <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full ${leaveRequest.isApproved === null ? "bg-yellow-300" : leaveRequest.isApproved ? "bg-green-500" : "bg-red-500" }`}>
+                          {leaveRequest.isApproved === null ? "Pending" : leaveRequest.isApproved ? "Approved" : "Declined"}
+                        </span>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap border-r">
+                          {isAdmin ? (
+                            <div className='flex gap-2'>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => approveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => declineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
+                            </div>
+                          ) : (
+                            <div className='flex mx-auto justify-center'>
+                              <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => deleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} />
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             </>
           )}
       </div>

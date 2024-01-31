@@ -64,7 +64,7 @@ const Security = ({ model }) => {
                     <div className='flex flex-col justify-center h-full items-center'>
                         {!user.twoFactorEnabled && (
                             <>
-                                <p className='text-center text-gray-600 mb-8 text-lg font-semibold'>
+                                <p className='text-center text-gray-600 mt-3 md:mt-0 mb-8 text-lg font-semibold'>
                                     Enable Two Factor Authentication (2FA) for an extra layer of security. When 2FA is enabled,
                                     you'll need to provide a verification code in addition to your password during login.
                                     This helps protect your account from unauthorized access.

@@ -14,7 +14,9 @@ import LeaveManagement from '../components/Profile/LeaveManagement';
 const Profile = ({ model }) => {
   const { user } = useAuthContext();
 
-  const [selectedSection, setSelectedSection] = useState('MyVisits');
+  const [selectedSection, setSelectedSection] = useState(() => {
+    return user.isAdmin ? 'Dashboard' : 'MyVisits';
+  });
 
   const isAdmin = user?.isAdmin;
   const isDoctor = model === 'doctor';

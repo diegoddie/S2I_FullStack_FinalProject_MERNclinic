@@ -117,7 +117,9 @@ export const getVisitsByUserId = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    if (!(req.user.role === 'admin' || req.user.id === userId)) {
+    const user = await User.findById(userId);
+    
+    if (req.user.id !== userId && user.isAdmin !== 'true') {
       return res.status(403).json({message: "Permission denied."})
     }
 
@@ -127,6 +129,7 @@ export const getVisitsByUserId = async (req, res, next) => {
     });
     res.status(200).json(visits);
   } catch (err) {
+      console.log(err)
       next(errorHandler(500, 'Internal Server Error'));
   }
 };
