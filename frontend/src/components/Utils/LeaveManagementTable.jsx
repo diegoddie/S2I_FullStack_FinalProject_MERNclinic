@@ -73,7 +73,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
+      <div className="py-4 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
         {isLoading && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />

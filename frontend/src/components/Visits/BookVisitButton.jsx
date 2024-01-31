@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
-import { useBookVisit } from '../../hooks/visits/useBookVisit'
+import { useManageVisits } from '../../hooks/visits/useManageVisits.js'
 import { useAuthContext } from '../../hooks/auth/useAuthContext'
-import { useGetUsers } from '../../hooks/users/useGetUsers'
 import { MdClose } from 'react-icons/md'
 import Spinner from '../Utils/Spinner'
 import { Link } from 'react-router-dom'
 
 const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) => {
-    const { bookVisit, isLoading } = useBookVisit()
-    const { getUsers, loading } = useGetUsers()
+    const { bookVisit, getUsers, isLoading } = useManageVisits()
     const { user } = useAuthContext()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,7 +68,7 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
                                     <h3 className='text-2xl font-semibold text-[#168aad]'>Booking Details</h3>
                                 </div>
                                 <div className='p-6 space-y-4'>
-                                    {isLoading || loading && (
+                                    {isLoading && (
                                         <div className='flex items-center justify-center mx-auto py-10'>
                                             <Spinner />
                                         </div>

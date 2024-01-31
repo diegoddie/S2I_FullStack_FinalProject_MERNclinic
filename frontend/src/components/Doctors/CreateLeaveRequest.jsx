@@ -68,7 +68,7 @@ const CreateLeaveRequest = () => {
   return (
     <>
       <button
-        className='px-6 py-4 leading-5 transition-colors duration-200 transform rounded-md text-xl font-semibold bg-green-500 hover:bg-green-600'
+        className='px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#29992e] hover:bg-green-800'
         onClick={handleOpenModal}
       >
         New Request

@@ -33,7 +33,6 @@ router.put(
     '/update/:id', 
     verifyToken, 
     [
-      check('date').optional().notEmpty().withMessage('Date is required'),
       check('paid').optional().isBoolean().withMessage('Paid must be a boolean value'),
       check('cost').optional().isNumeric().toFloat().withMessage('Cost must be a valid number'),
     ],

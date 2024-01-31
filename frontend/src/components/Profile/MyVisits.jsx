@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useGetVisits } from '../../hooks/visits/useGetVisits';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import Spinner from '../Utils/Spinner';
 import VisitsTable from '../Utils/VisitsTable';
+import { useManageVisits } from '../../hooks/visits/useManageVisits';
 
 const MyVisits = () => {
-  const { getVisits, isLoading } = useGetVisits();
+  const { getVisits, isLoading } = useManageVisits();
   const { user } = useAuthContext();
 
   const [data, setData] = useState([]);

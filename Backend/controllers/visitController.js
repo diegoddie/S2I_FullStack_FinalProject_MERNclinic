@@ -188,6 +188,13 @@ export const deleteVisit = async (req, res, next) => {
       if (!visit || (visit.user.toString() !== authUserId && req.user.role !== 'admin')) {
         return res.status(403).json({message:"Permission denied. You can only delete your own visits."})
       }
+
+      const currentDate = new Date();
+      const visitDate = new Date(visit.date);
+
+      if (visitDate < currentDate) {
+        return res.status(400).json({ message: "Visit date has already passed. You cannot delete past visits." });
+      }
   
       const deletedVisit = await Visit.findByIdAndDelete(visitId).populate('user doctor');
   
