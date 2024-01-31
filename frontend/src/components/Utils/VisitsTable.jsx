@@ -37,11 +37,11 @@ const VisitsTable = ({ title, isDoctor, data }) => {
 
     const sortVisitsDate = (visits) =>
         visits.sort((a, b) => {
-        if (sortColumn === 'date') {
-            return sortOrder === 'asc'
-            ? compareDesc(new Date(a[sortColumn]), new Date(b[sortColumn]))
-            : compareDesc(new Date(b[sortColumn]), new Date(a[sortColumn]));
-        }
+            if (sortColumn === 'date') {
+                return sortOrder === 'asc'
+                ? compareDesc(new Date(a[sortColumn]), new Date(b[sortColumn]))
+                : compareDesc(new Date(b[sortColumn]), new Date(a[sortColumn]));
+            }
         return 0;
         });
     
@@ -60,14 +60,12 @@ const VisitsTable = ({ title, isDoctor, data }) => {
             });
         }
     
-        filteredVisits = sortVisitsDate(filteredVisits);
-    
-        setFilteredData(filteredVisits);
+        setFilteredData(sortVisitsDate(filteredVisits));
     };
 
     useEffect(() => {
         handleFilter();
-    }, [startDate, endDate, sortColumn, sortOrder, data]);
+    }, [data, startDate, endDate, sortColumn, sortOrder, currentPage]);
 
     return (
         <div className="flex flex-col">
@@ -113,11 +111,11 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                                 <table className="divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="cursor-pointer px-7 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('createdAt')}>
+                                            <th className="cursor-pointer px-7 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('date')}>
                                                 <div className='flex gap-2 justify-center'>
                                                     <span>Date</span>
                                                     <span className='items-center flex text-md'>
-                                                        {sortOrder === 'asc' && sortColumn === 'createdAt' ? (
+                                                        {sortOrder === 'asc' && sortColumn === 'date' ? (
                                                             <FaLongArrowAltUp className=''/>
                                                         ) : (
                                                             <FaLongArrowAltDown />
