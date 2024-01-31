@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import LeaveManagementTable from '../Utils/LeaveManagementTable';
-import { useGetDoctors } from '../../hooks/doctors/useGetDoctors';
 import Spinner from '../Utils/Spinner';
 import CreateLeaveRequest from '../Doctors/CreateLeaveRequest';
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const LeaveManagement = () => {
-    const { getDoctors, loading } = useGetDoctors();
+    const { getDoctors, isLoading } = useManageDoctors();
     const { user } = useAuthContext();
 
     const [pendingLeaveRequestsData, setPendingLeaveRequestsData] = useState([]);
@@ -107,12 +107,12 @@ const LeaveManagement = () => {
                     Leave Management
                 </h3>
             </div>
-            {loading && (
+            {isLoading && (
                 <div className="flex items-center justify-center mx-auto py-10">
                     <Spinner />
                 </div>
             )}
-            {!loading && (
+            {!isLoading && (
                 <>
                     {!isAdmin && (
                         <div className="flex gap-2 justify-center pt-4">

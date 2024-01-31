@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import errorHandler from "../utils/errorHandler";
 
-export const use2FA = () => {
+export const useManage2FA = () => {
     const navigate = useNavigate()
 
     const [isLoading, setIsLoading] = useState(false);

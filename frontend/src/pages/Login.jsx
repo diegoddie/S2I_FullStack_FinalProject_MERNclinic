@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
-import { useLogin } from '../hooks/auth/useLogin';
 import { animateScroll as scroll } from 'react-scroll';
+import { useManageAuth } from '../hooks/auth/useManageAuth';
 
 const Login = ({ model }) => {
-  const {login, isLoading} = useLogin()
+  const {login, isLoading} = useManageAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',

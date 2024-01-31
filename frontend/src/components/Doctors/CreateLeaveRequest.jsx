@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useUpdateDoctor } from '../../hooks/doctors/useUpdateDoctor';
 import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const CreateLeaveRequest = () => {
-  const { updateDoctor, isLoading } = useUpdateDoctor();
+  const { updateDoctor, isLoading } = useManageDoctors();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({

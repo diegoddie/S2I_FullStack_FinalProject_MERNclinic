@@ -6,7 +6,7 @@ import Spinner from '../Utils/Spinner';
 import errorHandler from '../../hooks/utils/errorHandler';
 import { toast } from 'react-toastify';
 
-const VisitBook = ({ doctor }) => {
+const BookVisit = ({ doctor }) => {
   const { dispatch } = useAuthContext();
 
   const [isLoading, setIsLoading] = useState(false)
@@ -65,4 +65,4 @@ const VisitBook = ({ doctor }) => {
   );
 };
 
-export default VisitBook;
+export default BookVisit;

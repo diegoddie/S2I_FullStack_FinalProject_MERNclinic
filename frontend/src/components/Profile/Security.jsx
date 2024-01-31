@@ -3,11 +3,11 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import { MdClose } from "react-icons/md";
 import QRCode from 'qrcode.react';
 import Spinner from '../Utils/Spinner';
-import { use2FA } from '../../hooks/auth/use2FA';
 import DeleteAccountButton from '../Auth/DeleteAccountButton';
+import { useManage2FA } from '../../hooks/auth/useManage2FA';
 
 const Security = ({ model }) => {
-    const { generate2FA, verify2FA, disable2FA, isLoading } = use2FA();
+    const { generate2FA, verify2FA, disable2FA, isLoading } = useManage2FA();
     const { user } = useAuthContext();
     
     const [isModalOpen, setIsModalOpen] = useState(false);

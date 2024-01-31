@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useUpdateUser } from '../../hooks/users/useUpdateUser';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import Spinner from '../Utils/Spinner';
+import { useManageUsers } from '../../hooks/users/useManageUsers';
 
 const UpdateProfile = ({ model }) => {
-    const { updateUser, isLoading } = useUpdateUser();
+    const { updateUser, isLoading } = useManageUsers();
     const { user } = useAuthContext();
 
     const [imageError, setImageError] = useState('');

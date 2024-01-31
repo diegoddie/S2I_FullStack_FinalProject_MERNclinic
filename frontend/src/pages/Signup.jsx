@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
-import { useSignup } from '../hooks/users/useSignup';
 import { animateScroll as scroll } from 'react-scroll';
+import { useManageUsers } from '../hooks/users/useManageUsers';
 
 const SignUp = () => {
-  const {signup, isLoading} = useSignup()
+  const {signUp, isLoading} = useManageUsers()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,7 +23,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try{
-      await signup({formData})
+      await signUp({formData})
     } catch (error) {
       console.error('Error during sign-up:', error);
     }

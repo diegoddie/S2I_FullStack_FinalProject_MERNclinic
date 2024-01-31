@@ -1,8 +1,8 @@
 import React from 'react';
-import { useLogout } from '../../hooks/auth/useLogout';
+import { useManageAuth } from '../../hooks/auth/useManageAuth';
 
 const LogoutButton = () => {
-  const { logout } = useLogout()
+  const { logout } = useManageAuth()
 
   const handleLogout = async () => {
     try {

@@ -3,11 +3,11 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import DoctorCard from "../Doctors/DoctorCard.jsx";
-import { useGetDoctors } from "../../hooks/doctors/useGetDoctors.js";
 import Spinner from "../Utils/Spinner.jsx";
+import { useManageDoctors } from "../../hooks/doctors/useManageDoctors.js";
 
 const Doctors = () => {
-    const { getDoctors, loading } = useGetDoctors()
+    const { getDoctors, isLoading } = useManageDoctors()
     const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
@@ -60,12 +60,12 @@ const Doctors = () => {
     return (
         <section id='doctors'>
             <div className='py-12 md:py-20 md:px-4 px-2 mx-auto'>
-              {loading && 
+              {isLoading && 
                 <div className='flex items-center justify-center mx-auto py-10'>
                   <Spinner />
                 </div>
               }
-              {!loading && (
+              {!isLoading && (
                 <>
                   <div className='md:w-2/3 mx-auto text-center pb-4'>
                       <h2 className='text-4xl mb-4 font-semibold text-[#168aad]'>

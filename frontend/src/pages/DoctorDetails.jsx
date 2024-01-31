@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { animateScroll as scroll } from 'react-scroll';
 import DoctorAbout from '../components/Doctors/DoctorAbout';
 import DoctorContacts from '../components/Doctors/DoctorContacts';
-import VisitBook from '../components/Visits/VisitBook';
+import BookVisit from '../components/Visits/BookVisit';
 import Spinner from '../components/Utils/Spinner';
 import axios from 'axios';
 import errorHandler from '../hooks/utils/errorHandler';
@@ -81,7 +81,7 @@ const DoctorDetails = () => {
                                 tab === 'contacts' && <DoctorContacts doctor={doctor}/>
                             }
                             {
-                                tab === 'book' && <VisitBook doctor={doctor} />
+                                tab === 'book' && <BookVisit doctor={doctor} />
                             }
                         </div>
                     </div>

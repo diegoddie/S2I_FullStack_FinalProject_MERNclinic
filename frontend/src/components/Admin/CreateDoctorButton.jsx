@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
-import { useCreateDoctor } from '../../hooks/doctors/useCreateDoctor';
 import defaultProfilePicture from '../../assets/default-user.jpg'
 import CustomWorkShifts from '../Utils/CustomWorkShifts';
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const CreateDoctorButton = () => {
     const workingDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const {createDoctor, isLoading} = useCreateDoctor()
+    const {createDoctor, isLoading} = useManageDoctors()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [imageError, setImageError] = useState('');

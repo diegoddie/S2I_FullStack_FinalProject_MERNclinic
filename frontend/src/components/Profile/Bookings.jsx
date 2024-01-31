@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useGetDoctors } from '../../hooks/doctors/useGetDoctors'
 import DoctorCard from '../Doctors/DoctorCard'
 import Spinner from '../Utils/Spinner'
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors'
 
 const Bookings = () => {
-  const { getDoctors, loading } = useGetDoctors()
+  const { getDoctors, isLoading } = useManageDoctors()
   const [doctors, setDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -34,12 +34,12 @@ const Bookings = () => {
 
   return (
     <div className='mb-10'>
-        {loading && 
+        {isLoading && 
           <div className='flex items-center justify-center mx-auto py-10'>
             <Spinner />
           </div>
         }
-        {!loading && (
+        {!isLoading && (
           <>
             <div className='font-semibold flex items-center mx-auto justify-center mt-3'>
               <h3 className='text-4xl leading-[30px] text-[#168aad] text-center px-3'>
