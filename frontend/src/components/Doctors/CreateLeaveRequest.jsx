@@ -51,9 +51,21 @@ const CreateLeaveRequest = () => {
       await updateDoctor({
         formData,
       });
+
+      setFormData({
+        leaveRequests: [
+          {
+            typology: '',
+            startDate: '',
+            endDate: '',
+          },
+        ],
+      });
+      
       handleCloseModal()
+
     } catch (error) {
-      console.error("Error updating the doctor's leave requests:", error);
+      console.error("Error updating doctor's leave requests:", error);
     }
   };
 

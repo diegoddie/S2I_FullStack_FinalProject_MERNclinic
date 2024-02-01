@@ -6,6 +6,7 @@ import { useManageUsers } from '../hooks/users/useManageUsers';
 
 const SignUp = () => {
   const {signUp, isLoading} = useManageUsers()
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

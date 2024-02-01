@@ -5,7 +5,8 @@ import { animateScroll as scroll } from 'react-scroll';
 import { useManageAuth } from '../hooks/auth/useManageAuth';
 
 const Login = ({ model }) => {
-  const {login, isLoading} = useManageAuth()
+  const { login, isLoading } = useManageAuth()
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',

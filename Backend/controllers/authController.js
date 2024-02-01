@@ -82,7 +82,7 @@ const signIn = async (req, res, next, Model) => {
 
       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET);
       const { password: hashedPassword, ...rest } = validUser._doc;
-      const expiryDate = new Date(Date.now() + (validUser.isAdmin ? 3000000 : 60000));
+      const expiryDate = new Date(Date.now() + (validUser.isAdmin ? 43200000 : 3600000));
 
       res
           .cookie('access_token', token, { httpOnly: true, expires: expiryDate })

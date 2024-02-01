@@ -85,5 +85,24 @@ export const useManageAuth = () => {
         }
     }
 
-    return { login, logout, isLoading }
+    const verifyPassword = async (model, password) => {
+        try{
+            setIsLoading(false)
+
+            const res = await axios.post(`http://localhost:3000/${model}/verify-password`, { password }, { withCredentials: true });
+
+            if (res.status === 200){
+                setIsLoading(false)
+                return true
+            }
+        }catch(error){
+            console.error('Error during password verification:', error)
+            errorHandler(error)
+
+            setIsLoading(false);
+        }
+        return false
+    }
+
+    return { login, logout, verifyPassword, isLoading }
 }

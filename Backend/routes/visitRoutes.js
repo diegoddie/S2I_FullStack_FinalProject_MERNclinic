@@ -26,7 +26,7 @@ router.post(
 
 router.get('/', verifyToken, verifyAdmin, getAllVisits);
 router.get('/:id', verifyToken, getVisitById);
-router.get('/doctor/:doctorId', verifyToken, verifyAdmin, getVisitsByDoctorId);
+router.get('/doctor/:doctorId', verifyToken, getVisitsByDoctorId);
 router.get('/user/:userId', verifyToken, getVisitsByUserId);
 
 router.put(

@@ -17,7 +17,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
   const [endDate, setEndDate] = useState(endOfMonth(new Date()));
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
-
+  console.log(filteredData)
   const showDatePicker = title !== 'Pending Requests' 
   const itemsPerPage = 10; 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -38,33 +38,61 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
       return 0;
     });
 
-    const formatDate = (dateString, typology) => {
-      const date = new Date(dateString);
+  const formatDate = (dateString, typology) => {
+    const date = new Date(dateString);
       
-      if (typology === 'vacation') {
-        // Se la tipologia è 'VACATION', mostra solo la data senza l'orario
-        return format(date, 'dd/MM/yyyy', { locale: it });
-      } else {
-        // Altrimenti, mostra la data completa con l'orario
-        const formattedDate = format(date, 'dd/MM/yyyy', { locale: it });
-        const formattedTime = format(date, 'HH:mm', { locale: it });
-        return `${formattedDate} ${formattedTime}`;
-      }
-    };
+    if (typology === 'vacation') {
+      return format(date, 'dd/MM/yyyy', { locale: it });
+    } else {
+      const formattedDate = format(date, 'dd/MM/yyyy', { locale: it });
+      const formattedTime = format(date, 'HH:mm', { locale: it });
+      return `${formattedDate} ${formattedTime}`;
+    }
+  };
 
   const handleFilter = () => {
     const filteredData = title !== 'Pending Requests'
       ? data.filter((leaveRequest) => {
           const leaveStartDate = new Date(leaveRequest.startDate);
           const leaveEndDate = new Date(leaveRequest.endDate);
-  
+    
           return isWithinInterval(leaveStartDate, { start: startDate, end: endDate }) ||
-                 isWithinInterval(leaveEndDate, { start: startDate, end: endDate }) ||
-                 isWithinInterval(startDate, { start: leaveStartDate, end: leaveEndDate });
+                isWithinInterval(leaveEndDate, { start: startDate, end: endDate }) ||
+                isWithinInterval(startDate, { start: leaveStartDate, end: leaveEndDate });
         })
       : data;
-  
+    
     setFilteredData(sortLeaveRequests(filteredData));
+  };
+
+  const handleApproveLeaveRequest = async (doctorId, requestId) => {
+    try {
+      await approveLeaveRequest(doctorId, requestId);
+
+      setFilteredData((prevData) => prevData.filter((request) => request._id !== requestId));
+    } catch (error) {
+      console.error("Error approving leave request:", error);
+    }
+  };
+
+  const handleDeclineLeaveRequest = async (doctorId, requestId) => {
+    try {
+      await declineLeaveRequest(doctorId, requestId);
+
+      setFilteredData((prevData) => prevData.filter((request) => request._id !== requestId));
+    } catch (error) {
+      console.error("Error declining leave request:", error);
+    }
+  };
+
+  const handleDeleteLeaveRequest = async (doctorId, requestId) => {
+    try {
+      await deleteLeaveRequest(doctorId, requestId);
+
+      setFilteredData((prevData) => prevData.filter((request) => request._id !== requestId));
+    } catch (error) {
+      console.error("Error deleting leave request:", error);
+    }
   };
 
   useEffect(() => {
@@ -192,12 +220,12 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                         <td className="px-4 py-4 whitespace-nowrap border-r">
                           {isAdmin ? (
                             <div className='flex gap-2'>
-                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => approveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
-                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => declineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => handleApproveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => handleDeclineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
                             </div>
                           ) : (
                             <div className='flex mx-auto justify-center'>
-                              <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => deleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} />
+                              <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => handleDeleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} />
                             </div>
                           )}
                         </td>

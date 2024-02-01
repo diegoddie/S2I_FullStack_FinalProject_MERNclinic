@@ -5,6 +5,7 @@ import { useManageDoctors } from '../../hooks/doctors/useManageDoctors'
 
 const Bookings = () => {
   const { getDoctors, isLoading } = useManageDoctors()
+  
   const [doctors, setDoctors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 

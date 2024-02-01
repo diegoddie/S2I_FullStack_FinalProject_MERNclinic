@@ -406,7 +406,9 @@ export const deleteLeaveRequest = async (req,res,next) => {
     leaveRequest.deleteOne();
     await doctor.save();
 
-    res.status(200).json({ message: 'Leave request successfully deleted' });
+    const { password: userPassword, ...rest } = doctor._doc;
+
+    res.status(200).json({ user: rest, message: 'Leave request successfully deleted' });
   } catch(err){
     console.error('Error deleting leave request:', err);
     next(errorHandler(500, 'Internal Server Error'))

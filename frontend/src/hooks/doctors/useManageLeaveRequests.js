@@ -6,7 +6,7 @@ import { useAuthContext } from "../auth/useAuthContext";
 
 export const useManageLeaveRequests = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const { dispatch } = useAuthContext();
+    const { dispatch, token } = useAuthContext();
 
     const approveLeaveRequest = async(doctorId, leaveRequestId) => {
         try{
@@ -17,7 +17,6 @@ export const useManageLeaveRequests = () => {
             if(res.status === 200){
                 setIsLoading(false)
                 toast.success('Request approved succesfully.')
-                window.location.reload()
             }
         }catch(error){
             console.error('Error approving leave request:', error);
@@ -45,7 +44,6 @@ export const useManageLeaveRequests = () => {
             if(res.status === 200){
                 setIsLoading(false)
                 toast.success('Request declined succesfully.')
-                window.location.reload()
             }
         }catch(error){
             console.error('Error declining leave request:', error);
@@ -63,7 +61,8 @@ export const useManageLeaveRequests = () => {
 
             if(res.status === 200){
                 setIsLoading(false)
-                window.location.reload()
+                const updatedUser = res.data.user;
+                dispatch({ type: 'LOGIN', payload: { user: updatedUser, token } });
                 toast.success('Request deleted succesfully.')
             }
         }catch(error){

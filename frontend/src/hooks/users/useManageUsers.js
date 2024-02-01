@@ -81,6 +81,34 @@ export const useManageUsers = () => {
         }
     };
 
-    return { getUsers, signUp, updateUser, isLoading };
+    const deleteUser = async (model, id) => {
+        try{
+            setIsLoading(false)
+
+            const res = await axios.delete(`http://localhost:3000/${model}/delete/${id}`, { withCredentials: true });
+
+            if (res.status === 200) {
+                setIsLoading(false);
+                dispatch({ type: 'LOGOUT' });
+                toast.success('User deleted successfully.');
+            }
+        }catch(error){
+            console.error('Error during deletion:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false);
+        }
+    }
+
+    return { getUsers, signUp, updateUser, deleteUser, isLoading };
 };
 

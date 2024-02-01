@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { MdClose } from 'react-icons/md';
-import axios from 'axios';
 import Spinner from '../Utils/Spinner';
 import { toast } from 'react-toastify';
 import errorHandler from '../../hooks/utils/errorHandler';
+import { useManageAuth } from '../../hooks/auth/useManageAuth';
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
-const DeleteDoctorButton = ({doctors}) => {
+const DeleteDoctorButton = ({ doctors, updateDoctorsList }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const { verifyPassword } = useManageAuth()
+    const { deleteDoctor } = useManageDoctors()
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -23,48 +27,33 @@ const DeleteDoctorButton = ({doctors}) => {
     const handleDelete = async () => {
         try {
             setPassword('');
-            setIsLoading(true);
-      
+    
             if (!selectedDoctor) {
                 setIsLoading(false);
                 toast.error('Please choose a doctor to delete.');
                 return;
             }
-      
+    
             if (!password) {
                 setIsLoading(false);
                 toast.error('Please enter your password to confirm deletion.');
                 return;
             }
-      
-            try {
-                await axios.post('http://localhost:3000/user/verify-password', { password }, { withCredentials: true });
-            } catch (error) {
-                setIsLoading(false);
-                toast.error('Password verification failed. Please check your password.');
-                return;
-            }
-      
-            try{
-                const res = await axios.delete(`http://localhost:3000/doctor/delete/${selectedDoctor}`, { withCredentials: true });
 
-                if (res.status === 200) {
-                    setIsLoading(false);
-                    handleCloseModal();
-                    toast.success('Doctor deleted successfully.');
-                    window.location.reload();
-                }
-            }catch(error){
-                setIsLoading(false);
-                errorHandler(error);
-            } 
-        } catch(error){
+            const isPasswordVerified = await verifyPassword("user", password);
+
+            if (isPasswordVerified) {
+                await deleteDoctor(selectedDoctor);
+                updateDoctorsList()
+                handleCloseModal()
+            }
+        } catch (error) {
             console.error('Error deleting doctor:', error);
             setIsLoading(false);
-
+    
             errorHandler(error);
         }
-    }
+    };
 
     return (
         <>

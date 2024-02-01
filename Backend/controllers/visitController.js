@@ -103,6 +103,11 @@ export const getVisitById = async (req, res, next) => {
 export const getVisitsByDoctorId = async (req, res, next) => {
     try {
       const { doctorId } = req.params;
+
+      if (req.user.id !== doctorId && req.user.role !== 'admin') {
+        return res.status(403).json({message: "Permission denied."})
+      }
+
       const visits = await Visit.find({ doctor: doctorId }).populate({
         path: 'user doctor',
         select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',

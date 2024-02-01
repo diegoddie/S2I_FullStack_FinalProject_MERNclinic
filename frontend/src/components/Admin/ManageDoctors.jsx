@@ -7,19 +7,20 @@ import { useManageDoctors } from '../../hooks/doctors/useManageDoctors'
 
 const ManageDoctors = () => {
     const { getDoctors, isLoading } = useManageDoctors()
+    
     const [doctors, setDoctors] = useState([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
+    const updateDoctorsList = async () => {
+      try {
           const doctorsData = await getDoctors();
           setDoctors(doctorsData);
-        } catch (error) {
+      } catch (error) {
           console.log(error);
-        }
-      };
-    
-      fetchData();
+      }
+    };
+
+    useEffect(() => {
+      updateDoctorsList();
     }, []);
 
     return (
@@ -37,8 +38,8 @@ const ManageDoctors = () => {
               </h3>
             </div>
             <div className='flex justify-center mt-5 gap-3'>
-              <CreateDoctorButton  />
-              <DeleteDoctorButton doctors={doctors} />
+              <CreateDoctorButton updateDoctorsList={updateDoctorsList} />
+              <DeleteDoctorButton doctors={doctors} updateDoctorsList={updateDoctorsList} />
             </div>
             <div className='flex flex-wrap mt-8 mx-auto justify-center items-center gap-6'>
               {doctors.map((doctor, id) => (

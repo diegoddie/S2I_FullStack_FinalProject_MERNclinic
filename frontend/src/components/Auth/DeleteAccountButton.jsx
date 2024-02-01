@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import Spinner from '../Utils/Spinner';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
 import { toast } from 'react-toastify';
 import errorHandler from '../../hooks/utils/errorHandler';
+import { useManageAuth } from '../../hooks/auth/useManageAuth';
+import { useManageUsers } from '../../hooks/users/useManageUsers';
 
 const DeleteAccountButton = ({ model }) => {
     const navigate = useNavigate()
@@ -14,7 +15,9 @@ const DeleteAccountButton = ({ model }) => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const { user, dispatch } = useAuthContext();
+    const { user } = useAuthContext();
+    const { verifyPassword } = useManageAuth()
+    const { deleteUser } = useManageUsers()
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -28,7 +31,6 @@ const DeleteAccountButton = ({ model }) => {
     const handleDelete = async () => {
         try {
             setPassword('');
-            setIsLoading(true);
 
             if (!password) {
                 setIsLoading(false);
@@ -36,27 +38,12 @@ const DeleteAccountButton = ({ model }) => {
                 return;
             }
 
-            try {
-                await axios.post(`http://localhost:3000/${model}/verify-password`, { password }, { withCredentials: true });
-            } catch (error) {
-                setIsLoading(false);
-                toast.error('Password verification failed. Please check your password.');
-                return;
-            }
-
-            try{
-                const res = await axios.delete(`http://localhost:3000/${model}/delete/${user._id}`, { withCredentials: true });
-
-                if (res.status === 200) {
-                    setIsLoading(false);
-                    handleCloseModal();
-                    dispatch({ type: 'LOGOUT' });
-                    navigate('/')
-                    toast.success('Account deleted successfully.');
-                }
-            }catch(error){
-                setIsLoading(false);
-                errorHandler(error);
+            const isPasswordVerified = await verifyPassword(model, password);
+        
+            if (isPasswordVerified) {
+                await deleteUser(model, user._id);
+                handleCloseModal();
+                navigate('/')
             }
         } catch (error) {
             console.error('Error deleting account:', error);

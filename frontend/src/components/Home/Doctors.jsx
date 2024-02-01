@@ -8,6 +8,7 @@ import { useManageDoctors } from "../../hooks/doctors/useManageDoctors.js";
 
 const Doctors = () => {
     const { getDoctors, isLoading } = useManageDoctors()
+    
     const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {

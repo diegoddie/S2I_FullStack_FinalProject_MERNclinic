@@ -33,7 +33,6 @@ export const useManageDoctors = () => {
 
             if(res.status === 201){
                 setIsLoading(false)
-                
                 toast.success('Doctor created succesfully.')
             }            
         } catch (error) {
@@ -83,10 +82,38 @@ export const useManageDoctors = () => {
         }
     };
 
+    const deleteDoctor = async (id) => {
+        try {
+            setIsLoading(true);
+
+            const res = await axios.delete(`http://localhost:3000/doctor/delete/${id}`, { withCredentials: true });
+
+            if (res.status === 200) {
+                setIsLoading(false);
+                toast.success('Doctor deleted successfully.');
+            }
+        } catch (error) {
+            console.error('Error during deletion:', error);
+            
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false);
+        }
+    }
+
     return {
         isLoading,
         getDoctors,
         createDoctor,
-        updateDoctor
+        updateDoctor,
+        deleteDoctor
     };
 };

@@ -5,8 +5,9 @@ import defaultProfilePicture from '../../assets/default-user.jpg'
 import CustomWorkShifts from '../Utils/CustomWorkShifts';
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
-const CreateDoctorButton = () => {
+const CreateDoctorButton = ({ updateDoctorsList }) => {
     const workingDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
     const {createDoctor, isLoading} = useManageDoctors()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +49,6 @@ const CreateDoctorButton = () => {
       }
     };
     
-
     const handleFileChange = async(e) => {
       const file = e.target.files[0];
 
@@ -83,6 +83,7 @@ const CreateDoctorButton = () => {
             workShifts: isCustomWorkShifts ? customWorkShifts : undefined,
           },
         });
+        updateDoctorsList()
         handleCloseModal()
       } catch (error) {
         console.error('Error adding a new doctor:', error);

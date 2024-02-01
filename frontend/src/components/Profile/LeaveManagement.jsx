@@ -19,7 +19,7 @@ const LeaveManagement = () => {
         setSelectedTab(tab);
     }
 
-    const fetchAllData = async () => {
+    const fetchAllLeaveRequests = async () => {
         try {
             if (user.isAdmin) {
                 const allDoctors = await getDoctors();
@@ -56,7 +56,7 @@ const LeaveManagement = () => {
         }
     };
 
-    const fetchData = async () => {
+    const fetchPendingLeaveRequests = async () => {
         try {
             if (user.isAdmin) {
                 const allDoctors = await getDoctors();
@@ -82,7 +82,6 @@ const LeaveManagement = () => {
                 setPendingLeaveRequestsData(userLeaveRequests);
             } else {
                 const userLeaveRequests = user.leaveRequests.filter(request => request.isApproved === null);
-    
                 setPendingLeaveRequestsData(userLeaveRequests.map(request => ({
                     firstName: user.firstName,
                     lastName: user.lastName,
@@ -96,9 +95,9 @@ const LeaveManagement = () => {
     };
 
     useEffect(() => {
-        fetchData();
-        fetchAllData();
-    }, []);
+        fetchPendingLeaveRequests();
+        fetchAllLeaveRequests();
+    }, [user]);
 
     return (
         <div className=''>
