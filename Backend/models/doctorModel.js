@@ -65,6 +65,14 @@ const doctorSchema = new mongoose.Schema({
         type: String,
         default: "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    emailVerificationToken: {
+        type: String,
+        default: null,
+    },
     twoFactorSecret: {
         type: String,
         default: "",

@@ -13,6 +13,7 @@ import PasswordResetRequest from "./pages/PasswordReset/PasswordResetRequest.jsx
 import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EmailVerified from "./components/Auth/EmailVerified.jsx";
 
 const App = () => {
   const { user, token } = useAuthContext()
@@ -33,6 +34,9 @@ const App = () => {
             <Route exact path="/doctor/profile/:id" element={user && token ? <Profile model="doctor"/> : <Navigate to="/login" />} />
 
             <Route path="/doctor/:id" element={<DoctorDetails />} />
+
+            <Route path="/user/verify-email/:token" element={<EmailVerified model="user" />} />
+            <Route path="/doctor/verify-email/:token" element={<EmailVerified model="doctor" />} />
 
             <Route path="/user/password-reset" element={<PasswordResetRequest model="user" />} />
             <Route path="/doctor/password-reset" element={<PasswordResetRequest model="doctor" />} />

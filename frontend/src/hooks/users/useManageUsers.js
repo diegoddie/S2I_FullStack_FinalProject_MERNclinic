@@ -3,11 +3,8 @@ import errorHandler from "../utils/errorHandler";
 import { useState } from "react";
 import { useAuthContext } from "../auth/useAuthContext";
 import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
 
 export const useManageUsers = () => {
-    const navigate = useNavigate()
-
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext()
 
@@ -39,8 +36,7 @@ export const useManageUsers = () => {
 
             if(res.status === 201){
                 setIsLoading(false)
-                toast.success('Signup successful! Redirecting to login.');
-                navigate('/login')
+                toast.success('Please check your email for verification.');
             }            
         } catch (error) {
             console.error('Error during sign-up:', error);

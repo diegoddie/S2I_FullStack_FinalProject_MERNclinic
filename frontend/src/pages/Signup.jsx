@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import { animateScroll as scroll } from 'react-scroll';
 import { useManageUsers } from '../hooks/users/useManageUsers';
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 const SignUp = () => {
-  const {signUp, isLoading} = useManageUsers()
-  
+  const { signUp, isLoading } = useManageUsers()
+
+  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -25,12 +27,15 @@ const SignUp = () => {
 
     try{
       await signUp({formData})
+      setIsRegistrationComplete(true);
     } catch (error) {
       console.error('Error during sign-up:', error);
     }
   };
 
   useEffect(() => {
+    setIsRegistrationComplete(null);
+
     scroll.scrollToTop({
         duration: 500,
         smooth: 'easeInOutQuad',
@@ -39,6 +44,7 @@ const SignUp = () => {
 
   return (
     <section className='flex flex-col items-center justify-center md:h-full px-3 md:px-0 py-10 md:py-20'>
+      {!isRegistrationComplete ? (
       <div className='w-full max-w-[570px] rounded-lg shadow-2xl p-10 bg-white'>
         <h3 className='text-[#168aad] text-2xl leading-9 font-semibold mb-6 text-center'>
           Create an Account
@@ -134,6 +140,19 @@ const SignUp = () => {
           </Link>
         </p>
       </div>
+      ) : (
+        <div className='text-center md:h-screen'>
+          <p className='text-[#168aad] text-3xl leading-9 font-semibold mb-2 md:mb-5'>
+            Registration completed successfully!
+          </p>
+          <div className='flex flex-col md:flex-row mx-auto justify-center items-center gap-3'>
+            <IoIosCheckmarkCircle className='w-[100px] h-[100px] text-green-400' />
+            <p className='text-gray-500 text-xl font-semibold'>
+              Please check your email for verification.
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

@@ -48,6 +48,15 @@ export const useManageAuth = () => {
         } catch (error) {
             console.error('Error during login', error);
             setIsLoading(false);
+
+            if (error.response && error.response.status === 401 && error.response.data.message === 'Email not verified. Please check your email for verification instructions.') {
+                try {
+                  await requestNewVerificationEmail(formData.email);
+                  toast.success('New verification email requested successfully.');
+                } catch (err) {
+                  console.error('Error requesting new verification email:', err);
+                }
+              }
           
             errorHandler(error)
         }      
@@ -85,6 +94,41 @@ export const useManageAuth = () => {
         }
     }
 
+    const verifyMail = async(model,token) => {
+        try{
+            setIsLoading(false)
+            const res = await axios.post(`http://localhost:3000/${model}/verify-email/${token}`)
+            if (res.status === 200){
+                setIsLoading(false)
+                return true
+            }
+        }catch(error){
+            console.error('Error during email verification:', error)
+            errorHandler(error)
+
+            setIsLoading(false);
+        }
+        return false
+    }
+
+    const requestNewVerificationEmail = async(email) => {
+        try{
+            setIsLoading(true)
+            const res = await axios.post('http://localhost:3000/request-new-verification-email', {email})
+
+            if(res.status===200){
+                setIsLoading(false)
+                return true
+            }
+        }catch(error){
+            console.error('Error during email verification:', error)
+            errorHandler(error)
+
+            setIsLoading(false)
+        }
+        return false
+    }
+
     const verifyPassword = async (model, password) => {
         try{
             setIsLoading(false)
@@ -104,5 +148,5 @@ export const useManageAuth = () => {
         return false
     }
 
-    return { login, logout, verifyPassword, isLoading }
+    return { login, logout, verifyPassword, verifyMail, requestNewVerificationEmail, isLoading }
 }

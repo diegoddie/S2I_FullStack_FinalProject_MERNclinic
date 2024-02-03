@@ -9,6 +9,7 @@ import Doctor from "../models/doctorModel.js";
 import verifyOTP from "../utils/auth/verifyOTP.js";
 import generateTokenPayload from "../utils/auth/generateTokenPayload.js";
 import speakeasy from 'speakeasy'
+import { sendUserAuthEmail } from "../utils/auth/sendUserAuthEmail.js";
 
 export const signUp = async(req,res,next) => {
     try{
@@ -37,7 +38,10 @@ export const signUp = async(req,res,next) => {
         const hashedPassword = bcryptjs.hashSync(password, 10)
         const newUser = await User.create({firstName, lastName, email, taxId, password: hashedPassword, phoneNumber, profilePicture, isAdmin})
 
-        res.status(201).json({ message: "User created successfully", user: newUser });
+        const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        await sendUserAuthEmail(newUser.email, token);
+
+        res.status(201).json({ message: "Check your email for verification", user: newUser });
     }catch(err){
         console.log(err)
         next(errorHandler(500, 'Internal Server Error'));
@@ -61,6 +65,10 @@ const signIn = async (req, res, next, Model) => {
       const validPassword = bcryptjs.compareSync(password, validUser.password);
       if (!validPassword) {
           return res.status(401).json({ message: 'Wrong credentials. Please check your email and password.' });
+      }
+
+      if (!validUser.isVerified) {
+        return res.status(401).json({ message: 'Email not verified. Please check your email for verification instructions.' });
       }
 
       if (validUser.twoFactorEnabled) {
@@ -101,6 +109,68 @@ export const userSignIn = async (req, res, next) => {
 export const doctorSignIn = async (req, res, next) => {
   await signIn(req, res, next, Doctor);
 };
+
+export const verifyEmail = async(req,res,next,Model) => {
+  try{
+    const token = req.params.token;
+
+    if (!token) {
+      return res.status(400).json({ message: 'Token is missing' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decodedToken || !decodedToken.userId) {
+      return res.status(400).json({ message: 'Invalid token' });
+    }
+
+    const user = await Model.findById(decodedToken.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.isVerified = true;
+    user.emailVerificationToken = null;
+    await user.save();
+
+    res.status(200).json({ message: "Email verification successful" });
+  }catch(err){
+    console.error('Error verifying email:', err);
+    if (err.name === 'TokenExpiredError') {
+      return res.status(400).json({ message: "Token expired. Please request a new verification email." });
+    } 
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+}
+
+export const requestNewVerificationEmail = async(req,res,next) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email }) || await Doctor.findOne({email});
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if(user.isVerified){
+      return res.status(400).json({ message: 'User already verified' })
+    }
+
+    const newVerificationToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    user.emailVerificationToken = newVerificationToken;
+    await user.save();
+
+    await sendUserAuthEmail(user.email, newVerificationToken);
+
+    res.status(200).json({ message: 'New verification email requested successfully' });
+  }catch(error){
+    console.error(error);
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+}
 
 export const verifyPassword = async(req,res,next,Model)=>{
   try{

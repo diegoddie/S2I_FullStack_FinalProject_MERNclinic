@@ -1,5 +1,5 @@
 import express from 'express'
-import { signUp, signOut } from '../controllers/authController.js';
+import { signUp, signOut, requestNewVerificationEmail } from '../controllers/authController.js';
 import { check } from 'express-validator';
 
 const router = express.Router();
@@ -17,5 +17,7 @@ router.post(
 );
 
 router.get('/sign-out', signOut)
+
+router.post('/request-new-verification-email', requestNewVerificationEmail)
 
 export default router

@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 
-// Function to send a welcome email to a new doctor
-export const sendWelcomeEmail = async (email, password) => {
+export const sendWelcomeEmail = async (email, password, token) => {
     try {
       // Create a nodemailer transporter using Gmail service
       const transporter = nodemailer.createTransport({
@@ -11,14 +10,15 @@ export const sendWelcomeEmail = async (email, password) => {
           pass: process.env.GMAIL_PSW_APP,
         },
       });
+
+      const verifyEmailLink = `http://localhost:3001/doctor/verify-email/${token}`;
   
-      const resetPasswordUrl = 'http://localhost:3001/doctor/login'; 
       const mailOptions = {
         from: process.env.GMAIL,
         to: email,
         subject: 'Welcome to Our Clinic!',
         html: `
-            <p>Welcome to our clinic! Your temporary password is: ${password}. Please use this password to <a href="${resetPasswordUrl}">log in here</a>. You can change it later.</p>
+            <p>Welcome to our clinic! Click <a href="${verifyEmailLink}">here</a> to verify your email. Your temporary password is: ${password}, you can change it later. Please use this <a href="http://localhost:3001/doctor/login">login URL</a>.</p>
         `,
       };
   

@@ -1,5 +1,6 @@
 import Doctor from "../models/doctorModel.js";
 import bcryptjs from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import { errorHandler } from "../utils/error.js";
 import { validationResult } from 'express-validator';
 import { generateRandomPassword } from "../utils/auth/generateRandomPsw.js";
@@ -30,8 +31,8 @@ export const createDoctor = async (req, res, next) => {
       const hashedPassword = bcryptjs.hashSync(randomPassword, 10)
 
       const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, workShifts });
-
-      await sendWelcomeEmail(newDoctor.email, randomPassword);
+      const token = jwt.sign({ userId: newDoctor._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+      await sendWelcomeEmail(newDoctor.email, randomPassword, token);
       
       res.status(201).json({ message: "Doctor created successfully and email sent", doctor: newDoctor });
   } catch (err) {
