@@ -12,11 +12,10 @@ const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) =>
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [patients, setPatients] = useState([])
     const [selectedPatient, setSelectedPatient] = useState(null);
-    console.log(selectedPatient)
     const handleOpenModal = async () => {
         setIsModalOpen(true);
 
-        if (user.isAdmin){
+        if (user?.isAdmin){
             try {
                 const res = await getUsers()
                 setPatients(res);
