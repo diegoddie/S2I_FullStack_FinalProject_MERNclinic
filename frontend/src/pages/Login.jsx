@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Spinner from '../components/Utils/Spinner';
 import { animateScroll as scroll } from 'react-scroll';
 import { useManageAuth } from '../hooks/auth/useManageAuth';
 
 const Login = ({ model }) => {
-  const { login, isLoading } = useManageAuth()
+  const location = useLocation()
 
+  const { login, isLoading } = useManageAuth()
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -52,7 +54,7 @@ const Login = ({ model }) => {
           </div>
         }
         {!isLoading && (
-          <form onSubmit={handleSubmit} className='py-4'>
+          <form onSubmit={handleSubmit} className='pt-4'>
             {!isTwoFactorEnabled && (
                <>
                 <div className='mb-5'>
@@ -115,6 +117,13 @@ const Login = ({ model }) => {
                 Click Here
               </Link>
             </p>
+            {location.pathname !== '/doctor/login' && (
+              <p className='mt-2 text-gray-400 text-center text-lg'>
+                <Link to='/doctor/login' className='text-[#168aad] hover:text-[#12657f] ml-1 font-semibold'>
+                  I'm a doctor
+                </Link>
+              </p>
+            )}
           </form>
         )}
       </div>

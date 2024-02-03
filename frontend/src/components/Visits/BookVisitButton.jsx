@@ -4,13 +4,16 @@ import { useAuthContext } from '../../hooks/auth/useAuthContext'
 import { MdClose } from 'react-icons/md'
 import Spinner from '../Utils/Spinner'
 import { Link } from 'react-router-dom'
+import { useManageUsers } from '../../hooks/users/useManageUsers.js'
 
 const BookVisitButton = ({ doctor, formattedDate, formattedTime, visitDate }) => {
-    const { bookVisit, getUsers, isLoading } = useManageVisits()
+    const { bookVisit, isLoading } = useManageVisits()
+    const { getUsers } = useManageUsers()
     const { user } = useAuthContext()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [patients, setPatients] = useState([])
+
     const [selectedPatient, setSelectedPatient] = useState(null);
     const handleOpenModal = async () => {
         setIsModalOpen(true);
