@@ -1,4 +1,4 @@
-import { compareDesc, endOfMonth, format, isWithinInterval, startOfMonth } from 'date-fns';
+import { compareDesc, format, isWithinInterval, startOfMonth, subDays, subMonths } from 'date-fns';
 import { it } from 'date-fns/locale';
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker';
@@ -13,11 +13,13 @@ const VisitsTable = ({ title, isDoctor, data }) => {
     const [sortColumn, setSortColumn] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
     const [startDate, setStartDate] = useState(() => {
-        return title === 'Next Visits' ? new Date() : startOfMonth(new Date());
+        return title === 'Next Visits' ? new Date() : startOfMonth(subMonths(new Date(), 1));
     });
+    console.log(startDate)
     const [endDate, setEndDate] = useState(() => {
-        return title === 'Next Visits' ? new Date() : endOfMonth(new Date());
+        return title === 'Next Visits' ? startDate : subDays(new Date(), 1);
     });
+    console.log(endDate)
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredData, setFilteredData] = useState([]);
 
@@ -50,19 +52,22 @@ const VisitsTable = ({ title, isDoctor, data }) => {
     
     const handleFilter = () => {
         let filteredVisits = data ?? [];
-
-        if (title === 'Next Visits') {
-            const currentDate = new Date();
-            filteredVisits = filteredVisits.filter((visit) => new Date(visit.date) > currentDate);
-        }
-
-        if (isDoctor || title === 'Past Visits') {
+        
+        if (isDoctor) {
             filteredVisits = filteredVisits.filter((visit) => {
                 const visitDate = new Date(visit.date);
                 return isWithinInterval(visitDate, { start: startDate, end: endDate });
             });
+        } else {
+            if (title === 'Next Visits') {
+                const currentDate = new Date();
+                filteredVisits = filteredVisits.filter((visit) => new Date(visit.date) >= currentDate);
+            } else if (title === 'Past Visits') {
+                const currentDate = new Date();
+                filteredVisits = filteredVisits.filter((visit) => new Date(visit.date) < currentDate);
+            }
         }
-    
+        
         setFilteredData(sortVisitsDate(filteredVisits));
     };
 
@@ -73,6 +78,20 @@ const VisitsTable = ({ title, isDoctor, data }) => {
         } catch(error){
             console.log(error)
         }
+    };
+
+    const handleStartDateChange = (date) => {
+        date.setHours(0, 0, 0, 0);
+        setStartDate(date);
+
+        if (endDate.getTime() === startDate.getTime()) {
+            handleEndDateChange(new Date(date));
+        }
+    };
+
+    const handleEndDateChange = (date) => {
+        date.setHours(23, 59, 59, 999);
+        setEndDate(date);
     };
     
     useEffect(() => {
@@ -88,11 +107,11 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                     </div>
                 )}
                 <>
-                    {isDoctor || title === 'Past Visits' ? (
+                    {isDoctor && (
                         <div className="flex gap-4 mt-1 mb-4 justify-center">
                             <DatePicker
                                 selected={startDate}
-                                onChange={(date) => setStartDate(date)}
+                                onChange={handleStartDateChange}
                                 selectsStart
                                 startDate={startDate}
                                 endDate={endDate}
@@ -102,7 +121,7 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                             />
                             <DatePicker
                                 selected={endDate}
-                                onChange={(date) => setEndDate(date)}
+                                onChange={handleEndDateChange}
                                 selectsEnd
                                 startDate={startDate}
                                 endDate={endDate}
@@ -112,14 +131,14 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                                 placeholderText="End Date"
                             />
                         </div>
-                    ) : null}
+                    )}
                     {filteredData.length === 0 ? (
                         <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
                             {isDoctor
                                 ? "No visits for the requested period."
                                 : title === "Next Visits"
                                 ? "You have no scheduled visits."
-                                : "No visits for the requested period." 
+                                : "You don't have past visits to see." 
                             }
                         </p>
                     ) : (

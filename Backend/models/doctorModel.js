@@ -165,7 +165,7 @@ doctorSchema.methods.checkExistingVisits = async function (visitDate) {
   
       const existingVisits = await this.model('Visit').find({
         doctor: this._id,
-        startTime: { $lte: endTime },
+        startTime: { $lt: endTime },
         endTime: { $gt: startTime },
       });
   

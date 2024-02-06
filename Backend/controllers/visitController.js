@@ -18,6 +18,9 @@ export const createVisit = async (req, res, next) => {
     }
 
     const { user, doctor, date } = req.body;
+    if (!user || !doctor) {
+      return res.status(400).json({ message: "Doctor and user are required" });
+    }
     const visitDate = new Date(date);
     const currentDate = new Date();
 
@@ -28,13 +31,22 @@ export const createVisit = async (req, res, next) => {
     const doctorDetails = await Doctor.findById(doctor);
     const patientDetails = await User.findById(user);
 
-    const startTime = visitDate.toISOString(); 
+    if (!doctorDetails || !patientDetails) {
+      return res.status(404).json({ message: "Doctor or patient not found" });
+    }
+
+    const startTime = visitDate.toISOString();
     const endTime = new Date(visitDate.getTime() + 60 * 60000).toISOString();
 
     const hasUserExistingVisits = await patientDetails.checkExistingVisits(visitDate)
+    const hasDoctorExistingVisits = await doctorDetails.checkExistingVisits(visitDate)
 
     if (hasUserExistingVisits){
       return res.status(400).json({ message: "User is not available on that day or time" });
+    }
+
+    if(hasDoctorExistingVisits){
+      return res.status(400).json({ message: "Doctor is not available on that day or time" });
     }
 
     const newVisit = await Visit.create({ user, doctor, date, startTime, endTime });
@@ -121,10 +133,8 @@ export const getVisitsByDoctorId = async (req, res, next) => {
 export const getVisitsByUserId = async (req, res, next) => {
   try {
     const { userId } = req.params;
-
-    const user = await User.findById(userId);
     
-    if (req.user.id !== userId && user.isAdmin !== 'true') {
+    if (req.user.id !== userId && req.user.role !== 'admin') {
       return res.status(403).json({message: "Permission denied."})
     }
 
