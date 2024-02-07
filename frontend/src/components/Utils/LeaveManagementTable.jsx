@@ -117,7 +117,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                   startDate={startDate}
                   endDate={endDate}
                   dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                  className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
                   placeholderText="Start Date"
                 />
                 <DatePicker
@@ -128,7 +128,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                   endDate={endDate}
                   minDate={startDate}
                   dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                  className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
                   placeholderText="End Date"
                 />
               </div>

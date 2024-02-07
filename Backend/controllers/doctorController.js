@@ -142,22 +142,18 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
         let startTime = addHours(currentDate, parseInt(workShift.startTime.split(':')[0]));
         const endTime = addHours(currentDate, parseInt(workShift.endTime.split(':')[0]));
 
-        // Itera nelle fasce orarie comprese tra START TIME e END TIME
         while (startTime < endTime) {
           const isAvailable = await doctor.isAvailable(startTime);
           const hasExistingVisits = await doctor.checkExistingVisits(startTime);
 
-          // Se è disponibile e non ci sono visite esistenti, aggiungi alla lista di slot disponibili
           if (isAvailable && !hasExistingVisits) {
             availableSlots.push(startTime);
           }
 
-          // Incrementa di un'ora
           startTime = addHours(startTime, 1);
         }
       }
-    
-      // Incrementa la data di mezz'ora
+
       currentDate = addDays(currentDate, 1);
     }
 
@@ -182,7 +178,6 @@ export const updateDoctor = async (req, res, next) => {
       const { firstName, lastName, email, password, confirmPassword, taxId, specialization, about, city, workShifts, leaveRequests, phoneNumber, profilePicture } = req.body;
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
 
-      // Initialize an empty object to store the fields to be updated
       const updateFields = {};
 
       if (firstName) updateFields.firstName = firstName;
@@ -278,7 +273,6 @@ export const deleteDoctor = async (req, res, next) => {
 
       const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
 
-      // If the doctor is deleted, cancel associated future appointments
       if (deletedDoctor) {
           // Delete future appointments
           const deletionResult = await Visit.deleteMany({

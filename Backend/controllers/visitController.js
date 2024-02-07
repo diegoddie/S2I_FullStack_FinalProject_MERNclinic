@@ -161,7 +161,6 @@ export const updateVisit = async (req, res, next) => {
 
       const visit = await Visit.findById(visitId);
 
-      // Check user permissions
       if (!visit || (visit.doctor.toString() !== authUserId && req.user.role !== 'admin')) {
         return res.status(403).json({message: "Permission denied."})
       }
