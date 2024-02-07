@@ -40,7 +40,7 @@ const Visits = () => {
   }, []);
 
   return (
-    <div className=''>
+    <div className='overflow-x-hidden'>
         <div className='font-semibold flex items-center mx-auto justify-center mt-3'>
             <h3 className='text-4xl leading-[30px] text-[#168aad] text-center px-3 mb-3'>
                 Visits
@@ -55,9 +55,9 @@ const Visits = () => {
           <>
             <div className="flex gap-2 justify-center pt-4">
               <button onClick={() => handleTabChange('nextVisits')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#168aad] hover:bg-[#12657f]">Next Visits</button>
-              <button onClick={() => handleTabChange('pastVisits')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#fc81b0] hover:bg-[#f873a4]">Past Visits</button>
+              <button onClick={() => handleTabChange('pastVisits')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#36ac63] hover:bg-[#368354]">Past Visits</button>
             </div>
-            <div className='overflow-x-auto'>
+            <div className='overflow-x-hidden'>
               {selectedTab === 'nextVisits' && (
                 <VisitsTable data={data} isDoctor={isDoctor} isAdmin={isAdmin} title="Next Visits" />
               )}

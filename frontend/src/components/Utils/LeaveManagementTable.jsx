@@ -17,7 +17,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
   const [endDate, setEndDate] = useState(endOfMonth(new Date()));
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
-  console.log(filteredData)
+
   const showDatePicker = title !== 'Pending Requests' 
   const itemsPerPage = 10; 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -101,7 +101,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="py-4 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
+      <div className="mt-1 py-4 max-w-full align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto ">
         {isLoading && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />
@@ -109,7 +109,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
         )}
         <>
           {showDatePicker && (
-              <div className="flex gap-4 my-4 justify-center">
+              <div className="flex gap-1 my-4 justify-center px-8">
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
@@ -117,7 +117,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                   startDate={startDate}
                   endDate={endDate}
                   dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded"
+                  className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
                   placeholderText="Start Date"
                 />
                 <DatePicker
@@ -128,7 +128,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                   endDate={endDate}
                   minDate={startDate}
                   dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded"
+                  className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
                   placeholderText="End Date"
                 />
               </div>
@@ -143,17 +143,17 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
           </>
           {filteredData.length > 0 && (
             <>
-              <div className="shadow overflow-x-auto border-b sm:rounded-lg">
+              <div className="shadow border-b sm:rounded-lg overflow-x-auto">
                 <table className="divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                  <thead className="bg-secondary text-white">
+                    <tr className='text-center text-lg'>
+                      <th className="px-5 py-3 border-r font-medium">
                         Doctor
                       </th>
-                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                      <th className="px-5 py-3 border-r font-medium">
                         Type
                       </th>
-                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('createdAt')}>
+                      <th className="cursor-pointer font-medium px-5 py-3 border-r" onClick={() => toggleSortOrder('createdAt')}>
                         <div className='flex gap-2 justify-center'>
                           <span>Created At</span>
                           <span className='items-center flex text-md'>
@@ -165,7 +165,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                           </span>
                         </div>
                       </th>
-                      <th className="cursor-pointer px-5 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('startDate')}>
+                      <th className="cursor-pointer font-medium px-5 py-3 border-r" onClick={() => toggleSortOrder('startDate')}>
                         <div className='flex gap-2 justify-center'>
                           <span>From</span>
                           <span className='items-center flex text-md'>
@@ -177,13 +177,13 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                           </span>
                         </div>
                       </th>
-                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                      <th className="px-5 py-3 border-r font-medium">
                         To
                       </th>
-                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                      <th className="px-5 py-3 border-r font-medium">
                         Status
                       </th>
-                      <th className="px-5 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                      <th className="px-5 py-3 border-r font-medium">
                         Action
                       </th>
                     </tr>
@@ -193,35 +193,35 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                       <tr key={leaveRequest._id} className="items-center text-center">
                         <td className="px-5 py-4 whitespace-nowrap border-r">
                           <div className="flex items-center">
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="font-medium text-gray-900">
                               {leaveRequest.firstName} {leaveRequest.lastName}
                             </div>
                           </div>
                         </td>
                         <td className="px-5 py-4 whitespace-nowrap border-r">
-                          <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-300' : 'bg-blue-300 '}`}>
+                          <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-200 text-purple-800' : 'bg-blue-200 text-blue-900'}`}>
                             {leaveRequest.typology}
                           </span>
                         </td>
                         <td className="px-5 py-4 whitespace-nowrap border-r">
-                          <div className="text-sm text-gray-900">{formatDate(leaveRequest.createdAt)}</div>
+                          <div className="text-gray-500">{formatDate(leaveRequest.createdAt)}</div>
                         </td>
-                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                        <td className="px-5 py-4 whitespace-nowrap text-gray-900 border-r">
                           {formatDate(leaveRequest.startDate, leaveRequest.typology.toLowerCase())}
                         </td>
-                        <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-500 border-r">
+                        <td className="px-5 py-4 whitespace-nowrap text-gray-900 border-r">
                           {formatDate(leaveRequest.endDate, leaveRequest.typology.toLowerCase())}
                         </td>
                         <td className="px-5 py-4 whitespace-nowrap border-r">
-                        <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full ${leaveRequest.isApproved === null ? "bg-yellow-300" : leaveRequest.isApproved ? "bg-green-500" : "bg-red-500" }`}>
+                        <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full ${leaveRequest.isApproved === null ? "bg-yellow-200 text-orange-700" : leaveRequest.isApproved ? "bg-green-200 text-green-900" : "bg-red-200 text-red-800" }`}>
                           {leaveRequest.isApproved === null ? "Pending" : leaveRequest.isApproved ? "Approved" : "Declined"}
                         </span>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap border-r">
                           {isAdmin ? (
                             <div className='flex gap-2'>
-                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-300 hover:bg-green-500 duration-300' onClick={() => handleApproveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
-                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-300 hover:bg-red-500 duration-300' onClick={() => handleDeclineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-200 text-green-900 hover:bg-green-400 duration-300' onClick={() => handleApproveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>
+                              <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-red-200 text-red-800 hover:bg-red-400 duration-300' onClick={() => handleDeclineLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Decline</button>
                             </div>
                           ) : (
                             <div className='flex mx-auto justify-center'>

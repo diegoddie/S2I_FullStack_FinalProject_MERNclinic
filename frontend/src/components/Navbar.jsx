@@ -75,9 +75,9 @@ const Navbar = () => {
             <nav className={`bg-white fixed w-[250px] top-0 h-screen ${isMenuOpen ? 'left-0' : '-left-[250px]'} shadow-2xl lg:hidden transition-all duration-300 z-20`}>
               <div className='w-8 h-8 relative -right-full top-8 flex justify-center items-center rounded-tr-lg rounded-br-lg cursor-pointer transition-all'>
                 {isMenuOpen ? (
-                  <RiArrowLeftDoubleLine className='text-3xl bg-black text-white' onClick={toggleMenu} />
+                  <RiArrowLeftDoubleLine className='text-3xl bg-primary text-secondary' onClick={toggleMenu} />
                 ) : (
-                  <RiArrowRightDoubleFill className='text-3xl bg-black text-white' onClick={toggleMenu} />
+                  <RiArrowRightDoubleFill className='text-3xl bg-primary text-secondary' onClick={toggleMenu} />
                 )}
               </div>
               <div className='px-12 flex flex-col gap-y-12 h-full'>

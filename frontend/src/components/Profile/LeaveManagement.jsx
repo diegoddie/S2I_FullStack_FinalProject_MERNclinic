@@ -114,13 +114,15 @@ const LeaveManagement = () => {
             {!isLoading && (
                 <>
                     {!isAdmin && (
-                        <div className="flex gap-2 justify-center pt-4">
-                            <button onClick={() => handleTabChange('pendingRequests')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#d69347] hover:bg-[#ad783b]">Pending</button>
-                            <button onClick={() => handleTabChange('allRequests')} className="px-5 py-3 leading-4 transition-colors duration-200 transform rounded-md text-xl font-semibold text-white bg-[#168aad] hover:bg-[#12657f]">All Requests</button>
+                        <>
+                        <div className="pt-4 flex px-2 gap-1 md:gap-2 justify-center">                      
+                            <button onClick={() => handleTabChange('pendingRequests')} className="px-3 md:px-4 py-4 md:py-5 leading-3 md:leading-4 transition-colors duration-200 transform rounded-md text-lg md:text-xl font-semibold text-white bg-[#d69347] hover:bg-[#ad783b]">Pending</button>
+                            <button onClick={() => handleTabChange('allRequests')} className="px-3 md:px-4 py-4 md:py-5 leading-3 md:leading-4 transition-colors duration-200 transform rounded-md text-lg md:text-xl font-semibold text-white bg-[#168aad] hover:bg-[#12657f]">All Requests</button>
                             <CreateLeaveRequest />
                         </div>
+                        </>
                     )}
-                    <div className='overflow-x-auto'>
+                    <div className=''>
                         {isAdmin ? (
                             <LeaveManagementTable isAdmin={isAdmin} data={pendingLeaveRequestsData} title="Pending Requests"/>
                         ) : (

@@ -77,7 +77,7 @@ const UpdateProfile = ({ model }) => {
     };
 
     return (
-      <div>
+      <div className='px-2 md:px-10 2xl:px-20'>
         {isLoading && 
           <div className='flex items-center justify-center mx-auto py-10'>
             <Spinner />

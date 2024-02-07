@@ -41,7 +41,7 @@ const Profile = ({ model }) => {
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />
-            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md overflow-x-auto'>
+            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md overflow-x-hidden'>
               {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
               {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
               {selectedSection === 'Visits' && <Visits />}

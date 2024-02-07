@@ -112,14 +112,14 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
 
     return (
         <div className="flex flex-col">
-            <div className="mt-3 py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto bg-white">
+            <div className="mt-2 py-5 max-w-full align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto ">
                 {isLoading && (
                     <div className="flex items-center justify-center mx-auto py-10">
                         <Spinner />
                     </div>
                 )}
                 <>
-                    <div className="flex gap-4 mt-1 mb-4 justify-center">
+                    <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center">
                         {isAdmin && (
                             <>
                                 <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
@@ -149,7 +149,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                             </>
                         )}
                         {isDoctor && (
-                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 mx-10 md:mx-0">
                                 <div className="flex items-center pointer-events-none mr-1">
                                     <CiSearch className="text-gray-800 font-bold text-md" />
                                 </div>
@@ -176,27 +176,29 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                 />
                             </div>
                         )}
-                        <DatePicker
-                            selected={startDate}
-                            onChange={handleStartDateChange}
-                            selectsStart
-                            startDate={startDate}
-                            endDate={endDate}
-                            dateFormat="dd/MM/yyyy"
-                            className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
-                            placeholderText="Start Date"
-                        />
-                        <DatePicker
-                            selected={endDate}
-                            onChange={handleEndDateChange}
-                            selectsEnd
-                            startDate={startDate}
-                            endDate={endDate}
-                            minDate={startDate}
-                            dateFormat="dd/MM/yyyy"
-                            className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
-                            placeholderText="End Date"
-                        />
+                        <div className='flex flex-row gap-1 justify-center px-2 md:px-0'>
+                            <DatePicker
+                                selected={startDate}
+                                onChange={handleStartDateChange}
+                                selectsStart
+                                startDate={startDate}
+                                endDate={endDate}
+                                dateFormat="dd/MM/yyyy"
+                                className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                                placeholderText="Start Date"
+                            />
+                            <DatePicker
+                                selected={endDate}
+                                onChange={handleEndDateChange}
+                                selectsEnd
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={startDate}
+                                dateFormat="dd/MM/yyyy"
+                                className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                                
+                            />
+                        </div>
                     </div>
                     {filteredData.length === 0 ? (
                         <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
@@ -204,11 +206,11 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                         </p>
                     ) : (
                         <>
-                            <div className="shadow overflow-x-auto border-b sm:rounded-lg">
+                            <div className="shadow border-b sm:rounded-lg overflow-x-auto">
                                 <table className="divide-y divide-gray-200">
                                     <thead className="bg-secondary text-white">
-                                        <tr>
-                                            <th className="cursor-pointer px-7 py-3 text-center font-medium uppercase border-r" onClick={() => toggleSortOrder('date')}>
+                                        <tr className='text-center text-lg'>
+                                            <th className="cursor-pointer px-7 py-3 font-medium border-r" onClick={() => toggleSortOrder('date')}>
                                                 <div className='flex gap-2 justify-center'>
                                                     <span>Date</span>
                                                     <span className='items-center flex text-md'>
@@ -220,16 +222,16 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
+                                            <th className="px-7 py-3 font-medium border-r">
                                                 Patient
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
+                                            <th className="px-7 py-3 font-medium border-r">
                                                 Doctor
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
+                                            <th className="px-7 py-3 font-medium border-r">
                                                 Specialization
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
+                                            <th className="px-7 py-3 font-medium border-r">
                                                 Action
                                             </th>
                                         </tr>
