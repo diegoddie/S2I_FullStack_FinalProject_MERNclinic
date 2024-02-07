@@ -1,5 +1,6 @@
 import { compareDesc, format, isWithinInterval, startOfMonth, subDays, subMonths } from 'date-fns';
 import { it } from 'date-fns/locale';
+import { CiSearch } from "react-icons/ci";
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker';
 import { FaLongArrowAltDown, FaLongArrowAltUp, FaTrash } from 'react-icons/fa';
@@ -19,6 +20,8 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
         return title === 'Next Visits' ? startDate : subDays(new Date(), 1);
     });
     const [currentPage, setCurrentPage] = useState(1);
+    const [patientNameFilter, setPatientNameFilter] = useState('');
+    const [doctorNameFilter, setDoctorNameFilter] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
     const itemsPerPage = 10; 
@@ -50,20 +53,32 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     
     const handleFilter = () => {
         let filteredVisits = data ?? [];
-        if (isDoctor || isAdmin) {
-            filteredVisits = filteredVisits.filter((visit) => {
-                const visitDate = new Date(visit.date);
-                return isWithinInterval(visitDate, { start: startDate, end: endDate });
-            });
-        } else {
-            if (title === 'Next Visits') {
-                const currentDate = new Date();
-                filteredVisits = filteredVisits.filter((visit) => new Date(visit.date) >= currentDate);
-            } else if (title === 'Past Visits') {
-                const currentDate = new Date();
-                filteredVisits = filteredVisits.filter((visit) => new Date(visit.date) < currentDate);
+        
+        filteredVisits = filteredVisits.filter((visit) => {
+            const visitDate = new Date(visit.date);
+            return isWithinInterval(visitDate, { start: startDate, end: endDate });
+        });
+            
+        filteredVisits = filteredVisits.filter((visit) => {
+            const { user, doctor } = visit;
+            const patientFullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+            const doctorFullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
+                
+            if (isAdmin) {
+                return (
+                    patientFullName.includes(patientNameFilter.toLowerCase()) &&
+                    doctorFullName.includes(doctorNameFilter.toLowerCase())
+                );
+            } else if (isDoctor) {
+                return (
+                    patientFullName.includes(patientNameFilter.toLowerCase())
+                );
+            } else {
+                return (
+                    doctorFullName.includes(doctorNameFilter.toLowerCase())
+                );
             }
-        }
+        });
         
         setFilteredData(sortVisitsDate(filteredVisits));
     };
@@ -93,50 +108,99 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     
     useEffect(() => {
         handleFilter();
-    }, [data, startDate, endDate, sortColumn, sortOrder, currentPage]);
+    }, [data, startDate, endDate, patientNameFilter, doctorNameFilter, sortColumn, sortOrder, currentPage]);
 
     return (
         <div className="flex flex-col">
-            <div className="py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
+            <div className="mt-3 py-5 align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto bg-white">
                 {isLoading && (
                     <div className="flex items-center justify-center mx-auto py-10">
                         <Spinner />
                     </div>
                 )}
                 <>
-                    {isDoctor || isAdmin && (
-                        <div className="flex gap-4 mt-1 mb-4 justify-center">
-                            <DatePicker
-                                selected={startDate}
-                                onChange={handleStartDateChange}
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                dateFormat="dd/MM/yyyy"
-                                className="p-2 border border-gray-300 rounded"
-                                placeholderText="Start Date"
-                            />
-                            <DatePicker
-                                selected={endDate}
-                                onChange={handleEndDateChange}
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate}
-                                dateFormat="dd/MM/yyyy"
-                                className="p-2 border border-gray-300 rounded"
-                                placeholderText="End Date"
-                            />
-                        </div>
-                    )}
+                    <div className="flex gap-4 mt-1 mb-4 justify-center">
+                        {isAdmin && (
+                            <>
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                    <div className="flex items-center pointer-events-none mr-1">
+                                        <CiSearch className="text-gray-800 font-bold text-md" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search Patient"
+                                        value={patientNameFilter}
+                                        onChange={(e) => setPatientNameFilter(e.target.value)}
+                                        className="bg-transparent outline-none"
+                                    />
+                                </div>
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                    <div className="flex items-center pointer-events-none mr-1">
+                                        <CiSearch className="text-gray-800 font-bold text-md" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search Doctor"
+                                        value={doctorNameFilter}
+                                        onChange={(e) => setDoctorNameFilter(e.target.value)}
+                                        className="bg-transparent outline-none"
+                                    />
+                                </div>       
+                            </>
+                        )}
+                        {isDoctor && (
+                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                <div className="flex items-center pointer-events-none mr-1">
+                                    <CiSearch className="text-gray-800 font-bold text-md" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search Patient"
+                                    value={patientNameFilter}
+                                    onChange={(e) => setPatientNameFilter(e.target.value)}
+                                    className="bg-transparent outline-none"
+                                />
+                            </div>
+                        )}
+                        {!isAdmin && !isDoctor && (
+                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                <div className="flex items-center pointer-events-none mr-1">
+                                    <CiSearch className="text-gray-800 font-bold text-md" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search Doctor"
+                                    value={doctorNameFilter}
+                                    onChange={(e) => setDoctorNameFilter(e.target.value)}
+                                    className="bg-transparent outline-none"
+                                />
+                            </div>
+                        )}
+                        <DatePicker
+                            selected={startDate}
+                            onChange={handleStartDateChange}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            dateFormat="dd/MM/yyyy"
+                            className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                            placeholderText="Start Date"
+                        />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={handleEndDateChange}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            dateFormat="dd/MM/yyyy"
+                            className="p-2 border border-gray-300 rounded bg-gray-50 outline-none"
+                            placeholderText="End Date"
+                        />
+                    </div>
                     {filteredData.length === 0 ? (
                         <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
-                            {isDoctor || isAdmin
-                                ? "There are no visits for the requested period."
-                                : title === "Next Visits"
-                                ? "You don't have any scheduled visits."
-                                : "There are no visits for the requested period." 
-                            }
+                            No visits found
                         </p>
                     ) : (
                         <>
