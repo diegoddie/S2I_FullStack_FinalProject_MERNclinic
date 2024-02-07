@@ -137,7 +137,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
               {filteredData.length === 0
                 ? title === 'Pending Requests'
                   ? 'There are no Pending Requests'
-                  : 'No requests for the selected period'
+                  : 'There are no requests for the selected period'
                 : null}
             </p>
           </>

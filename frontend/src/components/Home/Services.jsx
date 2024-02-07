@@ -16,7 +16,7 @@ const Services = () => {
                     Services
                 </h2>
                 <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-600 px-8">
-                    At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
+                    At MyClinic, we offer a range of exceptional healthcare services tailored to your needs. Our commitment goes beyond medical expertise, striving to create a compassionate and supportive environment for all our patients.
                 </p>
             </div>
             <div className='mt-12 flex flex-col md:flex-row gap-12 justify-center items-center'>

@@ -25,7 +25,7 @@ const Contact = () => {
                         Contact Us
                     </h2>
                     <p className="text-justify md:text-center text-lg 2xl:text-xl text-gray-600 px-8">
-                        Are you looking to get in touch with us via email? Fill out the form below, and we'll get back to you as soon as possible.
+                        Are you looking to get in touch with us? Fill out the form below, and we'll get back to you as soon as possible.
                     </p>
                 </div>
                 <div className='mt-10 mx-auto md:w-1/2 px-8'>

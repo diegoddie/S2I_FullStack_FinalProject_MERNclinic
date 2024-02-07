@@ -45,11 +45,11 @@ const Navbar = () => {
           <div className='flex flex-col gap-y-4 lg:flex-row lg:gap-x-10 lg:gap-y-0'>
             <div className='flex justify-center items-center gap-x-1 lg:justify-normal'>
               <FaLocationDot className='text-xl text-secondary mb-1'/>
-              <div className='text-sm text-secondary'>Via Giuseppe Garibaldi, 54 Flero (BS)</div>
+              <div className='text-sm text-secondary'>123 Oak Street - Springfield, IL 62701</div>
             </div>
             <div className='flex justify-center items-center gap-x-2 lg:justify-normal'>
               <FaPhoneAlt className='text-xl text-secondary'/>
-              <div className='text-sm text-secondary'>+39 329-3094304</div>
+              <div className='text-sm text-secondary'>(555) 123-4567</div>
             </div>
             <div className='flex justify-center md:mt-0 items-center gap-2 font-semibold text-xl text-gray-700'>
               {token && user ? (

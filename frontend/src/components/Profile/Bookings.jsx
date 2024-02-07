@@ -58,7 +58,7 @@ const Bookings = () => {
             </div>
             <div className='flex flex-wrap mt-5 mx-auto justify-center items-center gap-2'>
               {filteredDoctors.map((doctor, id) => (
-                <div key={id} className='my-2 2xl:w-[350px] w-[340px] mb-8'>
+                <div key={id} className='my-4 2xl:w-[350px] w-[340px]'>
                   <DoctorCard doctor={doctor} />          
                 </div>
               ))}

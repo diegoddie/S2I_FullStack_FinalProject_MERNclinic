@@ -4,14 +4,15 @@ import Spinner from '../Utils/Spinner';
 import VisitsTable from '../Utils/VisitsTable';
 import { useManageVisits } from '../../hooks/visits/useManageVisits';
 
-const MyVisits = () => {
-  const { getVisits, isLoading } = useManageVisits();
+const Visits = () => {
+  const { getAllVisits, getVisitsById, isLoading } = useManageVisits();
   const { user } = useAuthContext();
 
   const [data, setData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('nextVisits');
 
   const isDoctor = user.specialization || false;
+  const isAdmin = user.isAdmin || false;
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
@@ -20,10 +21,13 @@ const MyVisits = () => {
   const fetchData = async () => {
     try {
         if (isDoctor) {
-            const visits = await getVisits("doctor", user._id);
+            const visits = await getVisitsById("doctor", user._id);
             setData(visits)
-        } else {
-            const visits = await getVisits("user", user._id);
+        } else if (isAdmin){
+            const visits = await getAllVisits();
+            setData(visits)
+        }else{
+            const visits = await getVisitsById("user", user._id);
             setData(visits)
         }
     } catch (error) {
@@ -39,7 +43,7 @@ const MyVisits = () => {
     <div className=''>
         <div className='font-semibold flex items-center mx-auto justify-center mt-3'>
             <h3 className='text-4xl leading-[30px] text-[#168aad] text-center px-3 mb-3'>
-                My Visits
+                Visits
             </h3>
         </div>
         {isLoading && (
@@ -55,10 +59,10 @@ const MyVisits = () => {
             </div>
             <div className='overflow-x-auto'>
               {selectedTab === 'nextVisits' && (
-                <VisitsTable data={data} isDoctor={isDoctor} title="Next Visits" />
+                <VisitsTable data={data} isDoctor={isDoctor} isAdmin={isAdmin} title="Next Visits" />
               )}
               {selectedTab === 'pastVisits' && (
-                <VisitsTable data={data} isDoctor={isDoctor} title="Past Visits" />
+                <VisitsTable data={data} isDoctor={isDoctor} isAdmin={isAdmin} title="Past Visits" />
               )}
             </div>
           </>
@@ -67,4 +71,4 @@ const MyVisits = () => {
 );
 }
 
-export default MyVisits
+export default Visits

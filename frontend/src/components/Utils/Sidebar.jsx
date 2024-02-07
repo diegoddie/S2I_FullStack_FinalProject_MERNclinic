@@ -9,8 +9,8 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
 
     const menuItems = [
         { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, user: [isAdmin] },
+        { title: 'Visits', section: 'Visits', icon: <MdHealthAndSafety />, user: [isDoctor, isAdmin, !isAdmin] },
         { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, user: [isAdmin] },
-        { title: 'My Visits', section: 'MyVisits', icon: <MdHealthAndSafety />, user: [isDoctor, !isAdmin] },
         { title: 'Leave Management', section: 'LeaveManagement', icon: <FaRegPenToSquare />, user: [isDoctor, isAdmin] },
         { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, user: [!isDoctor] },
         { title: 'Update Profile', section: 'Update', icon: <CgProfile />, user: [isDoctor, isAdmin, !isAdmin]},

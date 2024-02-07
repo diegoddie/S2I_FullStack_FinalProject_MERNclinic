@@ -34,7 +34,7 @@ const Footer = () => {
               <div className='flex flex-col gap-y-3 mt-2 mb-8 mx-auto items-center justify-center'>
                 <div className='flex items-center gap-x-[6px]'>
                   <FaLocationDot className='text-xl text-gray-200'/>
-                  <div className='text-lg'>Via Giuseppe Garibaldi, 54 Flero (BS)</div>
+                  <div className='text-lg'>123 Oak Street - Springfield, IL 62701</div>
                 </div>
                 <div className='flex items-center gap-x-[6px]'>
                   <MdEmail className='text-xl text-gray-200'/>
@@ -42,7 +42,7 @@ const Footer = () => {
                 </div>
                 <div className='flex items-center gap-x-[6px]'>
                   <FaPhoneAlt className='text-xl text-gray-200'/>
-                  <div className='text-lg'>+39 329-3094304</div>
+                  <div className='text-lg'>(555) 123-4567</div>
                 </div>
               </div>
               <div className='flex gap-[14px] text-[30px]'>
@@ -107,7 +107,7 @@ const Footer = () => {
         </div>
         <div className='py-[20px] border-t'>
           <div className="container mx-auto text-center">
-            <div className='font-light text-base'>&copy; 2023 MyClinic - All rights reserved.</div>
+            <div className='font-light text-base'>&copy; 2024 MyClinic - All rights reserved.</div>
           </div>
         </div>
       </footer>

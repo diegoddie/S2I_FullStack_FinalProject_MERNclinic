@@ -10,7 +10,38 @@ export const useManageVisits = () => {
     const { token, dispatch } = useAuthContext();
     const [isLoading, setIsLoading] = useState(false);
 
-    const getVisits = async (model, id) => {
+    const getAllVisits = async()=>{
+        try{
+            setIsLoading(true)
+            const res = await axios.get('http://localhost:3000/visit', {
+                headers: {
+                    'Authorization': `Bearer ${token.token}`
+                }
+            });
+
+            if(res.status === 200){
+                setIsLoading(false)
+                const visits = res.data;
+                return visits
+            }
+        }catch(error){
+            console.error('Error getting visits:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false)
+        }
+    }
+
+    const getVisitsById = async (model, id) => {
         try {
             setIsLoading(true);
             const res = await axios.get(`http://localhost:3000/visit/${model}/${id}`, {
@@ -96,6 +127,6 @@ export const useManageVisits = () => {
         }
     }
 
-    return { getVisits, bookVisit, deleteVisit, isLoading };
+    return { getVisitsById, getAllVisits, bookVisit, deleteVisit, isLoading };
 };
 

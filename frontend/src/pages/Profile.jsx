@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/auth/useAuthContext';
 import Spinner from '../components/Utils/Spinner';
-import MyVisits from '../components/Profile/MyVisits';
 import Bookings from '../components/Profile/Bookings';
 import UpdateProfile from '../components/Profile/UpdateProfile';
 import Dashboard from '../components/Profile/Dashboard';
@@ -10,12 +9,13 @@ import Sidebar from '../components/Utils/Sidebar';
 import Security from '../components/Profile/Security';
 import ManageDoctors from '../components/Admin/ManageDoctors';
 import LeaveManagement from '../components/Profile/LeaveManagement';
+import Visits from '../components/Profile/Visits';
 
 const Profile = ({ model }) => {
   const { user } = useAuthContext();
 
   const [selectedSection, setSelectedSection] = useState(() => {
-    return user.isAdmin ? 'Dashboard' : 'MyVisits';
+    return user.isAdmin ? 'Dashboard' : 'Visits';
   });
 
   const isAdmin = user?.isAdmin;
@@ -44,7 +44,7 @@ const Profile = ({ model }) => {
             <div className='flex-1 bg-[#cef4ed] py-4 rounded-md overflow-x-auto'>
               {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
               {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
-              {selectedSection === 'MyVisits' && <MyVisits />}
+              {selectedSection === 'Visits' && <Visits />}
               {selectedSection === 'Bookings' && !isDoctor && <Bookings />}
               {selectedSection === 'LeaveManagement' && (isDoctor || isAdmin) && <LeaveManagement model={model} />}
               {selectedSection === 'Update' && <UpdateProfile model={model}/>}

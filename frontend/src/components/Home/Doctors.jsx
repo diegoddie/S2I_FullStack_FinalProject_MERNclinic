@@ -73,7 +73,7 @@ const Doctors = () => {
                           Our Doctors
                       </h2>
                       <p className="md:text-center text-lg 2xl:text-xl text-gray-600 px-8 text-justify">
-                          At MyClinic, we are driven by a passion for delivering exceptional healthcare services. Our commitment extends beyond medical expertise to creating a compassionate and supportive environment for our patients.
+                        Meet our team of experienced and dedicated doctors at MyClinic. Our specialists are committed to providing personalized care and comprehensive medical services to our patients, ensuring they receive the best treatment and support.
                       </p>
                   </div>
                   <div className="px-8 items-center justify-center mx-auto my-10">

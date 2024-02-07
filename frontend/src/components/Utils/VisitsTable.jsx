@@ -7,7 +7,7 @@ import Pagination from './Pagination';
 import Spinner from './Spinner';
 import { useManageVisits } from '../../hooks/visits/useManageVisits';
 
-const VisitsTable = ({ title, isDoctor, data }) => {
+const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     const { deleteVisit, isLoading } = useManageVisits();
 
     const [sortColumn, setSortColumn] = useState('date');
@@ -15,11 +15,9 @@ const VisitsTable = ({ title, isDoctor, data }) => {
     const [startDate, setStartDate] = useState(() => {
         return title === 'Next Visits' ? new Date() : startOfMonth(subMonths(new Date(), 1));
     });
-    console.log(startDate)
     const [endDate, setEndDate] = useState(() => {
         return title === 'Next Visits' ? startDate : subDays(new Date(), 1);
     });
-    console.log(endDate)
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredData, setFilteredData] = useState([]);
 
@@ -52,8 +50,7 @@ const VisitsTable = ({ title, isDoctor, data }) => {
     
     const handleFilter = () => {
         let filteredVisits = data ?? [];
-        
-        if (isDoctor) {
+        if (isDoctor || isAdmin) {
             filteredVisits = filteredVisits.filter((visit) => {
                 const visitDate = new Date(visit.date);
                 return isWithinInterval(visitDate, { start: startDate, end: endDate });
@@ -107,7 +104,7 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                     </div>
                 )}
                 <>
-                    {isDoctor && (
+                    {isDoctor || isAdmin && (
                         <div className="flex gap-4 mt-1 mb-4 justify-center">
                             <DatePicker
                                 selected={startDate}
@@ -134,20 +131,20 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                     )}
                     {filteredData.length === 0 ? (
                         <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
-                            {isDoctor
-                                ? "No visits for the requested period."
+                            {isDoctor || isAdmin
+                                ? "There are no visits for the requested period."
                                 : title === "Next Visits"
-                                ? "You have no scheduled visits."
-                                : "You don't have past visits to see." 
+                                ? "You don't have any scheduled visits."
+                                : "There are no visits for the requested period." 
                             }
                         </p>
                     ) : (
                         <>
                             <div className="shadow overflow-x-auto border-b sm:rounded-lg">
                                 <table className="divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
+                                    <thead className="bg-secondary text-white">
                                         <tr>
-                                            <th className="cursor-pointer px-7 py-3 text-center font-medium text-gray-500 uppercase border-r" onClick={() => toggleSortOrder('date')}>
+                                            <th className="cursor-pointer px-7 py-3 text-center font-medium uppercase border-r" onClick={() => toggleSortOrder('date')}>
                                                 <div className='flex gap-2 justify-center'>
                                                     <span>Date</span>
                                                     <span className='items-center flex text-md'>
@@ -159,42 +156,42 @@ const VisitsTable = ({ title, isDoctor, data }) => {
                                                     </span>
                                                 </div>
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
                                                 Patient
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
                                                 Doctor
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
                                                 Specialization
                                             </th>
-                                            <th className="px-7 py-3 text-center font-medium text-gray-500 uppercase border-r">
+                                            <th className="px-7 py-3 text-center font-medium uppercase border-r">
                                                 Action
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-gray-50 divide-y divide-gray-200">
                                         {currentItems.map((visit) => (
                                             <tr key={visit._id} className="items-center text-center">
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-sm text-gray-900 font-medium">{formatDate(visit.date)}</div>
+                                                    <div className="text-gray-900 font-medium">{formatDate(visit.date)}</div>
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
                                                     <div className="flex items-center">
-                                                        <div className="text-sm font-medium text-gray-900">
+                                                        <div className="font-medium text-gray-900">
                                                             {visit.user.firstName} {visit.user.lastName}
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
                                                     <div className="flex items-center">
-                                                        <div className="text-sm font-medium text-gray-900">
+                                                        <div className="font-medium text-gray-900">
                                                             {visit.doctor.firstName} {visit.doctor.lastName}
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-sm text-gray-900">{visit.doctor.specialization}</div>
+                                                    <div className="text-gray-900">{visit.doctor.specialization}</div>
                                                 </td>
 
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
