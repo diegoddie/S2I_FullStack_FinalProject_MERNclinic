@@ -8,7 +8,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { RiArrowRightDoubleFill } from "react-icons/ri";
 import { RiArrowLeftDoubleLine } from "react-icons/ri";
 import { useAuthContext } from '../hooks/auth/useAuthContext';
-import LogoutButton from './Auth/LogoutButton';
+import LogoutButton from './Button/LogoutButton';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

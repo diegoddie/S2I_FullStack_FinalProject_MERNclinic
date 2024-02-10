@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../../hooks/auth/useAuthContext';
-import LeaveManagementTable from '../Utils/LeaveManagementTable';
+import LeaveManagementTable from '../Table/LeaveManagementTable';
 import Spinner from '../Utils/Spinner';
-import CreateLeaveRequest from '../Doctors/CreateLeaveRequest';
+import CreateLeaveRequest from '../Button/CreateLeaveRequestButton';
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const LeaveManagement = () => {

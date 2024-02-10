@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useManageAuth } from '../../hooks/auth/useManageAuth';
-import Spinner from '../Utils/Spinner';
+import Spinner from './Spinner';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 import { toast } from 'react-toastify';
 

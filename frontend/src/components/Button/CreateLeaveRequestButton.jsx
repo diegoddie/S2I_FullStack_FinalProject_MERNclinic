@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
-const CreateLeaveRequest = () => {
+const CreateLeaveRequestButton = () => {
   const { updateDoctor, isLoading } = useManageDoctors();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -183,4 +183,4 @@ const CreateLeaveRequest = () => {
   );
 };
 
-export default CreateLeaveRequest;
+export default CreateLeaveRequestButton;

@@ -31,6 +31,10 @@ const Login = ({ model }) => {
 
     } catch (error) {
       console.error('Error during login', error);
+      setFormData({
+        email: '',
+        password: ''
+      })
     }
   };
 

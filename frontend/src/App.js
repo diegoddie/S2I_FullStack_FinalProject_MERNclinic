@@ -13,7 +13,7 @@ import PasswordResetRequest from "./pages/PasswordReset/PasswordResetRequest.jsx
 import PasswordReset from "./pages/PasswordReset/PasswordReset.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EmailVerified from "./components/Auth/EmailVerified.jsx";
+import EmailVerified from "./components/Utils/EmailVerified.jsx";
 
 const App = () => {
   const { user, token } = useAuthContext()

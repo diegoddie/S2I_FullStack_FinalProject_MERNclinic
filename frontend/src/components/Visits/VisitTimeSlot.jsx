@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { it, enUS } from 'date-fns/locale';
 import Pagination from '../Utils/Pagination';
-import BookVisitButton from './BookVisitButton';
+import BookVisitButton from '../Button/BookVisitButton';
 
 
 const VisitTimeSlot = ({ data, doctor }) => {

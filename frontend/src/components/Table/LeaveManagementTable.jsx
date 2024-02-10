@@ -5,12 +5,14 @@ import { format, compareDesc, startOfMonth, endOfMonth, isWithinInterval } from 
 import { it } from 'date-fns/locale';
 import { FaLongArrowAltUp, FaLongArrowAltDown, FaTrash } from "react-icons/fa";
 import { useManageLeaveRequests } from '../../hooks/doctors/useManageLeaveRequests';
-import Spinner from './Spinner';
-import Pagination from './Pagination';
+import Spinner from '../Utils/Spinner';
+import Pagination from '../Utils/Pagination';
+import DeleteConfirmationModal from '../Modal/DeleteConfirmationModal';
 
 const LeaveManagementTable = ({ title, data, isAdmin }) => {
   const { approveLeaveRequest, declineLeaveRequest, deleteLeaveRequest, isLoading } = useManageLeaveRequests();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortColumn, setSortColumn] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
   const [startDate, setStartDate] = useState(startOfMonth(new Date()));
@@ -22,6 +24,14 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
   const itemsPerPage = 10; 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentItems = filteredData?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+      setIsModalOpen(false);
+  };
 
   const toggleSortOrder = (column) => {
     setSortColumn(column);
@@ -90,6 +100,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
       await deleteLeaveRequest(doctorId, requestId);
 
       setFilteredData((prevData) => prevData.filter((request) => request._id !== requestId));
+      handleCloseModal()
     } catch (error) {
       console.error("Error deleting leave request:", error);
     }
@@ -225,7 +236,13 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                             </div>
                           ) : (
                             <div className='flex mx-auto justify-center'>
-                              <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => handleDeleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} />
+                              <FaTrash
+                                onClick={handleOpenModal}
+                                className='cursor-pointer text-xl text-red-700 hover:text-red-800'
+                              />
+                              {isModalOpen && (
+                                <DeleteConfirmationModal onDelete={() => handleDeleteLeaveRequest(leaveRequest.doctorId, leaveRequest._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
+                              )}
                             </div>
                           )}
                         </td>

@@ -4,6 +4,7 @@ import Spinner from '../Utils/Spinner';
 import defaultProfilePicture from '../../assets/default-user.jpg'
 import CustomWorkShifts from '../Utils/CustomWorkShifts';
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
+import errorHandler from '../../hooks/utils/errorHandler';
 
 const CreateDoctorButton = ({ updateDoctorsList }) => {
     const workingDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -87,6 +88,7 @@ const CreateDoctorButton = ({ updateDoctorsList }) => {
         handleCloseModal()
       } catch (error) {
         console.error('Error adding a new doctor:', error);
+        errorHandler(error)
       }
     };
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useManageVisits } from '../../hooks/visits/useManageVisits.js'
-import { useAuthContext } from '../../hooks/auth/useAuthContext'
+import { useAuthContext } from '../../hooks/auth/useAuthContext.js'
 import { MdClose } from 'react-icons/md'
-import Spinner from '../Utils/Spinner'
+import Spinner from '../Utils/Spinner.jsx'
 import { Link } from 'react-router-dom'
 import { useManageUsers } from '../../hooks/users/useManageUsers.js'
 

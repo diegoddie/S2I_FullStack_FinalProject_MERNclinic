@@ -4,13 +4,15 @@ import { CiSearch } from "react-icons/ci";
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker';
 import { FaLongArrowAltDown, FaLongArrowAltUp, FaTrash } from 'react-icons/fa';
-import Pagination from './Pagination';
-import Spinner from './Spinner';
+import Pagination from '../Utils/Pagination';
+import Spinner from '../Utils/Spinner';
 import { useManageVisits } from '../../hooks/visits/useManageVisits';
+import DeleteConfirmationModal from '../Modal/DeleteConfirmationModal';
 
 const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     const { deleteVisit, isLoading } = useManageVisits();
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [sortColumn, setSortColumn] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
     const [startDate, setStartDate] = useState(() => {
@@ -27,6 +29,14 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     const itemsPerPage = 10; 
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
     const currentItems = filteredData?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+  
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     const toggleSortOrder = (column) => {
         setSortColumn(column);
@@ -119,7 +129,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                     </div>
                 )}
                 <>
-                    <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center">
+                    <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center mx-8">
                         {isAdmin && (
                             <>
                                 <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
@@ -163,7 +173,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                             </div>
                         )}
                         {!isAdmin && !isDoctor && (
-                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 ">
                                 <div className="flex items-center pointer-events-none mr-1">
                                     <CiSearch className="text-gray-800 font-bold text-md" />
                                 </div>
@@ -260,10 +270,17 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                                     <div className="text-gray-900">{visit.doctor.specialization}</div>
                                                 </td>
 
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                <td className="px-5 py-4 border-r">
                                                     {title === 'Next Visits' && (
+                                                        
                                                         <div className='flex mx-auto justify-center'>
-                                                            <FaTrash className='cursor-pointer text-xl text-red-700 hover:text-red-800' onClick={() => handleDeleteVisit(visit._id)} />
+                                                            <FaTrash
+                                                                onClick={handleOpenModal}
+                                                                className='cursor-pointer text-xl text-red-700 hover:text-red-800'
+                                                            />
+                                                            {isModalOpen && (
+                                                                <DeleteConfirmationModal handleDelete={() => handleDeleteVisit(visit._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </td>

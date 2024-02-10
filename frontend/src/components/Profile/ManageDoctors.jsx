@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Spinner from '../Utils/Spinner'
 import DoctorCard from '../Doctors/DoctorCard'
-import DeleteDoctorButton from './DeleteDoctorButton'
-import CreateDoctorButton from './CreateDoctorButton'
+import DeleteDoctorButton from '../Button/DeleteDoctorButton'
+import CreateDoctorButton from '../Button/CreateDoctorButton'
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors'
 
 const ManageDoctors = () => {

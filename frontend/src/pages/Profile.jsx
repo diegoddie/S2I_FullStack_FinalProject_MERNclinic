@@ -5,9 +5,9 @@ import Spinner from '../components/Utils/Spinner';
 import Bookings from '../components/Profile/Bookings';
 import UpdateProfile from '../components/Profile/UpdateProfile';
 import Dashboard from '../components/Profile/Dashboard';
-import Sidebar from '../components/Utils/Sidebar';
+import Sidebar from '../components/Sidebar';
 import Security from '../components/Profile/Security';
-import ManageDoctors from '../components/Admin/ManageDoctors';
+import ManageDoctors from '../components/Profile/ManageDoctors';
 import LeaveManagement from '../components/Profile/LeaveManagement';
 import Visits from '../components/Profile/Visits';
 
@@ -41,7 +41,7 @@ const Profile = ({ model }) => {
               selectedSection={selectedSection}
               handleMenuItemClick={handleMenuItemClick}
             />
-            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md overflow-x-hidden'>
+            <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
               {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
               {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
               {selectedSection === 'Visits' && <Visits />}
