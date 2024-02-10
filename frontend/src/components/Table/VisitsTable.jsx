@@ -8,6 +8,7 @@ import Pagination from '../Utils/Pagination';
 import Spinner from '../Utils/Spinner';
 import { useManageVisits } from '../../hooks/visits/useManageVisits';
 import DeleteConfirmationModal from '../Modal/DeleteConfirmationModal';
+import errorHandler from '../../hooks/utils/errorHandler';
 
 const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
     const { deleteVisit, isLoading } = useManageVisits();
@@ -71,9 +72,9 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
             
         filteredVisits = filteredVisits.filter((visit) => {
             const { user, doctor } = visit;
-            const patientFullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-            const doctorFullName = `${doctor.firstName} ${doctor.lastName}`.toLowerCase();
-                
+            const patientFullName = user ? `${user.firstName} ${user.lastName}`.toLowerCase() : 'N/A';
+            const doctorFullName = doctor ? `${doctor.firstName} ${doctor.lastName}`.toLowerCase() : 'N/A';
+            
             if (isAdmin) {
                 return (
                     patientFullName.includes(patientNameFilter.toLowerCase()) &&
@@ -99,6 +100,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
             setFilteredData((prevFilteredData) => prevFilteredData.filter(visit => visit._id !== visitId));
         } catch(error){
             console.log(error)
+            errorHandler(error)
         }
     };
 
@@ -254,20 +256,20 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
                                                     <div className="flex items-center">
-                                                        <div className="font-medium text-gray-900">
-                                                            {visit.user.firstName} {visit.user.lastName}
+                                                        <div className="font-medium text-gray-900 mx-auto">
+                                                            {visit.user ? `${visit.user.firstName} ${visit.user.lastName}` : 'N/A'}
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
                                                     <div className="flex items-center">
-                                                        <div className="font-medium text-gray-900">
-                                                            {visit.doctor.firstName} {visit.doctor.lastName}
+                                                        <div className="font-medium text-gray-900 mx-auto">
+                                                            {visit.doctor ? `${visit.doctor.firstName} ${visit.doctor.lastName}` : 'N/A'}
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-gray-900">{visit.doctor.specialization}</div>
+                                                    <div className="text-gray-900">{visit.doctor ? `${visit.doctor.specialization}` : 'N/A'}</div>
                                                 </td>
 
                                                 <td className="px-5 py-4 border-r">
