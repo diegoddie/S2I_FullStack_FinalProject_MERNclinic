@@ -129,7 +129,8 @@ const RegisterPaymentModal = ({ onClose, id, updateFilteredData }) => {
                                             <input 
                                                 type='file' 
                                                 name='invoiceFile' 
-                                                id='invoiceFile' 
+                                                id='invoiceFile'
+                                                accept='.pdf'
                                                 onChange={handleFileChange} 
                                                 className=''
                                             />
