@@ -31,13 +31,23 @@ export const verifyAdmin = (req, res, next) => {
 export const cloudinaryMiddleware = async(req,res,next) =>{
     try {
         if (req.body.profilePicture) {
-            const result = await cloudinary.uploader.upload(req.body.profilePicture, {
+            const profilePictureResult = await cloudinary.uploader.upload(req.body.profilePicture, {
                 folder: "users",
                 allowed_formats: ["png", "jpg", "jpeg", "avif"]
             });
     
-            req.body.profilePicture = result.secure_url;
+            req.body.profilePicture = profilePictureResult.secure_url;
         }
+
+        if (req.body.invoiceFile){
+            const invoiceFileResult = await cloudinary.uploader.upload(req.body.invoiceFile, {
+                folder: "invoices",
+                allowed_formats: ["pdf"]
+            });
+
+            req.body.invoiceFile = invoiceFileResult.secure_url;
+        }
+        
         next();
     } catch (err) {
         console.log(err);

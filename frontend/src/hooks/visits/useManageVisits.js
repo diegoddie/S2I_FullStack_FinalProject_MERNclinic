@@ -41,6 +41,37 @@ export const useManageVisits = () => {
         }
     }
 
+    const getNotPayedVisits = async()=>{
+        try{
+            setIsLoading(true)
+            const res = await axios.get('http://localhost:3000/visit/pending-payments', {
+                headers: {
+                    'Authorization': `Bearer ${token.token}`
+                }
+            });
+
+            if(res.status === 200){
+                setIsLoading(false)
+                const visits = res.data;
+                return visits
+            }
+        }catch(error){
+            console.error('Error getting not payed visits:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false)
+        }
+    }
+
     const getVisitsById = async (model, id) => {
         try {
             setIsLoading(true);
@@ -99,6 +130,33 @@ export const useManageVisits = () => {
         }
     };
 
+    const updateVisit = async ({ id, formData }) => {
+        try{
+            setIsLoading(true)
+
+            const res = await axios.put(`http://localhost:3000/visit/update/${id}`, formData, {withCredentials: true})
+
+            if(res.status === 201){
+                setIsLoading(false)
+                toast.success('Visit data updated succesfully.')
+            }
+        } catch (error) {
+            console.error('Error updating visit data:', error);
+
+            if (error.response && error.response.status === 401) {
+                console.log('Token expired. Logging out...');
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                dispatch({ type: 'LOGOUT' });
+                
+                toast.warning('Session expired. Please log in again.');
+            } else {
+                errorHandler(error);
+            }
+            setIsLoading(false);
+        }
+    }
+
     const deleteVisit = async (id) => {
         try{
             setIsLoading(true)
@@ -127,6 +185,6 @@ export const useManageVisits = () => {
         }
     }
 
-    return { getVisitsById, getAllVisits, bookVisit, deleteVisit, isLoading };
+    return { getVisitsById, getAllVisits, getNotPayedVisits, bookVisit, updateVisit, deleteVisit, isLoading };
 };
 

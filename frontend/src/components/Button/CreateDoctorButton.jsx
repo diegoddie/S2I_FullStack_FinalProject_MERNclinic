@@ -93,11 +93,11 @@ const CreateDoctorButton = ({ updateDoctorsList }) => {
     };
 
     const handleOpenModal = () => {
-        setIsModalOpen(true);
+      setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
-        setIsModalOpen(false);
+      setIsModalOpen(false);
     };
 
     return (
@@ -249,41 +249,41 @@ const CreateDoctorButton = ({ updateDoctorsList }) => {
                                       </div>
                                     </div>
                                     <div className='flex flex-col justify-center mx-auto items-center pt-4 pb-2'>
-                                        <label className='text-xl leading-[20px] text-[#168aad] font-semibold mb-2'>
-                                          Work Shifts
-                                        </label>
-                                        <div className='flex items-center space-x-4 mt-2'>
-                                          <label className='flex items-center text-xl leading-[10px] text-[#168aad]'>
-                                            <input
-                                              type='checkbox'
-                                              name='isCustomWorkShifts'
-                                              checked={!isCustomWorkShifts}
-                                              onChange={() => setIsCustomWorkShifts(!isCustomWorkShifts)}
-                                              className='mr-2'
-                                            />
+                                      <label className='text-xl leading-[20px] text-[#168aad] font-semibold mb-2'>
+                                        Work Shifts
+                                      </label>
+                                      <div className='flex items-center space-x-4 mt-2'>
+                                        <label className='flex items-center text-xl leading-[10px] text-[#168aad]'>
+                                          <input
+                                            type='checkbox'
+                                            name='isCustomWorkShifts'
+                                            checked={!isCustomWorkShifts}
+                                            onChange={() => setIsCustomWorkShifts(!isCustomWorkShifts)}
+                                            className='mr-2'
+                                          />
                                             Default
-                                          </label>
-                                          <label className='flex items-center text-xl leading-[10px] text-[#168aad]'>
-                                            <input
-                                              type='checkbox'
-                                              name='isCustomWorkShifts'
-                                              checked={isCustomWorkShifts}
-                                              onChange={() => setIsCustomWorkShifts(!isCustomWorkShifts)}
-                                              className='mr-2'
-                                            />
+                                        </label>
+                                        <label className='flex items-center text-xl leading-[10px] text-[#168aad]'>
+                                          <input
+                                            type='checkbox'
+                                            name='isCustomWorkShifts'
+                                            checked={isCustomWorkShifts}
+                                            onChange={() => setIsCustomWorkShifts(!isCustomWorkShifts)}
+                                            className='mr-2'
+                                          />
                                             Custom
-                                          </label>
-                                        </div>
-                                        <div className='mt-4'>
-                                          {isCustomWorkShifts && (
-                                            <CustomWorkShifts
-                                              workingDays={workingDays}
-                                              customWorkShifts={customWorkShifts}
-                                              handleCustomWorkShiftChange={handleCustomWorkShiftChange}
-                                            />
-                                          )}
-                                        </div>
+                                        </label>
                                       </div>
+                                      <div className='mt-4'>
+                                        {isCustomWorkShifts && (
+                                          <CustomWorkShifts
+                                            workingDays={workingDays}
+                                            customWorkShifts={customWorkShifts}
+                                            handleCustomWorkShiftChange={handleCustomWorkShiftChange}
+                                          />
+                                        )}
+                                      </div>
+                                    </div>
                                     <div className='flex justify-center mx-auto'>
                                       <button type="submit" className='bg-[#45aece] text-white py-2 px-4 rounded text-lg font-semibold hover:bg-[#168aad]'>
                                         Add A New Doctor

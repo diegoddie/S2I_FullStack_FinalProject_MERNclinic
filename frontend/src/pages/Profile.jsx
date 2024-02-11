@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useAuthContext } from '../hooks/auth/useAuthContext';
 import Spinner from '../components/Utils/Spinner';
@@ -10,6 +10,8 @@ import Security from '../components/Profile/Security';
 import ManageDoctors from '../components/Profile/ManageDoctors';
 import LeaveManagement from '../components/Profile/LeaveManagement';
 import Visits from '../components/Profile/Visits';
+import { animateScroll as scroll } from 'react-scroll';
+import RegisterPayments from '../components/Profile/RegisterPayments';
 
 const Profile = ({ model }) => {
   const { user } = useAuthContext();
@@ -24,6 +26,13 @@ const Profile = ({ model }) => {
   const handleMenuItemClick = (section) => {
     setSelectedSection(section);
   };
+
+  useEffect(() => {
+    scroll.scrollToTop({
+        duration: 500,
+        smooth: 'easeInOutQuad',
+    });
+  }, []);
 
   return (
       <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-6">
@@ -44,6 +53,7 @@ const Profile = ({ model }) => {
             <div className='flex-1 bg-[#cef4ed] py-4 rounded-md'>
               {selectedSection === 'ManageDoctors' && isAdmin && <ManageDoctors />}
               {selectedSection === 'Dashboard' && isAdmin && <Dashboard />}
+              {selectedSection === 'Payments' && isAdmin && <RegisterPayments />}
               {selectedSection === 'Visits' && <Visits />}
               {selectedSection === 'Bookings' && !isDoctor && <Bookings />}
               {selectedSection === 'LeaveManagement' && (isDoctor || isAdmin) && <LeaveManagement model={model} />}

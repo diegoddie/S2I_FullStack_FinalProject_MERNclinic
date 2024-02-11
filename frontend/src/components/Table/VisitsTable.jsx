@@ -4,6 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker';
 import { FaLongArrowAltDown, FaLongArrowAltUp, FaTrash } from 'react-icons/fa';
+import { FaFilePdf } from "react-icons/fa6";
 import Pagination from '../Utils/Pagination';
 import Spinner from '../Utils/Spinner';
 import { useManageVisits } from '../../hooks/visits/useManageVisits';
@@ -37,6 +38,10 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
   
     const handleCloseModal = () => {
         setIsModalOpen(false);
+    };
+
+    const handleDownloadPdf = (pdfUrl) => {
+        window.open(pdfUrl, '_blank');
     };
 
     const toggleSortOrder = (column) => {
@@ -130,11 +135,39 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                         <Spinner />
                     </div>
                 )}
-                <>
-                    <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center mx-8">
-                        {isAdmin && (
-                            <>
-                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                {!isLoading && (
+                    <>
+                        <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center mx-8">
+                            {isAdmin && (
+                                <>
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                        <div className="flex items-center pointer-events-none mr-1">
+                                            <CiSearch className="text-gray-800 font-bold text-md" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search Patient"
+                                            value={patientNameFilter}
+                                            onChange={(e) => setPatientNameFilter(e.target.value)}
+                                            className="bg-transparent outline-none"
+                                        />
+                                    </div>
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                        <div className="flex items-center pointer-events-none mr-1">
+                                            <CiSearch className="text-gray-800 font-bold text-md" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search Doctor"
+                                            value={doctorNameFilter}
+                                            onChange={(e) => setDoctorNameFilter(e.target.value)}
+                                            className="bg-transparent outline-none"
+                                        />
+                                    </div>       
+                                </>
+                            )}
+                            {isDoctor && (
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 mx-10 md:mx-0">
                                     <div className="flex items-center pointer-events-none mr-1">
                                         <CiSearch className="text-gray-800 font-bold text-md" />
                                     </div>
@@ -146,7 +179,9 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                         className="bg-transparent outline-none"
                                     />
                                 </div>
-                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                            )}
+                            {!isAdmin && !isDoctor && (
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 ">
                                     <div className="flex items-center pointer-events-none mr-1">
                                         <CiSearch className="text-gray-800 font-bold text-md" />
                                     </div>
@@ -157,144 +192,122 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                         onChange={(e) => setDoctorNameFilter(e.target.value)}
                                         className="bg-transparent outline-none"
                                     />
-                                </div>       
+                                </div>
+                            )}
+                            <div className='flex flex-row gap-1 justify-center px-2 md:px-0'>
+                                <DatePicker
+                                    selected={startDate}
+                                    onChange={handleStartDateChange}
+                                    selectsStart
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    dateFormat="dd/MM/yyyy"
+                                    className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
+                                    placeholderText="Start Date"
+                                />
+                                <DatePicker
+                                    selected={endDate}
+                                    onChange={handleEndDateChange}
+                                    selectsEnd
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    minDate={startDate}
+                                    dateFormat="dd/MM/yyyy"
+                                    className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
+                                    
+                                />
+                            </div>
+                        </div>
+                        {filteredData.length === 0 ? (
+                            <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
+                                No visits found
+                            </p>
+                        ) : (
+                            <>
+                                <div className="shadow border-b sm:rounded-lg overflow-x-auto md:w-fit justify-center items-center mx-auto">
+                                    <table className="divide-y divide-gray-200">
+                                        <thead className="bg-secondary text-white">
+                                            <tr className='text-center text-lg'>
+                                                <th className="cursor-pointer px-7 py-3 font-medium border-r" onClick={() => toggleSortOrder('date')}>
+                                                    <div className='flex gap-2 justify-center'>
+                                                        <span>Date</span>
+                                                        <span className='items-center flex text-md'>
+                                                            {sortOrder === 'asc' && sortColumn === 'date' ? (
+                                                                <FaLongArrowAltUp className=''/>
+                                                            ) : (
+                                                                <FaLongArrowAltDown />
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                </th>
+                                                <th className="px-7 py-3 font-medium border-r">
+                                                    Patient
+                                                </th>
+                                                <th className="px-7 py-3 font-medium border-r">
+                                                    Doctor
+                                                </th>
+                                                <th className="px-7 py-3 font-medium border-r">
+                                                    Specialization
+                                                </th>
+                                                <th className="px-7 py-3 font-medium border-r">
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-gray-50 divide-y divide-gray-200">
+                                            {currentItems.map((visit) => (
+                                                <tr key={visit._id} className="items-center text-center">
+                                                    <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                        <div className="text-gray-900 font-medium">{formatDate(visit.date)}</div>
+                                                    </td>
+                                                    <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                        <div className="flex items-center">
+                                                            <div className="font-medium text-gray-900 mx-auto">
+                                                                {visit.user ? `${visit.user.firstName} ${visit.user.lastName}` : 'N/A'}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                        <div className="flex items-center">
+                                                            <div className="font-medium text-gray-900 mx-auto">
+                                                                {visit.doctor ? `${visit.doctor.firstName} ${visit.doctor.lastName}` : 'N/A'}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-5 py-4 whitespace-nowrap border-r">
+                                                        <div className="text-gray-900">{visit.doctor ? `${visit.doctor.specialization}` : 'N/A'}</div>
+                                                    </td>
+                                                    <td className="px-5 py-4 border-r">
+                                                        {title === 'Next Visits' && (
+                                                            <div className='flex mx-auto justify-center'>
+                                                                <FaTrash
+                                                                    onClick={handleOpenModal}
+                                                                    className='cursor-pointer text-xl text-red-700 hover:text-red-800'
+                                                                />
+                                                                {isModalOpen && (
+                                                                    <DeleteConfirmationModal handleDelete={() => handleDeleteVisit(visit._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                        {title === 'Past Visits' && visit.invoice.invoiceFile !== '' && (
+                                                            <div className='flex mx-auto justify-center'>
+                                                                <FaFilePdf
+                                                                    onClick={() => handleDownloadPdf(visit.invoice.invoiceFile)}
+                                                                    className='cursor-pointer text-xl text-orange-500 hover:text-orange-700'
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                             </>
                         )}
-                        {isDoctor && (
-                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 mx-10 md:mx-0">
-                                <div className="flex items-center pointer-events-none mr-1">
-                                    <CiSearch className="text-gray-800 font-bold text-md" />
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search Patient"
-                                    value={patientNameFilter}
-                                    onChange={(e) => setPatientNameFilter(e.target.value)}
-                                    className="bg-transparent outline-none"
-                                />
-                            </div>
-                        )}
-                        {!isAdmin && !isDoctor && (
-                            <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 ">
-                                <div className="flex items-center pointer-events-none mr-1">
-                                    <CiSearch className="text-gray-800 font-bold text-md" />
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search Doctor"
-                                    value={doctorNameFilter}
-                                    onChange={(e) => setDoctorNameFilter(e.target.value)}
-                                    className="bg-transparent outline-none"
-                                />
-                            </div>
-                        )}
-                        <div className='flex flex-row gap-1 justify-center px-2 md:px-0'>
-                            <DatePicker
-                                selected={startDate}
-                                onChange={handleStartDateChange}
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                dateFormat="dd/MM/yyyy"
-                                className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
-                                placeholderText="Start Date"
-                            />
-                            <DatePicker
-                                selected={endDate}
-                                onChange={handleEndDateChange}
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate}
-                                dateFormat="dd/MM/yyyy"
-                                className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
-                                
-                            />
-                        </div>
-                    </div>
-                    {filteredData.length === 0 ? (
-                        <p className="text-center text-gray-700 mt-3 text-lg md:text-xl font-semibold">
-                            No visits found
-                        </p>
-                    ) : (
-                        <>
-                            <div className="shadow border-b sm:rounded-lg overflow-x-auto">
-                                <table className="divide-y divide-gray-200">
-                                    <thead className="bg-secondary text-white">
-                                        <tr className='text-center text-lg'>
-                                            <th className="cursor-pointer px-7 py-3 font-medium border-r" onClick={() => toggleSortOrder('date')}>
-                                                <div className='flex gap-2 justify-center'>
-                                                    <span>Date</span>
-                                                    <span className='items-center flex text-md'>
-                                                        {sortOrder === 'asc' && sortColumn === 'date' ? (
-                                                            <FaLongArrowAltUp className=''/>
-                                                        ) : (
-                                                            <FaLongArrowAltDown />
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </th>
-                                            <th className="px-7 py-3 font-medium border-r">
-                                                Patient
-                                            </th>
-                                            <th className="px-7 py-3 font-medium border-r">
-                                                Doctor
-                                            </th>
-                                            <th className="px-7 py-3 font-medium border-r">
-                                                Specialization
-                                            </th>
-                                            <th className="px-7 py-3 font-medium border-r">
-                                                Action
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-gray-50 divide-y divide-gray-200">
-                                        {currentItems.map((visit) => (
-                                            <tr key={visit._id} className="items-center text-center">
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-gray-900 font-medium">{formatDate(visit.date)}</div>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="flex items-center">
-                                                        <div className="font-medium text-gray-900 mx-auto">
-                                                            {visit.user ? `${visit.user.firstName} ${visit.user.lastName}` : 'N/A'}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="flex items-center">
-                                                        <div className="font-medium text-gray-900 mx-auto">
-                                                            {visit.doctor ? `${visit.doctor.firstName} ${visit.doctor.lastName}` : 'N/A'}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-5 py-4 whitespace-nowrap border-r">
-                                                    <div className="text-gray-900">{visit.doctor ? `${visit.doctor.specialization}` : 'N/A'}</div>
-                                                </td>
-
-                                                <td className="px-5 py-4 border-r">
-                                                    {title === 'Next Visits' && (
-                                                        
-                                                        <div className='flex mx-auto justify-center'>
-                                                            <FaTrash
-                                                                onClick={handleOpenModal}
-                                                                className='cursor-pointer text-xl text-red-700 hover:text-red-800'
-                                                            />
-                                                            {isModalOpen && (
-                                                                <DeleteConfirmationModal handleDelete={() => handleDeleteVisit(visit._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
-                        </>
-                    )}
-                </>
+                    </>
+                )}
             </div>
         </div>
     )

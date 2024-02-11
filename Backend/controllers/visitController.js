@@ -5,6 +5,7 @@ import User from "../models/userModel.js";
 import Doctor from "../models/doctorModel.js";
 import { sendVisitConfirmationEmail } from "../utils/visits/visitConfirmationEmail.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
+import { endOfDay } from 'date-fns';
 
 export const createVisit = async (req, res, next) => {
   try {
@@ -91,6 +92,18 @@ export const getAllVisits = async (req, res, next) => {
   }
 };
 
+export const getPendingPayments = async (req, res, next) => {
+  try {
+    const pendingPayments = await Visit.find({ paid: false, date: { $lte: endOfDay(new Date()) } }).populate({
+      path: 'user doctor',
+      select: 'firstName lastName taxId email phoneNumber specialization city profilePicture',
+    });
+    res.status(200).json(pendingPayments);
+  } catch (err) {
+    next(errorHandler(500, 'Internal Server Error'));
+  }
+};
+
 export const getVisitById = async (req, res, next) => {
   try {
     const visit = await Visit.findById(req.params.id).populate({
@@ -159,18 +172,21 @@ export const updateVisit = async (req, res, next) => {
       const { id: visitId } = req.params;
       const authUserId = req.user.id;
 
-      const visit = await Visit.findById(visitId);
+      const visit = await Visit.findById(visitId)
 
       if (!visit || (visit.doctor.toString() !== authUserId && req.user.role !== 'admin')) {
         return res.status(403).json({message: "Permission denied."})
       }
 
-      const { paid, cost } = req.body;
-
-      let updateFields = {};
-
-      if (paid) updateFields.paid = paid;
-      if (cost) updateFields.cost = cost;
+      const updateFields = {
+        paid: req.body.paid,
+        amount: req.body.amount,
+        paymentMethod: req.body.paymentMethod,
+        invoice: {
+          invoiceNumber: req.body.invoiceNumber,
+          invoiceFile: req.body.invoiceFile
+        }
+      };
 
       const updatedVisit = await Visit.findByIdAndUpdate(
           visitId,

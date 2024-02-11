@@ -2,13 +2,14 @@ import express from 'express';
 import {
   createVisit,
   getAllVisits,
+  getPendingPayments,
   getVisitById,
   getVisitsByDoctorId,
   getVisitsByUserId,
   updateVisit,
   deleteVisit,
 } from '../controllers/visitController.js';
-import { verifyToken, verifyAdmin } from '../middleware/middleware.js';
+import { verifyToken, verifyAdmin, cloudinaryMiddleware } from '../middleware/middleware.js';
 import { check } from 'express-validator';
 
 const router = express.Router();
@@ -25,16 +26,19 @@ router.post(
 );
 
 router.get('/', verifyToken, verifyAdmin, getAllVisits);
+router.get('/pending-payments', verifyToken, verifyAdmin, getPendingPayments)
 router.get('/:id', verifyToken, getVisitById);
 router.get('/doctor/:doctorId', verifyToken, getVisitsByDoctorId);
 router.get('/user/:userId', verifyToken, getVisitsByUserId);
 
 router.put(
     '/update/:id', 
-    verifyToken, 
+    verifyToken,
+    cloudinaryMiddleware,
     [
       check('paid').optional().isBoolean().withMessage('Paid must be a boolean value'),
-      check('cost').optional().isNumeric().toFloat().withMessage('Cost must be a valid number'),
+      check('amount').optional().isNumeric().toFloat().withMessage('amount must be a valid number'),
+      check('paymentMethod').optional().isIn(['cash', 'credit card', 'paypal', 'bank transfer', 'debit card']).withMessage('Invalid payment method'),
     ],
     updateVisit
 );

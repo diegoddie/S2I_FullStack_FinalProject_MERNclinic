@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+const invoiceSchema = new mongoose.Schema({
+    invoiceNumber: {
+        type: String,
+        unique: true
+    },
+    invoiceFile: {
+        type: String
+    }
+}, { _id: false });
+
 const visitSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
@@ -27,10 +37,18 @@ const visitSchema = new mongoose.Schema({
         type: Boolean, 
         default: false 
     },
-    cost: {
+    amount: {
         type: Number,
         default: 0,
         min: 0 
+    },
+    paymentMethod: {
+        type: String,
+        enum: ['cash', 'credit card', 'paypal', 'bank transfer', 'debit card']
+    },
+    invoice: {
+        type: invoiceSchema,
+        default: {}
     }
 }, {timestamps: true});
 

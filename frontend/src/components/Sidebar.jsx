@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { MdMenuOpen, MdHealthAndSafety, MdSecurity, MdDashboard } from "react-icons/md";
+import { MdMenuOpen, MdHealthAndSafety, MdDashboard, MdOutlinePayment } from "react-icons/md";
 import { FaUserDoctor, FaRegPenToSquare } from "react-icons/fa6";
 import { FaHospital } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { IoMdSettings } from "react-icons/io";
 
 const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick }) => {
     const [open, setOpen] = useState(false);
@@ -10,11 +11,12 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
     const menuItems = [
         { title: 'Dashboard', section: 'Dashboard', icon: <MdDashboard />, user: [isAdmin] },
         { title: 'Visits', section: 'Visits', icon: <MdHealthAndSafety />, user: [isDoctor, isAdmin, !isAdmin] },
+        { title: 'Payments', section: 'Payments', icon: <MdOutlinePayment />, user: [isAdmin] },
         { title: 'Manage Doctors', section: 'ManageDoctors', icon: <FaUserDoctor />, user: [isAdmin] },
         { title: 'Leave Management', section: 'LeaveManagement', icon: <FaRegPenToSquare />, user: [isDoctor, isAdmin] },
         { title: 'Book a Visit', section: 'Bookings', icon: <FaHospital />, user: [!isDoctor] },
         { title: 'Update Profile', section: 'Update', icon: <CgProfile />, user: [isDoctor, isAdmin, !isAdmin]},
-        { title: 'Security', section: 'Security', icon: <MdSecurity />, user: [isDoctor, isAdmin, !isAdmin] },
+        { title: 'Security', section: 'Security', icon: <IoMdSettings />, user: [isDoctor, isAdmin, !isAdmin] },
     ];
 
     const filteredMenuItems = menuItems.filter((menuItem) => {
@@ -35,7 +37,7 @@ const Sidebar = ({ data, isAdmin, isDoctor, selectedSection, handleMenuItemClick
                 <p className='leading-6 text-lg'>{data.email}</p>
             </div>
             <div className="pt-4 md:pt-8 flex flex-wrap md:flex-col gap-2 justify-center">
-                <ul className='flex flex-wrap md:flex-col gap-2 justify-center'>
+                <ul className='flex flex-wrap md:flex-col gap-2 justify-center px-7 md:px-0'>
                     {filteredMenuItems.map((menu, index) => (
                         <li
                             key={index}
