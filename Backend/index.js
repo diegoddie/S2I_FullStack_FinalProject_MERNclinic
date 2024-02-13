@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
     }));
 } else {
     app.use(cors({
-        origin: 'https://myclinic-backend.onrender.com', 
+        origin: 'https://myclinic-s2i.vercel.app', 
         credentials: true
     }));
 }
