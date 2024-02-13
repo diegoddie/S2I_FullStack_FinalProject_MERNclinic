@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
     app.use(cors({
         origin: 'https://mern-myclinic-backend.vercel.app', 
+        credentials: true
     }));
 }
 
