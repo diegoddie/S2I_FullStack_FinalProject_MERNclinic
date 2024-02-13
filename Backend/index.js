@@ -20,7 +20,9 @@ if (process.env.NODE_ENV === 'development') {
         credentials: true
     }));
 } else {
-    app.use(cors());
+    app.use(cors({
+        origin: 'https://mern-myclinic-backend.vercel.app', 
+    }));
 }
 
 app.use(express.json({ limit: "200mb" }));
