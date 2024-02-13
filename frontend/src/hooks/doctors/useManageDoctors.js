@@ -11,7 +11,7 @@ export const useManageDoctors = () => {
     const getDoctors = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.get('http://localhost:3000/doctor');
+            const res = await axios.get('https://myclinic-backend.onrender.com/doctor');
             if(res.status === 200){
                 setIsLoading(false)
                 const doctors = res.data;
