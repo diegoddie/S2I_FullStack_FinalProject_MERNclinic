@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
     }));
 } else {
     app.use(cors({
-        origin: 'https://myclinic-s2i.vercel.app', 
+        origin: 'https://www.myclinic.tech', 
         credentials: true
     }));
 }
