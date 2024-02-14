@@ -19,7 +19,7 @@ export const sendWelcomeEmail = async (email, password, token) => {
         to: email,
         subject: 'Welcome to Our Clinic!',
         html: `
-            <p>Welcome to our clinic! Click <a href="${verifyEmailLink}">here</a> to verify your email. Your temporary password is: ${password}, you can change it later. Please use this <a href="http://localhost:3001/doctor/login">login URL</a>.</p>
+            <p>Welcome to our clinic! Click <a href="${verifyEmailLink}">here</a> to verify your email. Your temporary password is: ${password}, you can change it later. Please use this <a href="${baseURL}/doctor/login">login URL</a>.</p>
         `,
       };
   
