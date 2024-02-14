@@ -10,7 +10,7 @@ export const useManageVisits = () => {
     const { token, dispatch } = useAuthContext();
     const [isLoading, setIsLoading] = useState(false);
 
-    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://api.myclinic.tech';
 
     const getAllVisits = async()=>{
         try{

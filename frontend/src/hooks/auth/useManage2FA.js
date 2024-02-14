@@ -11,7 +11,7 @@ export const useManage2FA = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
-    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://api.myclinic.tech';
 
     const generate2FA = async (model) => {
         try {
