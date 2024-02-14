@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express()
 
-app.use(cookieParser());
+
 
 if (process.env.NODE_ENV === 'development') {
     app.use(cors({ 
@@ -22,9 +22,17 @@ if (process.env.NODE_ENV === 'development') {
 } else {
     app.use(cors({
         origin: 'https://myclinic-s2i.vercel.app', 
-        credentials: true
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Assicurati di includere i metodi utilizzati dal tuo frontend
+        allowedHeaders: ['Content-Type', 'Authorization'], // Aggiungi gli header necessari
+        exposedHeaders: ['Content-Type', 'Authorization'], // Esponi gli header necessari
     }));
 }
+
+app.use(cookieParser({
+    sameSite: 'None', // Assicurati che SameSite sia impostato su None
+    secure: true // Assicurati che Secure sia impostato su true per inviare cookie solo su connessioni sicure (HTTPS)
+}));
 
 app.use(express.json({ limit: "200mb" }));
 app.use(express.urlencoded({ extended: true, limit: "200mb" }));
