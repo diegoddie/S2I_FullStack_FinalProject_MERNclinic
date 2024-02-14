@@ -31,7 +31,9 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(cookieParser({
     sameSite: 'None', // Assicurati che SameSite sia impostato su None
-    secure: true // Assicurati che Secure sia impostato su true per inviare cookie solo su connessioni sicure (HTTPS)
+    secure: true,
+    domain: "myclinic-s2i.vercel.app",
+    httpOnly: true // Assicurati che Secure sia impostato su true per inviare cookie solo su connessioni sicure (HTTPS)
 }));
 
 app.use(express.json({ limit: "200mb" }));
