@@ -206,7 +206,6 @@ export const verifyPassword = async(req,res,next,Model)=>{
 export const signOut = async (req, res) => {
   try {
     // Extract the access token cookie from the request
-    console.log(req)
     const accessTokenCookie = req.cookies["access_token"];
     console.log(accessTokenCookie)
     // If the cookie is not present, return unauthorized status
