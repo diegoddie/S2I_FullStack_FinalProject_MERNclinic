@@ -20,7 +20,6 @@ if (process.env.NODE_ENV === 'development') {
 } else {
     app.use(cors({
         origin: 'https://myclinic-s2i.vercel.app', 
-        headers: ["Content-Type"],
         credentials: true
     }));
 }
