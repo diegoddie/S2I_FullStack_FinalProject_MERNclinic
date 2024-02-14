@@ -285,7 +285,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                                                     className='cursor-pointer text-xl text-red-700 hover:text-red-800'
                                                                 />
                                                                 {isModalOpen && (
-                                                                    <DeleteConfirmationModal handleDelete={() => handleDeleteVisit(visit._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
+                                                                    <DeleteConfirmationModal onDelete={() => handleDeleteVisit(visit._id)} onClose={handleCloseModal} passwordConfirmation={false}/>
                                                                 )}
                                                             </div>
                                                         )}

@@ -166,7 +166,6 @@ export const useManageVisits = () => {
 
             if(res.status === 200){
                 setIsLoading(false)
-                
                 toast.success("Visit cancelled. You'll receive a confirmation e-mail.")
             }
         }catch(error){
