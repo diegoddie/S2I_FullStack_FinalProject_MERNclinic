@@ -5,37 +5,24 @@ import DoctorAbout from '../components/Doctors/DoctorAbout';
 import DoctorContacts from '../components/Doctors/DoctorContacts';
 import BookVisit from '../components/Visits/BookVisit';
 import Spinner from '../components/Utils/Spinner';
-import axios from 'axios';
-import errorHandler from '../hooks/utils/errorHandler';
+import { useManageDoctors } from '../hooks/doctors/useManageDoctors';
 
 const DoctorDetails = () => {
     const { id } = useParams();
 
-    const [loading, setLoading] = useState(false);
+    const { getDoctorById, isLoading } = useManageDoctors()
+
     const [doctor, setDoctor] = useState(null);
     const [tab, setTab] = useState('about')
 
     useEffect(() => {
-        const getDoctorDetails = async () => {
-            try {
-                setLoading(true);
-
-                const res = await axios.get(`http://localhost:3000/doctor/${id}`);
-
-                if(res.status === 200){
-                    setLoading(false)
-                    setDoctor(res.data);
-                }
-            } catch (error) {
-                console.error('Error getting doctor details:', error);
-                setLoading(false)
-
-                errorHandler(error)
-            }
+        const fetchData = async () => {
+            const doctorData = await getDoctorById(id);
+            setDoctor(doctorData);
         };
-
-        getDoctorDetails();
-    }, [id])
+    
+        fetchData();
+    }, [id]);
 
     useEffect(() => {
         scroll.scrollToTop({
@@ -47,12 +34,12 @@ const DoctorDetails = () => {
     return (
         <section className='py-12 h-full'>
             <div className='md:mt-10 px-5 mx-auto'>
-                {loading && 
+                {isLoading && 
                     <div className='flex items-center justify-center mx-auto py-10'>
                         <Spinner />
                     </div>
                 }
-                {!loading && doctor && (
+                {!isLoading && doctor && (
                 <div className='flex flex-col md:flex-row gap-[50px] mx-auto justify-center items-center'>
                     <div className='max-w-[1120px] w-full'>
                         <div className='flex flex-col md:flex-row items-center gap-5 justify-center mx-auto'>

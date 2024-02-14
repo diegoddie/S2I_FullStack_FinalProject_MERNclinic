@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
 import Spinner from '../../components/Utils/Spinner';
-import errorHandler from '../../hooks/utils/errorHandler';
-import { toast } from 'react-toastify';
+import { useManageAuth } from '../../hooks/auth/useManageAuth';
 
 const PasswordResetRequest = ({ model }) => {
-  const navigate = useNavigate()
+  const { passwordResetRequest, isLoading } = useManageAuth()
 
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
   });
@@ -20,22 +16,14 @@ const PasswordResetRequest = ({ model }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true);
-
     try {
-      const res = await axios.post(`http://localhost:3000/${model}/password-reset-request`, formData);
+      await passwordResetRequest({ model, formData });
 
-      if (res.status === 200){
-        setIsLoading(false)
-        navigate('/')
-        toast.success(res.data.message)
-      }     
-      
+      setFormData({
+        email: '',
+      });    
     } catch (error) {
       console.error('Error during the password reset request', error);
-      setIsLoading(false);
-
-      errorHandler(error)
     }
   };
 

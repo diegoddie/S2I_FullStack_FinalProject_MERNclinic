@@ -8,11 +8,13 @@ export const useManageLeaveRequests = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { dispatch, token } = useAuthContext();
 
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+
     const approveLeaveRequest = async(doctorId, leaveRequestId) => {
         try{
             setIsLoading(true);
 
-            const res = await axios.put(`http://localhost:3000/doctor/${doctorId}/approve/${leaveRequestId}`, {}, { withCredentials: true });
+            const res = await axios.put(`${baseURL}/doctor/${doctorId}/approve/${leaveRequestId}`, {}, { withCredentials: true });
 
             if(res.status === 200){
                 setIsLoading(false)
@@ -39,7 +41,7 @@ export const useManageLeaveRequests = () => {
         try{
             setIsLoading(true);
 
-            const res = await axios.put(`http://localhost:3000/doctor/${doctorId}/decline/${leaveRequestId}`, {}, { withCredentials: true });
+            const res = await axios.put(`${baseURL}/doctor/${doctorId}/decline/${leaveRequestId}`, {}, { withCredentials: true });
 
             if(res.status === 200){
                 setIsLoading(false)
@@ -57,7 +59,7 @@ export const useManageLeaveRequests = () => {
         try{
             setIsLoading(true);
 
-            const res = await axios.delete(`http://localhost:3000/doctor/${doctorId}/leave-requests/${leaveRequestId}`, { withCredentials: true });
+            const res = await axios.delete(`${baseURL}/doctor/${doctorId}/leave-requests/${leaveRequestId}`, { withCredentials: true });
 
             if(res.status === 200){
                 setIsLoading(false)

@@ -4,7 +4,6 @@ import { it, enUS } from 'date-fns/locale';
 import Pagination from '../Utils/Pagination';
 import BookVisitButton from '../Button/BookVisitButton';
 
-
 const VisitTimeSlot = ({ data, doctor }) => {
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -12,7 +11,6 @@ const VisitTimeSlot = ({ data, doctor }) => {
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
     
-
     const getAbbreviatedDay = (date) => {
         return format(date, 'EEE', { locale: enUS });
     };

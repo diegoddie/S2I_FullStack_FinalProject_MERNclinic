@@ -11,11 +11,13 @@ export const useManage2FA = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext();
 
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+
     const generate2FA = async (model) => {
         try {
             setIsLoading(true);
 
-            const res = await axios.post(`http://localhost:3000/${model}/generate2FA/${user._id}`, {}, { withCredentials: true })
+            const res = await axios.post(`${baseURL}/${model}/generate2FA/${user._id}`, {}, { withCredentials: true })
 
             if (res.status === 200) {
                 setIsLoading(false);
@@ -46,7 +48,7 @@ export const useManage2FA = () => {
         try {
             setIsLoading(true);
 
-            const res = await axios.post(`http://localhost:3000/${model}/verify2FA/${user._id}`, { tempSecretCode }, {
+            const res = await axios.post(`${baseURL}/${model}/verify2FA/${user._id}`, { tempSecretCode }, {
                 headers: {
                     Authorization: `Bearer ${token.token}`,
                 },
@@ -71,7 +73,7 @@ export const useManage2FA = () => {
         try {
             setIsLoading(true);
 
-            const res = await axios.post(`http://localhost:3000/${model}/disable2FA/${user._id}`, { password, confirmPassword }, {
+            const res = await axios.post(`${baseURL}/${model}/disable2FA/${user._id}`, { password, confirmPassword }, {
                 headers: {
                     Authorization: `Bearer ${token.token}`,
                 },

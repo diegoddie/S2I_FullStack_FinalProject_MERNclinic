@@ -1,47 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import VisitTimeSlot from './VisitTimeSlot';
-import { useAuthContext } from '../../hooks/auth/useAuthContext';
-import axios from 'axios';
 import Spinner from '../Utils/Spinner';
-import errorHandler from '../../hooks/utils/errorHandler';
-import { toast } from 'react-toastify';
+import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const BookVisit = ({ doctor }) => {
-  const { dispatch } = useAuthContext();
+  const { getDoctorWeeklyAvailability, isLoading } = useManageDoctors()
 
-  const [isLoading, setIsLoading] = useState(false)
   const [availableSlots, setAvailableSlots] = useState([]);
 
   useEffect(() => {
     const fetchAvailableSlots = async () => {
-      try {
-        setIsLoading(true);
-
-        const res = await axios.get(`http://localhost:3000/doctor/${doctor._id}/weeklyAvailability`);
-
-        if(res.status === 200){
-          setIsLoading(false)
-          setAvailableSlots(res.data.availableSlots);
-        }
-      } catch (error) {
-        console.error('Error fetching available slots:', error);
-
-        if (error.response && error.response.status === 401) {
-          console.log('Token expired. Logging out...');
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          dispatch({ type: 'LOGOUT' });
-          
-          toast.warning('Session expired. Please log in again.');
-      } else {
-          errorHandler(error);
-      }
-      setIsLoading(false);
-      }
+      const data = await getDoctorWeeklyAvailability(doctor._id)
+      setAvailableSlots(data);
     };
 
     fetchAvailableSlots();
-  
   }, []);
 
   return (

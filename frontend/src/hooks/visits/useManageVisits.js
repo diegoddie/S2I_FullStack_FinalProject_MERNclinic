@@ -10,10 +10,12 @@ export const useManageVisits = () => {
     const { token, dispatch } = useAuthContext();
     const [isLoading, setIsLoading] = useState(false);
 
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+
     const getAllVisits = async()=>{
         try{
             setIsLoading(true)
-            const res = await axios.get('http://localhost:3000/visit', {
+            const res = await axios.get(`${baseURL}/visit`, {
                 headers: {
                     'Authorization': `Bearer ${token.token}`
                 }
@@ -44,7 +46,7 @@ export const useManageVisits = () => {
     const getNotPayedVisits = async()=>{
         try{
             setIsLoading(true)
-            const res = await axios.get('http://localhost:3000/visit/pending-payments', {
+            const res = await axios.get(`${baseURL}/visit/pending-payments`, {
                 headers: {
                     'Authorization': `Bearer ${token.token}`
                 }
@@ -75,7 +77,7 @@ export const useManageVisits = () => {
     const getVisitsById = async (model, id) => {
         try {
             setIsLoading(true);
-            const res = await axios.get(`http://localhost:3000/visit/${model}/${id}`, {
+            const res = await axios.get(`${baseURL}/visit/${model}/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token.token}`
                 }
@@ -106,7 +108,7 @@ export const useManageVisits = () => {
     const bookVisit = async ({ user, doctor, date }) => {
         try {
             setIsLoading(true);
-            const res = await axios.post('http://localhost:3000/visit/create', { user, doctor, date }, { withCredentials: true })
+            const res = await axios.post(`${baseURL}/visit/create`, { user, doctor, date }, { withCredentials: true })
 
             if(res.status === 201){
                 setIsLoading(false)
@@ -134,7 +136,7 @@ export const useManageVisits = () => {
         try{
             setIsLoading(true)
 
-            const res = await axios.put(`http://localhost:3000/visit/update/${id}`, formData, {withCredentials: true})
+            const res = await axios.put(`${baseURL}/visit/update/${id}`, formData, {withCredentials: true})
 
             if(res.status === 201){
                 setIsLoading(false)
@@ -160,7 +162,7 @@ export const useManageVisits = () => {
     const deleteVisit = async (id) => {
         try{
             setIsLoading(true)
-            const res = await axios.delete(`http://localhost:3000/visit/delete/${id}`, { withCredentials: true })
+            const res = await axios.delete(`${baseURL}/visit/delete/${id}`, { withCredentials: true })
 
             if(res.status === 200){
                 setIsLoading(false)

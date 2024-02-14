@@ -11,11 +11,13 @@ export const useManageAuth = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = useAuthContext()
 
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+
     const login = async({ formData, model }) => {
         try{
             setIsLoading(true)
 
-            const res = await axios.post(`http://localhost:3000/${model}/sign-in`, formData, { withCredentials: true });
+            const res = await axios.post(`${baseURL}/${model}/sign-in`, formData, { withCredentials: true });
             const { codeRequested, ...json } = res.data;
 
             if (res.status === 200 && !codeRequested){
@@ -66,7 +68,7 @@ export const useManageAuth = () => {
         try {
             setIsLoading(true)
 
-            const res = await axios.get('http://localhost:3000/sign-out', { withCredentials: true });
+            const res = await axios.get(`${baseURL}/sign-out`, { withCredentials: true });
 
             if (res.status === 200) {
                 setIsLoading(false)
@@ -97,7 +99,7 @@ export const useManageAuth = () => {
     const verifyMail = async(model,token) => {
         try{
             setIsLoading(false)
-            const res = await axios.post(`http://localhost:3000/${model}/verify-email/${token}`)
+            const res = await axios.post(`${baseURL}/${model}/verify-email/${token}`)
             if (res.status === 200){
                 setIsLoading(false)
                 return true
@@ -114,7 +116,7 @@ export const useManageAuth = () => {
     const requestNewVerificationEmail = async(email) => {
         try{
             setIsLoading(true)
-            const res = await axios.post('http://localhost:3000/request-new-verification-email', {email})
+            const res = await axios.post(`${baseURL}/request-new-verification-email`, {email})
 
             if(res.status===200){
                 setIsLoading(false)
@@ -133,7 +135,7 @@ export const useManageAuth = () => {
         try{
             setIsLoading(false)
 
-            const res = await axios.post(`http://localhost:3000/${model}/verify-password`, { password }, { withCredentials: true });
+            const res = await axios.post(`${baseURL}/${model}/verify-password`, { password }, { withCredentials: true });
 
             if (res.status === 200){
                 setIsLoading(false)
@@ -148,5 +150,48 @@ export const useManageAuth = () => {
         return false
     }
 
-    return { login, logout, verifyPassword, verifyMail, requestNewVerificationEmail, isLoading }
+    const passwordReset = async({ model, token, formData }) => {
+        try{
+            setIsLoading(false)
+
+            const res = await axios.post(`${baseURL}/${model}/password-reset/${token}`, formData);
+
+            if (res.status === 200){
+                setIsLoading(false)
+                if (model === 'user') {
+                    navigate('/login');
+                } else if (model === 'doctor') {
+                    navigate('/doctor/login');
+                }
+                toast.success(res.data.message)
+            }
+        }catch (error) {
+            setIsLoading(false)
+            console.error('Error during password reset', error);
+
+            errorHandler(error)
+        }
+    }
+
+    const passwordResetRequest = async({ model, formData }) => {
+        console.log(formData)
+        try{
+            setIsLoading(false)
+
+            const res = await axios.post(`${baseURL}/${model}/password-reset-request`, formData);
+
+            if (res.status === 200){
+                setIsLoading(false)
+                navigate('/')
+                toast.success(res.data.message)
+            }
+        }catch (error) {
+            setIsLoading(false)
+            console.error('Error during password reset', error);
+
+            errorHandler(error)
+        }
+    }
+
+    return { login, logout, verifyPassword, verifyMail, requestNewVerificationEmail, passwordReset, passwordResetRequest, isLoading }
 }

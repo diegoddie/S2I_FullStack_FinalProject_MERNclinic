@@ -8,10 +8,12 @@ export const useManageUsers = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { user, token, dispatch } = useAuthContext()
 
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://myclinic-backend.onrender.com';
+
     const getUsers = async () => {
         try {
             setIsLoading(true);
-            const res = await axios.get('http://localhost:3000/user', {
+            const res = await axios.get(`${baseURL}/user`, {
                 headers: {
                     'Authorization': `Bearer ${token.token}`
                 }
@@ -32,7 +34,7 @@ export const useManageUsers = () => {
     const signUp = async ({ formData }) => {
         try {
             setIsLoading(true);
-            const res = await axios.post('http://localhost:3000/sign-up', formData);
+            const res = await axios.post(`${baseURL}/sign-up`, formData);
 
             if(res.status === 201){
                 setIsLoading(false)
@@ -50,7 +52,7 @@ export const useManageUsers = () => {
         try {
             setIsLoading(true);
 
-            const res = await axios.put(`http://localhost:3000/${model}/update/${user._id}`, formData, { withCredentials: true })
+            const res = await axios.put(`${baseURL}/${model}/update/${user._id}`, formData, { withCredentials: true })
 
             if (res.status === 200) {
                 setIsLoading(false);
@@ -81,7 +83,7 @@ export const useManageUsers = () => {
         try{
             setIsLoading(false)
 
-            const res = await axios.delete(`http://localhost:3000/${model}/delete/${id}`, { withCredentials: true });
+            const res = await axios.delete(`${baseURL}/${model}/delete/${id}`, { withCredentials: true });
 
             if (res.status === 200) {
                 setIsLoading(false);

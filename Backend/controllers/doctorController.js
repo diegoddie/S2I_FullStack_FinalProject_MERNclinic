@@ -157,7 +157,7 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
       currentDate = addDays(currentDate, 1);
     }
 
-    res.json({ availableSlots });
+    res.json(availableSlots);
   } catch(error){
     console.error('Error getting doctor availability:', error);
     next(errorHandler(500, 'Internal Server Error'));
