@@ -11,7 +11,7 @@ import visitRoutes from './routes/visitRoutes.js';
 dotenv.config();
 
 const app = express()
-
+app.set("trust proxy", 1);
 
 
 if (process.env.NODE_ENV === 'development') {
