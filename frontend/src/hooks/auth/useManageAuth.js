@@ -68,7 +68,7 @@ export const useManageAuth = () => {
         try {
             setIsLoading(true)
 
-            const res = await axios.get(`${baseURL}/sign-out`, { withCredentials: true });
+            const res = await axios.get(`${baseURL}/sign-out`, null, { withCredentials: true });
 
             if (res.status === 200) {
                 setIsLoading(false)

@@ -93,7 +93,12 @@ const signIn = async (req, res, next, Model) => {
       const expiryDate = new Date(Date.now() + (validUser.isAdmin ? 43200000 : 3600000));
 
       res
-          .cookie('access_token', token, { httpOnly: true, secure: true, sameSite: 'None', expires: expiryDate })
+          .cookie('access_token', token, { 
+            httpOnly: true, 
+            secure: true, 
+            sameSite: 'None', 
+            expires: expiryDate 
+          })
           .status(200)
           .json({ user: rest, token, expiration: expiryDate.getTime() });
   } catch (err) {
