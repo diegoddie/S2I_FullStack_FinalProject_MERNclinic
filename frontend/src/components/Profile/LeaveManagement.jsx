@@ -97,7 +97,7 @@ const LeaveManagement = () => {
     useEffect(() => {
         fetchPendingLeaveRequests();
         fetchAllLeaveRequests();
-    }, [user]);
+    }, []);
 
     return (
         <div className=''>
