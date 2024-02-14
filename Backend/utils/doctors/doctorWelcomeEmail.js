@@ -11,7 +11,8 @@ export const sendWelcomeEmail = async (email, password, token) => {
         },
       });
 
-      const verifyEmailLink = `http://localhost:3001/doctor/verify-email/${token}`;
+      const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://www.myclinic.tech';
+      const verifyEmailLink = `${baseURL}/doctor/verify-email/${token}`;
   
       const mailOptions = {
         from: process.env.GMAIL,

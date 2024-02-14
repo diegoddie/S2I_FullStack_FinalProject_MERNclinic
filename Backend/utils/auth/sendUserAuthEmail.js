@@ -10,7 +10,8 @@ export const sendUserAuthEmail = async (userEmail, token) => {
           },
         });
 
-        const verifyEmailLink = `http://localhost:3001/user/verify-email/${token}`;
+        const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://www.myclinic.tech';
+        const verifyEmailLink = `${baseURL}/user/verify-email/${token}`;
 
         const mailOptions = {
             from: process.env.GMAIL,  

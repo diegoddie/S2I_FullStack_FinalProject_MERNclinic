@@ -10,7 +10,8 @@ export const sendResetPasswordEmail = async (email, resetToken, Model) => {
             },
         });
 
-        const resetTokenLink = `http://localhost:3001/${Model.modelName.toLowerCase()}/password-reset/${resetToken}`;
+        const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://www.myclinic.tech';
+        const resetTokenLink = `${baseURL}/${Model.modelName.toLowerCase()}/password-reset/${resetToken}`;
 
         const mailOptions = {
             from: process.env.GMAIL,
