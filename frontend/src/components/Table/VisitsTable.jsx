@@ -129,7 +129,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
 
     return (
         <div className="flex flex-col">
-            <div className="mt-2 py-5 max-w-full align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto ">
+            <div className="mt-2 py-4 max-w-full xl:max-w-full lg:max-w-[740px] md:max-w-[485px] align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
                 {isLoading && (
                     <div className="flex items-center justify-center mx-auto py-10">
                         <Spinner />
@@ -137,10 +137,10 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                 )}
                 {!isLoading && (
                     <>
-                        <div className="flex flex-col md:flex-row gap-4 mt-1 mb-4 justify-center mx-8">
+                        <div className="flex flex-col mt-1 mb-4 justify-center">
                             {isAdmin && (
                                 <>
-                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
                                         <div className="flex items-center pointer-events-none mr-1">
                                             <CiSearch className="text-gray-800 font-bold text-md" />
                                         </div>
@@ -152,7 +152,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                             className="bg-transparent outline-none"
                                         />
                                     </div>
-                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
                                         <div className="flex items-center pointer-events-none mr-1">
                                             <CiSearch className="text-gray-800 font-bold text-md" />
                                         </div>
@@ -167,7 +167,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                 </>
                             )}
                             {isDoctor && (
-                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 mx-10 md:mx-0">
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
                                     <div className="flex items-center pointer-events-none mr-1">
                                         <CiSearch className="text-gray-800 font-bold text-md" />
                                     </div>
@@ -181,9 +181,9 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                 </div>
                             )}
                             {!isAdmin && !isDoctor && (
-                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 ">
+                                <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
                                     <div className="flex items-center pointer-events-none mr-1">
-                                        <CiSearch className="text-gray-800 font-bold text-md" />
+                                        <CiSearch className="text-gray-800 font-bold text-md"/>
                                     </div>
                                     <input
                                         type="text"
@@ -194,7 +194,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                     />
                                 </div>
                             )}
-                            <div className='flex flex-row gap-1 justify-center px-2 md:px-0'>
+                            <div className='flex flex-col md:flex-row gap-1 justify-center items-center mb-4 md:mb-0'>
                                 <DatePicker
                                     selected={startDate}
                                     onChange={handleStartDateChange}
@@ -224,7 +224,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                             </p>
                         ) : (
                             <>
-                                <div className="shadow border-b sm:rounded-lg overflow-x-auto md:w-fit justify-center items-center mx-auto">
+                                <div className="shadow border-b rounded-lg overflow-x-auto justify-center items-center mx-auto">
                                     <table className="divide-y divide-gray-200">
                                         <thead className="bg-secondary text-white">
                                             <tr className='text-center text-lg'>

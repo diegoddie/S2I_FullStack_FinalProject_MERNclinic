@@ -112,7 +112,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="mt-1 py-4 max-w-full align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto ">
+      <div className="mt-2 py-5 max-w-full 2xl:max-w-[1200px] xl:max-w-[950px] lg:max-w-[700px] md:max-w-[460px] align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
         {isLoading && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />
@@ -120,50 +120,50 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
         )}
         <>
           {showDatePicker && (
-              <div className="flex gap-1 my-4 justify-center px-8">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
-                  placeholderText="Start Date"
-                />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate}
-                  dateFormat="dd/MM/yyyy"
-                  className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
-                  placeholderText="End Date"
-                />
-              </div>
-            )}
-            <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold">
-              {filteredData.length === 0
-                ? title === 'Pending Requests'
-                  ? 'There are no Pending Requests'
-                  : 'There are no requests for the selected period'
-                : null}
-            </p>
-          </>
+            <div className="flex flex-col md:flex-row gap-1 justify-center items-center mb-4 md:mb-0">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                dateFormat="dd/MM/yyyy"
+                className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
+                placeholderText="Start Date"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                dateFormat="dd/MM/yyyy"
+                className="p-2 border border-gray-300 rounded bg-white text-gray-900 placeholder-gray-500 outline-none focus:ring-2 focus:ring-secondary"
+                placeholderText="End Date"
+              />
+            </div>
+          )}
+          <p className="text-center text-gray-700 mt-2 text-lg md:text-xl font-semibold">
+            {filteredData.length === 0
+              ? title === 'Pending Requests'
+              ? 'There are no Pending Requests'
+              : 'There are no requests for the selected period'
+              : null
+            }
+          </p>
+        </>
           {filteredData.length > 0 && (
             <>
-              <div className="shadow border-b sm:rounded-lg overflow-x-auto">
+              <div className="shadow border-b rounded-lg overflow-x-auto justify-center items-center mx-auto">
                 <table className="divide-y divide-gray-200">
                   <thead className="bg-secondary text-white">
                     <tr className='text-center text-lg'>
-                      <th className="px-5 py-3 border-r font-medium">
-                        Doctor
-                      </th>
-                      <th className="px-5 py-3 border-r font-medium">
-                        Type
-                      </th>
+                      {isAdmin && (
+                        <th className="px-5 py-3 border-r font-medium">
+                          Doctor
+                        </th>
+                      )}
                       <th className="cursor-pointer font-medium px-5 py-3 border-r" onClick={() => toggleSortOrder('createdAt')}>
                         <div className='flex gap-2 justify-center'>
                           <span>Created At</span>
@@ -175,6 +175,9 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                             )}
                           </span>
                         </div>
+                      </th>
+                      <th className="px-5 py-3 border-r font-medium">
+                        Type
                       </th>
                       <th className="cursor-pointer font-medium px-5 py-3 border-r" onClick={() => toggleSortOrder('startDate')}>
                         <div className='flex gap-2 justify-center'>
@@ -194,7 +197,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                       <th className="px-5 py-3 border-r font-medium">
                         Status
                       </th>
-                      <th className="px-5 py-3 border-r font-medium">
+                      <th className="px-5 py-3 font-medium">
                         Action
                       </th>
                     </tr>
@@ -202,20 +205,22 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {currentItems.map((leaveRequest) => (
                       <tr key={leaveRequest._id} className="items-center text-center">
-                        <td className="px-5 py-4 whitespace-nowrap border-r">
-                          <div className="flex items-center">
-                            <div className="font-medium text-gray-900">
-                              {leaveRequest.firstName} {leaveRequest.lastName}
+                        {isAdmin && (
+                          <td className="px-5 py-4 whitespace-nowrap border-r">
+                            <div className="flex items-center">
+                              <div className="font-medium text-gray-900">
+                                {leaveRequest.firstName} {leaveRequest.lastName}
+                              </div>
                             </div>
-                          </div>
+                          </td>
+                        )}
+                        <td className="px-5 py-4 whitespace-nowrap border-r">
+                          <div className="text-gray-500">{formatDate(leaveRequest.createdAt)}</div>
                         </td>
                         <td className="px-5 py-4 whitespace-nowrap border-r">
                           <span className={`px-3 py-1 inline-flex text-md leading-2 font-semibold capitalize rounded-full ${leaveRequest.typology.toLowerCase() === 'vacation' ? 'bg-purple-200 text-purple-800' : 'bg-blue-200 text-blue-900'}`}>
                             {leaveRequest.typology}
                           </span>
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap border-r">
-                          <div className="text-gray-500">{formatDate(leaveRequest.createdAt)}</div>
                         </td>
                         <td className="px-5 py-4 whitespace-nowrap text-gray-900 border-r">
                           {formatDate(leaveRequest.startDate, leaveRequest.typology.toLowerCase())}
@@ -228,7 +233,7 @@ const LeaveManagementTable = ({ title, data, isAdmin }) => {
                           {leaveRequest.isApproved === null ? "Pending" : leaveRequest.isApproved ? "Approved" : "Declined"}
                         </span>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap border-r">
+                        <td className="px-4 py-4 whitespace-nowrap">
                           {isAdmin ? (
                             <div className='flex gap-2'>
                               <button className='px-3 py-1 inline-flex text-md leading-2 font-semibold rounded-full bg-green-200 text-green-900 hover:bg-green-400 duration-300' onClick={() => handleApproveLeaveRequest(leaveRequest.doctorId, leaveRequest._id)}>Approve</button>

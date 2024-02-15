@@ -35,7 +35,7 @@ const Profile = ({ model }) => {
   }, []);
 
   return (
-      <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-6">
+      <section className="flex flex-col md:flex-row mx-auto h-full w-full px-2 md:pt-12 pb-4 md:px-3">
         {!user && (
           <div className="flex items-center justify-center mx-auto py-10">
             <Spinner />

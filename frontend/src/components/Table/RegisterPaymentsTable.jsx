@@ -74,8 +74,8 @@ const RegisterPaymentsTable = ({ data }) => {
 
     return (
         <div className="flex flex-col">
-            <div className="mt-2 py-5 max-w-full align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto ">
-                <div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-4 justify-center px-2">
+            <div className="mt-2 py-5 max-w-full xl:max-w-full lg:max-w-[740px] md:max-w-[490px] align-middle inline-block px-2 lg:px-4 items-center justify-center mx-auto">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-4 mb-4 justify-center px-2 mx-auto items-center">
                     <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
                         <div className="flex items-center pointer-events-none mr-1">
                             <CiSearch className="text-gray-800 font-bold text-md" />
@@ -107,7 +107,7 @@ const RegisterPaymentsTable = ({ data }) => {
                     </p>
                 ) : (
                     <>
-                        <div className="shadow border-b sm:rounded-lg overflow-x-auto">
+                        <div className="shadow border-b rounded-lg overflow-x-auto justify-center items-center mx-auto">
                             <table className="divide-y divide-gray-200">
                                 <thead className="bg-secondary text-white">
                                     <tr className='text-center text-lg'>
