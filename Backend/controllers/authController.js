@@ -207,7 +207,7 @@ export const signOut = async (req, res) => {
   try {
     // Extract the access token cookie from the request
     const accessTokenCookie = req.cookies["access_token"];
-    console.log(accessTokenCookie)
+    
     // If the cookie is not present, return unauthorized status
     if (!accessTokenCookie) {
       return res.status(401).json({ message: 'Unauthorized' });
