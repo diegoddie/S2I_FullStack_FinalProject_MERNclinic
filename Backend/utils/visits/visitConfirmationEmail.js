@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import formatDate from '../formatDate.js';
 
 export const sendVisitConfirmationEmail = async (userEmail, doctorEmail, visitDetails) => {
   try {
@@ -18,7 +19,7 @@ export const sendVisitConfirmationEmail = async (userEmail, doctorEmail, visitDe
         <html>
           <body>
             <h1>Your Visit Details</h1>
-            <p>Date: ${visitDetails.date}</p>
+            <p>Date: ${formatDate(visitDetails.date)}</p>
             <p>Doctor: ${visitDetails.doctor.firstName} ${visitDetails.doctor.lastName}</p>
             <p>Specialization: ${visitDetails.doctor.specialization}</p>
           </body>
@@ -34,7 +35,7 @@ export const sendVisitConfirmationEmail = async (userEmail, doctorEmail, visitDe
         <html>
           <body>
             <h1>New Visit Scheduled</h1>
-            <p>Date: ${visitDetails.date}</p>
+            <p>Date: ${formatDate(visitDetails.date)}</p>
             <p>Patient: ${visitDetails.patient.firstName} ${visitDetails.patient.lastName}</p>
             <p>Tax ID: ${visitDetails.patient.taxId}</p>
           </body>
@@ -53,6 +54,3 @@ export const sendVisitConfirmationEmail = async (userEmail, doctorEmail, visitDe
     throw err;
   }
 };
-
-
-

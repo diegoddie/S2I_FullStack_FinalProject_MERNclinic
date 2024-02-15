@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import formatDate from '../formatDate.js';
 
 export const sendVisitCancellationEmail = async (userEmail, doctorEmail, visitDetails) => {
   try {
@@ -18,7 +19,7 @@ export const sendVisitCancellationEmail = async (userEmail, doctorEmail, visitDe
         <html>
           <body>
             <h1>Your Visit Has Been Cancelled</h1>
-            <p>Your visit scheduled on ${visitDetails.date} has been cancelled.</p>
+            <p>Your visit scheduled on ${formatDate(visitDetails.date)} has been cancelled.</p>
             <p>Other Details:</p>
             <p>Doctor: ${visitDetails.doctor.firstName} ${visitDetails.doctor.lastName}</p>
             <p>${visitDetails.doctor.specialization}</p>
@@ -37,7 +38,7 @@ export const sendVisitCancellationEmail = async (userEmail, doctorEmail, visitDe
             <h1>Visit Cancellation</h1>
             <p>Patient: ${visitDetails.patient.firstName} ${visitDetails.patient.lastName}</p>
             <p>Tax ID: ${visitDetails.patient.taxId}</p>
-            <p>The visit scheduled on ${visitDetails.date} has been cancelled.</p>
+            <p>The visit scheduled on ${formatDate(visitDetails.date)} has been cancelled.</p>
           </body>
         </html>
       `,

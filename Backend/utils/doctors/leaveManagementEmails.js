@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import formatDate from '../formatDate.js'
 
 export const sendNewLeaveRequestEmailToAdmin = async (leaveRequest) => {
   try {
@@ -15,7 +16,7 @@ export const sendNewLeaveRequestEmailToAdmin = async (leaveRequest) => {
           to: process.env.ADMIN_EMAIL, 
           subject: 'New Leave Request requires approval',
           html: `
-              <p>A new ${leaveRequest.typology} Request from ${leaveRequest.startDate} to ${leaveRequest.endDate} requires approval.</p>
+              <p>A new ${leaveRequest.typology} Request from ${formatDate(leaveRequest.startDate, leaveRequest.typology)} to ${formatDate(leaveRequest.endDate, leaveRequest.typology)} requires approval.</p>
               <p>Doctor: ${leaveRequest.doctorName}</p>
               <p>Email: ${leaveRequest.doctorEmail}</p>
           `,
@@ -45,7 +46,7 @@ export const sendLeaveApprovalEmail = async (email, leaveRequest) => {
         to: email,
         subject: 'Your Leave Request has been approved',
         html: `
-            <p>Your ${leaveRequest.typology} Request from ${leaveRequest.startDate} to ${leaveRequest.endDate} has been approved.</p>
+            <p>Your ${leaveRequest.typology} Request from ${formatDate(leaveRequest.startDate, leaveRequest.typology)} to ${formatDate(leaveRequest.endDate, leaveRequest.typology)} has been approved.</p>
         `,
       };
   
@@ -73,7 +74,7 @@ export const sendLeaveDeclinalEmail = async (email, leaveRequest) => {
         to: email,
         subject: 'Your Leave Request has been declined',
         html: `
-            <p>Your ${leaveRequest.typology} Request from ${leaveRequest.startDate} to ${leaveRequest.endDate} has been declined.</p>
+            <p>Your ${leaveRequest.typology} Request from ${formatDate(leaveRequest.startDate, leaveRequest.typology)} to ${formatDate(leaveRequest.endDate, leaveRequest.typology)} has been declined.</p>
         `,
       };
   
