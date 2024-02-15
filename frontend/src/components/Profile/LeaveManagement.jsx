@@ -6,7 +6,7 @@ import CreateLeaveRequest from '../Button/CreateLeaveRequestButton';
 import { useManageDoctors } from '../../hooks/doctors/useManageDoctors';
 
 const LeaveManagement = () => {
-    const { getDoctors, isLoading } = useManageDoctors();
+    const { getDoctors, getDoctorById, isLoading } = useManageDoctors();
     const { user } = useAuthContext();
 
     const [pendingLeaveRequestsData, setPendingLeaveRequestsData] = useState([]);
@@ -42,7 +42,9 @@ const LeaveManagement = () => {
 
                 setAllLeaveRequestsData(allUserLeaveRequests);
             } else {
-                const allUserLeaveRequests = user.leaveRequests.map(request => ({
+                const doctor = await getDoctorById(user._id)
+
+                const allUserLeaveRequests = doctor.leaveRequests.map(request => ({
                     firstName: user.firstName,
                     lastName: user.lastName,
                     doctorId: user._id,
@@ -81,7 +83,9 @@ const LeaveManagement = () => {
     
                 setPendingLeaveRequestsData(userLeaveRequests);
             } else {
-                const userLeaveRequests = user.leaveRequests.filter(request => request.isApproved === null);
+                const doctor = await getDoctorById(user._id)
+
+                const userLeaveRequests = doctor.leaveRequests.filter(request => request.isApproved === null);
                 setPendingLeaveRequestsData(userLeaveRequests.map(request => ({
                     firstName: user.firstName,
                     lastName: user.lastName,
