@@ -1,5 +1,5 @@
 # WELCOME TO MYCLINIC! 🏥
-
+![Home](home.png)
 This project is a Full Stack MERN application for a private clinic. It focuses on providing a secure and user-friendly interface for managing clinic operations. 
 This is my final project for the Start2Impact's master in Full Stack Development.
 
@@ -12,17 +12,15 @@ Table of Contents 🔎
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Install Locally](#install-locally)
-- [API Endpoints](#api-endpoints)
+- [Api Endpoints](#api-endpoints)
 - [Acknowledgements](#acknowledgements)
 
 ## INTRODUCTION 🌎
-
 MyClinic is a comprehensive solution designed for managing various aspects of a private clinic, from appointment scheduling to managing doctors' permissions and vacation days. It emphasizes security and user experience, ensuring that sensitive data is handled securely while offering an intuitive interface for both clinic staff and patients.
 
 ## FEATURES 🚀
-
-Security: The foremost priority is ensuring the security of user data and authentication mechanisms, with JWT, Cookies, and optional two-factor authentication implemented.
-Clarity and User Interface: A clear and intuitive user interface is essential for both clinic staff and patients to efficiently navigate and utilize the application.
+**Security**: The foremost priority is ensuring the security of user data and authentication mechanisms, with JWT, Cookies, and optional two-factor authentication implemented.
+**Clarity and User Interface**: A clear and intuitive user interface is essential for both clinic staff and patients to efficiently navigate and utilize the application.
 
 ## TECH STACK ⛓️
 
@@ -41,7 +39,6 @@ Clarity and User Interface: A clear and intuitive user interface is essential fo
 - **React Icons**: A collection of popular icon libraries made available as React components.
 
 ## INSTALL LOCALLY ➡️
-
 To get started with MyClinic locally, follow these steps:
 
 1. Clone the Repo: `git clone https://github.com/diegoddie/S2I_FullStack_FinalProject_MERNclinic`
@@ -65,12 +62,10 @@ To get started with MyClinic locally, follow these steps:
 7. Start the frontend server using npm start in the frontend directory.
 8. Access the application in your browser at http://localhost:3001.
 
-## API ENDPOINTS
-
+## API ENDPOINTS 🧑🏻‍💻
 Here are the available API endpoints that you can test using Postman:
 
 ### Auth API
-
 - **POST /sign-up**: Sign up a new user. (**For patients only**)
 - **POST /doctor/create**: Sign up a new doctor. (**For admin only**)
 - **POST /request-new-verification-email**: Request a new verification email.
@@ -94,7 +89,6 @@ Here are the available API endpoints that you can test using Postman:
 - **GET /doctor/verify-email/:token**: Verify the doctor's email address using the provided token.
 
 ### Patients API
-
 - **PUT /user/update/:id**: Update user/admin information.
 
 - **DEL /user/delete/:id**: Delete a user/admin.
@@ -103,7 +97,6 @@ Here are the available API endpoints that you can test using Postman:
 - **GET /user**: Get all users (**For admin only**)
 
 ### Doctors API
-
 - **PUT /doctor/update/:id**: Update doctor's information.
 - **PUT /doctor/:doctorId/approve/:requestId**: Approve a leave request for a doctor (**For admin only**)
 - **PUT /doctor/:doctorId/decline/:requestId**: Decline a leave request for a doctor (**For admin only**)
@@ -117,7 +110,6 @@ Here are the available API endpoints that you can test using Postman:
 - **GET /doctor/:id/weeklyAvailability**: Get the weekly availability schedule of a specific doctor. 
 
 ### Visits API
-
 - **POST /visit/create**: Create a new visit. (**For Patients and Admin only**)
 
 - **PUT /visit/update/:id**: Update visit data.
