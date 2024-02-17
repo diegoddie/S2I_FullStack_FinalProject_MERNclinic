@@ -14,7 +14,7 @@ Table of Contents 🔎
 - [Tech Stack](#tech-stack)
 - [Install Locally](#install-locally)
 - [Api Endpoints](#api-endpoints)
-- [Acknowledgements](#acknowledgements)
+- [Acknowledgements and Contacts](#acknowledgements-contacts)
 
 ## INTRODUCTION 🌎
 ![book](book.png)
@@ -131,3 +131,15 @@ Here are the available API endpoints that you can test using Postman:
 - **GET /visit/doctor/:doctorId**: Get details of visits associated with a specific doctor.
 - **GET /visit/user/:user**: Get details of visits associated with a specific user.
 - **GET /visit/pending-payments**: Get details of visits with pending payments. (**For admin only**)
+
+## ACKNOWLEDGEMENTS AND CONTACTS ✉️
+This project marks the culmination of my journey in the Start2Impact's master program in Full Stack Development. It has been an immensely educational and stimulating experience, allowing me to connect with many individuals and foster a deep passion for programming.
+
+If you have any questions, feedback, or just want to connect, feel free to reach out to me through the following channels:
+
+- Email: diego.boost@gmail.com
+- Personal Website: https://diego-lauricella.netlify.app
+- Twitter: https://twitter.com/diegothedev
+- Github: https://github.com/diegoddie
+- Fiverr: https://www.fiverr.com/diegoddie
+- Upwork: https://www.upwork.com/freelancers/~01021369935709b658
