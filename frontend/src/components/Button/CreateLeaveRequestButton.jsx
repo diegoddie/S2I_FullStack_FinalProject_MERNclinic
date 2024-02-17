@@ -63,7 +63,7 @@ const CreateLeaveRequestButton = () => {
       });
       
       handleCloseModal()
-
+      window.location.reload();
     } catch (error) {
       console.error("Error updating doctor's leave requests:", error);
     }
