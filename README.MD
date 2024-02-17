@@ -9,10 +9,9 @@ For further details please take a look at the presentation inside the repo.
 Table of Contents 🔎
 - [Introduction](#introduction)
 - [Features](#features)
-- [Technologies Used](#tech-stack)
+- [Tech Stack](#tech-stack)
 - [Install Locally](#install-locally)
 - [Api Endpoints](#api-endpoints)
-- [Deployment](#deployment)
 - [Acknowledgements](#acknowledgements)
 
 ## INTRODUCTION 🌎
@@ -31,14 +30,12 @@ Clarity and User Interface: A clear and intuitive user interface is essential fo
 - **Mongoose**: A library for MongoDB and Node.js.
 - **JSON Web Tokens(JWT)**: JWTs are commonly used for securely transmitting information between parties as a JSON object. They are often used for authentication and authorization in web applications.
 - **Nodemailer**: A module for Node.js applications to allow easy email sending.
-and more
 
 ### Frontend
 - **React**: A runtime environment for executing JavaScript code on the server-side.
 - **Tailwind CSS**: A web application framework for building robust and efficient web applications.
 - **Axios**: A promise-based HTTP client for the browser and Node.js. It simplifies the process of making asynchronous HTTP requests and handling responses in web applications.
 - **React Icons**: A collection of popular icon libraries made available as React components.
-and more
 
 ## INSTALL LOCALLY ➡️
 To get started with MyClinic locally, follow these steps:
@@ -64,7 +61,7 @@ To get started with MyClinic locally, follow these steps:
 7. Start the frontend server using npm start in the frontend directory.
 8. Access the application in your browser at http://localhost:3001.
 
-## API Endpoints
+## API ENDPOINTS
 Here are the available API endpoints that you can test using Postman:
 
 ### Auth API
@@ -118,8 +115,8 @@ Here are the available API endpoints that you can test using Postman:
 
 - **DEL /visit/delete/:id**: Delete a visit.
 
-- **GET /visit**: Get details of all visits.(**For admin only**)
+- **GET /visit**: Get details of all visits. (**For admin only**)
 - **GET /visit/:id**: Get details of a specific visit.
 - **GET /visit/doctor/:doctorId**: Get details of visits associated with a specific doctor.
 - **GET /visit/user/:user**: Get details of visits associated with a specific user.
-- **GET /visit/pending-payments**: Get details of visits with pending payments.(**For admin only**)
+- **GET /visit/pending-payments**: Get details of visits with pending payments. (**For admin only**)
