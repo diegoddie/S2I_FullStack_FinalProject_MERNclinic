@@ -23,12 +23,12 @@ MyClinic is a comprehensive solution designed for managing various aspects of a 
 
 ## FEATURES 🚀
 ![2fa](2fa.png)
-**User Authentication & 2FA**: The foremost priority is ensuring the security of user data and authentication mechanisms. RWhen users register, they receive a confirmation email containing a unique link to verify their account, ensuring that only legitimate users gain access.
+- **User Authentication & 2FA**: The foremost priority is ensuring the security of user data and authentication mechanisms. RWhen users register, they receive a confirmation email containing a unique link to verify their account, ensuring that only legitimate users gain access.
 For login authentication, we utilize JSON Web Tokens (JWT) and Cookies, with JWTs expiring after 8 hours. This approach enhances security by limiting the duration of user sessions and mitigating the risk of unauthorized access. Additionally, users can opt to enable two-factor authentication (2FA), adding an extra layer of protection to their accounts. By requiring a secondary form of verification, such as a code sent to their mobile device, we further safeguard user accounts against potential threats.
-**Clarity and User Interface**: A clear and intuitive user interface is essential for both clinic staff and patients to efficiently navigate and utilize the application.
-**Appointment Booking & Dynamic Doctor Availability**:Patients can book appointments by viewing doctor availability in real-time. Upon booking, both the patient and doctor receive an automatic email summarizing the appointment details.
-**Leave Management**: Doctors can submit requests for leaves and permissions, which the admin can approve or decline.
-**Responsiveness**: The application is designed to be responsive, ensuring optimal user experience across devices of varying screen sizes, including desktops, tablets, and smartphones. This enhances accessibility and usability for all users, regardless of the device they are using.
+- **Clarity and User Interface**: A clear and intuitive user interface is essential for both clinic staff and patients to efficiently navigate and utilize the application.
+- **Appointment Booking & Dynamic Doctor Availability**:Patients can book appointments by viewing doctor availability in real-time. Upon booking, both the patient and doctor receive an automatic email summarizing the appointment details.
+- **Leave Management**: Doctors can submit requests for leaves and permissions, which the admin can approve or decline.
+- **Responsiveness**: The application is designed to be responsive, ensuring optimal user experience across devices of varying screen sizes, including desktops, tablets, and smartphones. This enhances accessibility and usability for all users, regardless of the device they are using.
 
 These features represent just a glimpse of what our application offers. We invite you to explore the application firsthand to discover even more exciting functionalities and benefits it provides.
 
