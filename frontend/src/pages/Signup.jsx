@@ -26,8 +26,10 @@ const SignUp = () => {
     e.preventDefault();
 
     try{
-      await signUp({formData})
-      setIsRegistrationComplete(true);
+      const registrationSuccessful = await signUp({ formData });
+      if (registrationSuccessful) {
+        setIsRegistrationComplete(true);
+      }
     } catch (error) {
       console.error('Error during sign-up:', error);
     }
