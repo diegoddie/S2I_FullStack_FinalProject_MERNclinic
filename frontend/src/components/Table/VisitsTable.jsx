@@ -139,8 +139,8 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                     <>
                         <div className="flex flex-col mt-1 mb-4 justify-center">
                             {isAdmin && (
-                                <div className='flex flex-col md:flex-row md:gap-3'>
-                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
+                                <div className='gap-2 flex flex-col md:flex-row justify-center items-center mx-auto mb-2'>
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 ">
                                         <div className="flex items-center pointer-events-none mr-1">
                                             <CiSearch className="text-gray-800 font-bold text-md" />
                                         </div>
@@ -152,7 +152,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                             className="bg-transparent outline-none"
                                         />
                                     </div>
-                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50 justify-center items-center mx-auto mb-2">
+                                    <div className="flex flex-row p-2 border border-gray-300 rounded bg-gray-50">
                                         <div className="flex items-center pointer-events-none mr-1">
                                             <CiSearch className="text-gray-800 font-bold text-md" />
                                         </div>
