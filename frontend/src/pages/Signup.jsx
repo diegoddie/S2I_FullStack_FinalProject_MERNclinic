@@ -9,6 +9,7 @@ const SignUp = () => {
   const { signUp, isLoading } = useManageUsers()
 
   const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
+  console.log(isRegistrationComplete)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -27,6 +28,7 @@ const SignUp = () => {
 
     try{
       const registrationSuccessful = await signUp({ formData });
+      console.log(registrationSuccessful)
       if (registrationSuccessful) {
         setIsRegistrationComplete(true);
       }

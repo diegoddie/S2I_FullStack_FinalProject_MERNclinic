@@ -39,6 +39,7 @@ export const useManageUsers = () => {
             if(res.status === 201){
                 setIsLoading(false)
                 toast.success('Please check your email for verification.');
+                return true
             }            
         } catch (error) {
             console.error('Error during sign-up:', error);
