@@ -116,7 +116,7 @@ Here are the available API endpoints that you can test using Postman:
 
 - **GET /doctor/:id**: Get details of a specific doctor.
 - **GET /doctor/profile/:id**: Get the profile of the authenticated doctor. (**For doctor only**)
-- **GET /doctor**: Get all doctors (**For admin only**)
+- **GET /doctor**: Get all doctors
 - **GET /doctor/:id/weeklyAvailability**: Get the weekly availability schedule of a specific doctor. 
 
 ### Visits API
