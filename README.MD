@@ -46,6 +46,7 @@ These features represent just a glimpse of what our application offers. We invit
 - **React**: A runtime environment for executing JavaScript code on the server-side.
 - **Tailwind CSS**: A web application framework for building robust and efficient web applications.
 - **Axios**: A promise-based HTTP client for the browser and Node.js. It simplifies the process of making asynchronous HTTP requests and handling responses in web applications.
+- **React Context**: A feature in React for globally managing state without having to pass props through every level of the component tree.
 - **React Icons**: A collection of popular icon libraries made available as React components.
 
 ## INSTALL LOCALLY ➡️
