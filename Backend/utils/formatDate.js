@@ -8,11 +8,11 @@ const formatDate = (dateString, typology) => {
     const zonedDate = utcToZonedTime(date, timeZone);
 
     if (typology === 'vacation') {
-        return format(zonedDate, 'dd/MM/yyyy', { locale: it });
+        return format(zonedDate, 'dd/MM/yyyy', { locale: it, timeZone });
     } else {
         const formattedDate = format(zonedDate, 'dd/MM/yyyy', { locale: it, timeZone });
         const formattedTime = format(zonedDate, 'HH:mm', { locale: it, timeZone });
-        console.log(formattedTime)
+
         return `${formattedDate} ${formattedTime}`;
     }
 };
