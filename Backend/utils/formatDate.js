@@ -1,15 +1,17 @@
 import { format } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import it from 'date-fns/locale/it/index.js';
 
 const formatDate = (dateString, typology) => {
-    console.log(dateString)
+    const timeZone = 'Europe/Rome'
     const date = new Date(dateString);
-    console.log(date)
+    const zonedDate = utcToZonedTime(date, timeZone);
+
     if (typology === 'vacation') {
-        return format(date, 'dd/MM/yyyy', { locale: it });
+        return format(zonedDate, 'dd/MM/yyyy', { locale: it });
     } else {
-        const formattedDate = format(date, 'dd/MM/yyyy', { locale: it });
-        const formattedTime = format(date, 'HH:mm', { locale: it });
+        const formattedDate = format(zonedDate, 'dd/MM/yyyy', { locale: it, timeZone });
+        const formattedTime = format(zonedDate, 'HH:mm', { locale: it, timeZone });
         console.log(formattedTime)
         return `${formattedDate} ${formattedTime}`;
     }
