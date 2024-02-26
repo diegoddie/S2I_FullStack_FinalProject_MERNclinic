@@ -7,7 +7,7 @@ const BookVisit = ({ doctor }) => {
   const { getDoctorWeeklyAvailability, isLoading } = useManageDoctors()
 
   const [availableSlots, setAvailableSlots] = useState([]);
-  console.log(availableSlots)
+
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       const data = await getDoctorWeeklyAvailability(doctor._id)
