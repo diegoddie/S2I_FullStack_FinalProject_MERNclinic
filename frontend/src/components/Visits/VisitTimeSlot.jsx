@@ -6,7 +6,7 @@ import BookVisitButton from '../Button/BookVisitButton';
 
 const VisitTimeSlot = ({ data, doctor }) => {
     const [currentPage, setCurrentPage] = useState(1);
-
+    
     const itemsPerPage = 16;
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -16,8 +16,9 @@ const VisitTimeSlot = ({ data, doctor }) => {
     };
       
     const getFormattedDateTime = (date) => {
+        console.log(date)
         const formattedDate = format(date, "dd/MM/yyyy", { locale: enUS });
-        const formattedTime = format(date, "HH:mm", { locale: enUS, timeZone: "Europe/Rome" });
+        const formattedTime = format(date, "HH:mm");
         console.log(formattedTime)
         return { formattedDate, formattedTime };
     };
