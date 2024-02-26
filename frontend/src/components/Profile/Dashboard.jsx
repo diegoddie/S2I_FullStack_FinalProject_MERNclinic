@@ -102,29 +102,29 @@ const Dashboard = () => {
             icon={<MdHealthAndSafety />}
             title="Visits Today"
             content={todaysVisits}
-            iconBg="sky-500"
-            hoverBg="hover:bg-sky-100"
+            cardBg="bg-sky-300"
+            hoverBg="hover:bg-sky-500"
           />
           <DashboardCard
             icon={<MdOutlinePayment />}
             title="Pending Payments"
             content={pendingPayments}
-            iconBg="yellow-400"
-            hoverBg="hover:bg-yellow-100"
+            cardBg="bg-yellow-200"
+            hoverBg="hover:bg-yellow-500"
           />
           <DashboardCard
             icon={<IoPeople />}
             title="Leave Requests"
             content={pendingLeaveRequests}
-            iconBg="gray-500"
-            hoverBg="hover:bg-gray-200"
+            cardBg="bg-gray-400"
+            hoverBg="hover:bg-gray-500"
           />
           <DashboardCard
             icon={<FaCashRegister />}
             title={`Revenue ${getYear(new Date())} ($)`}
             content={`${revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-            iconBg="green-600"
-            hoverBg="hover:bg-green-200"
+            cardBg="bg-green-300"
+            hoverBg="hover:bg-green-500"
           />
         </div>
       )}
