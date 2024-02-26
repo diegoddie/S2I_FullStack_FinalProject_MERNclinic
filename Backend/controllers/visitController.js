@@ -6,6 +6,7 @@ import Doctor from "../models/doctorModel.js";
 import { sendVisitConfirmationEmail } from "../utils/visits/visitConfirmationEmail.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import { endOfDay } from 'date-fns';
+import moment from 'moment'
 
 export const createVisit = async (req, res, next) => {
   try {
@@ -22,8 +23,9 @@ export const createVisit = async (req, res, next) => {
     if (!user || !doctor) {
       return res.status(400).json({ message: "Doctor and user are required" });
     }
-    const visitDate = new Date(date);
-    const currentDate = new Date();
+    const visitDate = moment(date).utc().toDate();
+
+    const currentDate = moment().utc().toDate();
 
     if (visitDate <= currentDate) {
       return res.status(400).json({ message: "Visit date must be in the future" });
@@ -50,7 +52,7 @@ export const createVisit = async (req, res, next) => {
       return res.status(400).json({ message: "Doctor is not available on that day or time" });
     }
 
-    const newVisit = await Visit.create({ user, doctor, date, startTime, endTime });
+    const newVisit = await Visit.create({ user, doctor, date:visitDate, startTime, endTime });
 
     const visitDetails = {
       Id: newVisit.id,

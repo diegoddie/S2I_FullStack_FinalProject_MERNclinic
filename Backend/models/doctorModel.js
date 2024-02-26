@@ -11,13 +11,13 @@ const workShiftSchema = {
     startTime: {
         type: String,
         required: true,
-        default: "09:00"
+        default: "08:00"
     },
     endTime: {
         type: String,
         required: true,
         default: function () {
-            return this.dayOfWeek === "Saturday" ? "13:00" : "19:00";
+            return this.dayOfWeek === "Saturday" ? "12:00" : "18:00";
         },
     },
 };
@@ -89,7 +89,7 @@ const doctorSchema = new mongoose.Schema({
             { dayOfWeek: "Wednesday" },
             { dayOfWeek: "Thursday" },
             { dayOfWeek: "Friday" },
-            { dayOfWeek: "Saturday", endTime: "13:00" },  
+            { dayOfWeek: "Saturday", endTime: "12:00" },  
         ]
     },
     leaveRequests: {
@@ -133,8 +133,11 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
 
     // Utility function to check if the visit is during the doctor's work shift
     const isDuringWorkShift = () => {
-        const startTime = new Date(`${visitDate.toISOString().split('T')[0]} ${workDay.startTime}`);
-        const endTime = new Date(`${visitDate.toISOString().split('T')[0]} ${workDay.endTime}`);
+        // Estrai la data in formato ISO (escludendo l'orario) dalla data della visita
+        const visitDateISO = visitDate.toISOString().split('T')[0];
+
+        const startTime = new Date(`${visitDateISO}T${workDay.startTime}:00Z`);
+        const endTime = new Date(`${visitDateISO}T${workDay.endTime}:00Z`);
         return visitDate >= startTime && visitDate < endTime;
     };
 
@@ -142,11 +145,9 @@ doctorSchema.methods.isAvailable = async function (visitDate) {
         // Estrai la data in formato ISO (escludendo l'orario) dalla data della visita
         const visitDateISO = visitDate.toISOString().split('T')[0];
         // Costruisci un oggetto Date per l'inizio del break pranzo (alle 13:00) utilizzando la data della visita e l'orario fisso
-        const lunchBreakStartTime = new Date(`${visitDateISO} 13:00`);
-    
+        const lunchBreakStartTime = new Date(`${visitDateISO}T12:00:00Z`);
         // Costruisci un oggetto Date per la fine del break pranzo (alle 14:00) utilizzando la data della visita e l'orario fisso
-        const lunchBreakEndTime = new Date(`${visitDateISO} 14:00`);
-    
+        const lunchBreakEndTime = new Date(`${visitDateISO}T13:00:00Z`);
         // Verifica se la data della visita è compresa tra l'inizio e la fine del break pranzo
         return visitDate >= lunchBreakStartTime && visitDate < lunchBreakEndTime;
     };
@@ -162,7 +163,7 @@ doctorSchema.methods.checkExistingVisits = async function (visitDate) {
     try {
       const startTime = visitDate.toISOString();
       const endTime = new Date(visitDate.getTime() + 60 * 60000).toISOString();
-  
+      
       const existingVisits = await this.model('Visit').find({
         doctor: this._id,
         startTime: { $lt: endTime },

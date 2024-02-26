@@ -8,6 +8,7 @@ import Visit from "../models/visitModel.js";
 import User from "../models/userModel.js";
 import { sendVisitCancellationEmail } from "../utils/visits/visitCancellationEmail.js";
 import { startOfDay, addDays, addHours } from 'date-fns';
+import moment from 'moment';
 import { sendWelcomeEmail } from "../utils/doctors/doctorWelcomeEmail.js";
 import { sendLeaveApprovalEmail, sendLeaveDeclinalEmail, sendNewLeaveRequestEmailToAdmin } from "../utils/doctors/leaveManagementEmails.js";
 import { checkDuplicateLeaveRequests, validateLeaveRequests } from "../utils/doctors/leaveRequests.js";
@@ -27,10 +28,19 @@ export const createDoctor = async (req, res, next) => {
         return res.status(409).json({ message: "A Doctor with the same TaxId or email already exists" });
       }
 
+      let workShiftsGMT = [];
+      if (workShifts && workShifts.length > 0){
+        workShiftsGMT = workShifts.map(shift => ({
+          dayOfWeek: shift.dayOfWeek,
+          startTime: moment(shift.startTime, 'HH:mm').utc().format('HH:mm'),
+          endTime: moment(shift.endTime, 'HH:mm').utc().format('HH:mm')
+        }));
+      }
+
       const randomPassword = generateRandomPassword();
       const hashedPassword = bcryptjs.hashSync(randomPassword, 10)
 
-      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, workShifts });
+      const newDoctor = await Doctor.create({ firstName, lastName, email, taxId, password:hashedPassword, specialization, city, profilePicture, about, phoneNumber, workShifts: workShifts === undefined ? workShifts : workShiftsGMT });
       const token = jwt.sign({ userId: newDoctor._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
       await sendWelcomeEmail(newDoctor.email, randomPassword, token);
       
@@ -128,8 +138,11 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
       return res.status(404).json({ message: 'Doctor not found' });
     }
 
-    let currentDate = startOfDay(addDays(new Date(), 1));
-    const endDate = addDays(currentDate, 6);
+    const currentDateMoment = moment().utc().startOf('day').add(1, 'days');
+    const endDateMoment = currentDateMoment.clone().add(6, 'days');
+
+    let currentDate = currentDateMoment.toDate();
+    const endDate = endDateMoment.toDate();
 
     const availableSlots = [];
 
@@ -140,7 +153,6 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
       if (workShift) {
         let startTime = addHours(currentDate, parseInt(workShift.startTime.split(':')[0]));
         const endTime = addHours(currentDate, parseInt(workShift.endTime.split(':')[0]));
-
         while (startTime < endTime) {
           const isAvailable = await doctor.isAvailable(startTime);
           const hasExistingVisits = await doctor.checkExistingVisits(startTime);
@@ -155,6 +167,7 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
 
       currentDate = addDays(currentDate, 1);
     }
+    
     res.json(availableSlots);
   } catch(error){
     console.error('Error getting doctor availability:', error);
