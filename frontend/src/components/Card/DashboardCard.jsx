@@ -2,7 +2,7 @@ import React from 'react';
 
 const DashboardCard = ({ icon, title, content, cardBg, hoverBg }) => {
   return (
-    <div className={`bg-white w-full md:w-fit rounded-xl border border-gray-400 p-5 mb-4 flex items-center ${hoverBg} duration-150 ${cardBg}`}>
+    <div className={`w-full md:w-fit rounded-xl border border-gray-400 p-5 mb-4 flex items-center ${hoverBg} duration-150 ${cardBg}`}>
         <div className='rounded-full h-20 w-20 md:h-24 md:w-24 flex items-center justify-center text-4xl md:text-5xl text-white'>
             {icon}
         </div>
