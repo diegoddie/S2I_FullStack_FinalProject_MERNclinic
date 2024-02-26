@@ -6,7 +6,7 @@ import BookVisitButton from '../Button/BookVisitButton';
 
 const VisitTimeSlot = ({ data, doctor }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const itemsPerPage = 16;
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -27,7 +27,9 @@ const VisitTimeSlot = ({ data, doctor }) => {
         <>
             <ul className='flex flex-wrap gap-8 justify-center'>
                 {currentItems.map((timeSlot, index) => {
+                    console.log(timeSlot)
                     const dateObj = parseISO(timeSlot);
+                    console.log(dateObj)
                     const dayOfWeek = getAbbreviatedDay(dateObj);
                     const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
                     
