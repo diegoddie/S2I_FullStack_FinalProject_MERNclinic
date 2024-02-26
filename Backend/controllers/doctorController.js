@@ -127,7 +127,7 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
-
+    console.log(new Date())
     let currentDate = startOfDay(addDays(new Date(), 1));
     console.log(currentDate)
     const endDate = addDays(currentDate, 6);
