@@ -6,7 +6,7 @@ import BookVisitButton from '../Button/BookVisitButton';
 
 const VisitTimeSlot = ({ data, doctor }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    console.log(data)
+
     const itemsPerPage = 16;
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -17,7 +17,7 @@ const VisitTimeSlot = ({ data, doctor }) => {
       
     const getFormattedDateTime = (date) => {
         const formattedDate = format(date, "dd/MM/yyyy", { locale: enUS });
-        const formattedTime = format(date, 'HH:mm', { locale: it });
+        const formattedTime = format(date, "HH:mm", { locale: enUS });
         return { formattedDate, formattedTime };
     };
 
@@ -28,8 +28,7 @@ const VisitTimeSlot = ({ data, doctor }) => {
                     const dateObj = parseISO(timeSlot);
                     const dayOfWeek = getAbbreviatedDay(dateObj);
                     const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
-                    console.log(formattedTime)
-
+                    
                     return (
                         <li key={index} className='gap-5 items-center bg-white py-5 px-4 w-[250px]'>
                             <div className='flex flex-col md:flex-row justify-center md:mb-3'>
