@@ -28,7 +28,7 @@ const VisitTimeSlot = ({ data, doctor }) => {
             <ul className='flex flex-wrap gap-8 justify-center'>
                 {currentItems.map((timeSlot, index) => {
                     console.log(timeSlot)
-                    const dateObj = parseISO(timeSlot);
+                    const dateObj = new Date(timeSlot);
                     console.log(dateObj)
                     const dayOfWeek = getAbbreviatedDay(dateObj);
                     const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
