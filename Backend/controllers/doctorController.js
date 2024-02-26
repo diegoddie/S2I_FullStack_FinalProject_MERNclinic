@@ -129,13 +129,14 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
     }
 
     let currentDate = startOfDay(addDays(new Date(), 1));
+    console.log(currentDate)
     const endDate = addDays(currentDate, 6);
 
     const availableSlots = [];
 
     while (currentDate <= endDate) {
       const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-
+      console.log(dayOfWeek)
       const workShift = doctor.workShifts.find(shift => shift.dayOfWeek === dayOfWeek);
     
       if (workShift) {
