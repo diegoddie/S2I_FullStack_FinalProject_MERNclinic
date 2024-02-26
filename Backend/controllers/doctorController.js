@@ -140,8 +140,9 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
     
       if (workShift) {
         let startTime = addHours(currentDate, parseInt(workShift.startTime.split(':')[0]));
+        console.log(startTime)
         const endTime = addHours(currentDate, parseInt(workShift.endTime.split(':')[0]));
-
+        console.log(endTime)
         while (startTime < endTime) {
           const isAvailable = await doctor.isAvailable(startTime);
           const hasExistingVisits = await doctor.checkExistingVisits(startTime);
@@ -156,7 +157,7 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
 
       currentDate = addDays(currentDate, 1);
     }
-
+    console.log(availableSlots)
     res.json(availableSlots);
   } catch(error){
     console.error('Error getting doctor availability:', error);
