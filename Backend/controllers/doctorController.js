@@ -127,24 +127,20 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
-    console.log(new Date())
-    console.log(startOfDay(new Date()))
+
     let currentDate = startOfDay(addDays(new Date(), 1));
-    console.log(currentDate)
     const endDate = addDays(currentDate, 6);
 
     const availableSlots = [];
 
     while (currentDate <= endDate) {
       const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-      console.log(dayOfWeek)
       const workShift = doctor.workShifts.find(shift => shift.dayOfWeek === dayOfWeek);
     
       if (workShift) {
         let startTime = addHours(currentDate, parseInt(workShift.startTime.split(':')[0]));
-        console.log(startTime)
         const endTime = addHours(currentDate, parseInt(workShift.endTime.split(':')[0]));
-        console.log(endTime)
+
         while (startTime < endTime) {
           const isAvailable = await doctor.isAvailable(startTime);
           const hasExistingVisits = await doctor.checkExistingVisits(startTime);
@@ -159,7 +155,6 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
 
       currentDate = addDays(currentDate, 1);
     }
-    console.log(availableSlots)
     res.json(availableSlots);
   } catch(error){
     console.error('Error getting doctor availability:', error);
