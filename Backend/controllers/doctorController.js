@@ -135,7 +135,6 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
 
     while (currentDate <= endDate) {
       const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-
       const workShift = doctor.workShifts.find(shift => shift.dayOfWeek === dayOfWeek);
     
       if (workShift) {
@@ -156,7 +155,6 @@ export const getDoctorWeeklyAvailability = async (req,res,next) => {
 
       currentDate = addDays(currentDate, 1);
     }
-
     res.json(availableSlots);
   } catch(error){
     console.error('Error getting doctor availability:', error);
@@ -251,62 +249,61 @@ export const updateDoctor = async (req, res, next) => {
 
 export const deleteDoctor = async (req, res, next) => {
   try {
-      const { id: doctorId } = req.params;
-      const { id: authUserId, role } = req.user;
+    const { id: doctorId } = req.params;
+    const { id: authUserId, role } = req.user;
 
-      const doctorToDelete = await Doctor.findById(doctorId);
-        
-      if (!doctorToDelete) {
-          return next(errorHandler(404, "Doctor not found"));
-      }
+    const doctorToDelete = await Doctor.findById(doctorId);
 
-      if (authUserId !== doctorToDelete.id && role !== 'admin') {
-          return next(errorHandler(403, 'Permission denied. You can only delete your own profile or an admin can delete any profile.'));
-      }
+    if (!doctorToDelete) {
+      return next(errorHandler(404, "Doctor not found"));
+    }
 
-      const currentDate = new Date();
+    if (authUserId !== doctorToDelete.id && role !== 'admin') {
+      return next(errorHandler(403, 'Permission denied. You can only delete your own profile or an admin can delete any profile.'));
+    }
 
+    const currentDate = new Date();
+
+    const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+
+    if (!deletedDoctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    // Delete future appointments
+    const deletionResult = await Visit.deleteMany({
+      doctor: doctorId,
+      date: { $gte: currentDate },
+    });
+
+    // If any appointments are deleted, send cancellation emails to the affected patients
+    if (deletionResult.deletedCount > 0) {
       const futureVisits = await Visit.find({
-          doctor: doctorId,
-          date: { $gte: currentDate },
+        doctor: doctorId,
+        date: { $gte: currentDate },
       });
 
-      const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+      for (const deletedVisit of futureVisits) {
+        const patientDetails = await User.findById(deletedVisit.user);
+        const userEmail = patientDetails.email;
 
-      if (deletedDoctor) {
-          // Delete future appointments
-          const deletionResult = await Visit.deleteMany({
-              doctor: doctorId,
-              date: { $gte: currentDate },
-          });
-
-          // If any appointments are deleted, send cancellation emails to the affected patients
-          if (deletionResult.deletedCount > 0) {
-              for (const deletedVisit of futureVisits) {
-                  const patientDetails = await User.findById(deletedVisit.user);
-                  const userEmail = patientDetails.email;
-
-                  // Send visit cancellation email
-                  await sendVisitCancellationEmail(userEmail, deletedDoctor.email, {
-                      date: deletedVisit.date,
-                      doctor: {
-                          firstName: deletedDoctor.firstName,
-                          lastName: deletedDoctor.lastName,
-                          specialization: deletedDoctor.specialization,
-                      },
-                      patient: {
-                          firstName: patientDetails.firstName,
-                          lastName: patientDetails.lastName,
-                          taxId: patientDetails.taxId,
-                      },
-                  });
-              }
-          }
-
-          res.status(200).json({ message: "Doctor and future appointments deleted successfully" });
-      } else {
-          return res.status(404).json({message: "Doctor not found"})
+        // Send visit cancellation email
+        await sendVisitCancellationEmail(userEmail, deletedDoctor.email, {
+          date: deletedVisit.date,
+          doctor: {
+            firstName: deletedDoctor.firstName,
+            lastName: deletedDoctor.lastName,
+            specialization: deletedDoctor.specialization,
+          },
+          patient: {
+            firstName: patientDetails.firstName,
+            lastName: patientDetails.lastName,
+            taxId: patientDetails.taxId,
+          },
+        });
       }
+    }
+    res.status(200).json({ message: "Doctor and future appointments deleted successfully" });
   } catch (err) {
       console.log(err);
       next(errorHandler(500, 'Internal Server Error: ' + err.message));
