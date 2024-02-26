@@ -26,16 +26,11 @@ const VisitTimeSlot = ({ data, doctor }) => {
         <>
             <ul className='flex flex-wrap gap-8 justify-center'>
                 {currentItems.map((timeSlot, index) => {
-                    let dateObj;
-                    if (process.env.NODE_ENV === 'production') {
-                        dateObj = new Date(timeSlot).toUTCString();
-                    } else if (process.env.NODE_ENV === 'development') {
-                        dateObj = new Date(timeSlot);
-                    }
-
+                    const dateObj = new Date(timeSlot);
                     const dayOfWeek = getAbbreviatedDay(dateObj);
+                    
                     const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
-                    console.log(formattedTime)
+
                     return (
                         <li key={index} className='gap-5 items-center bg-white py-5 px-4 w-[250px]'>
                             <div className='flex flex-col md:flex-row justify-center md:mb-3'>
