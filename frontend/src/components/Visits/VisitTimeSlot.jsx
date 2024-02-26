@@ -17,7 +17,8 @@ const VisitTimeSlot = ({ data, doctor }) => {
       
     const getFormattedDateTime = (date) => {
         const formattedDate = format(date, "dd/MM/yyyy", { locale: enUS });
-        const formattedTime = format(date, "HH:mm", { locale: enUS });
+        const formattedTime = format(date, "HH:mm", { locale: enUS, timeZone: "Europe/Rome" });
+        console.log(formattedTime)
         return { formattedDate, formattedTime };
     };
 
