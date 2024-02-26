@@ -41,8 +41,10 @@ const DeleteConfirmationModal = ({ onClose, onDelete, passwordConfirmation }) =>
                     onClick={() => {
                         if (passwordConfirmation) {
                             onDelete(password);
+                            onClose()
                         } else {
                             onDelete();
+                            onClose()
                         }
                     }}
                 >
