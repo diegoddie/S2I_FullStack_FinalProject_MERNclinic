@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 
 const invoiceSchema = new mongoose.Schema({
     invoiceNumber: {
-        type: String,
-        unique: true
+        type: String
     },
     invoiceFile: {
         type: String

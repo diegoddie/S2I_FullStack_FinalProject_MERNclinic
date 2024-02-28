@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { format, parseISO } from 'date-fns';
-import { it, enUS } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import Pagination from '../Utils/Pagination';
 import BookVisitButton from '../Button/BookVisitButton';
 
@@ -28,7 +28,7 @@ const VisitTimeSlot = ({ data, doctor }) => {
                 {currentItems.map((timeSlot, index) => {
                     const dateObj = new Date(timeSlot);
                     const dayOfWeek = getAbbreviatedDay(dateObj);
-                    
+
                     const { formattedDate, formattedTime } = getFormattedDateTime(dateObj);
 
                     return (

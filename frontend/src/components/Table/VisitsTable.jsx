@@ -1,4 +1,4 @@
-import { compareDesc, format, isWithinInterval, startOfMonth, subDays, subMonths } from 'date-fns';
+import { compareDesc, endOfYear, format, isWithinInterval, startOfMonth, subDays, subMonths } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { CiSearch } from "react-icons/ci";
 import React, { useState, useEffect } from 'react'
@@ -21,7 +21,13 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
         return title === 'Next Visits' ? new Date() : startOfMonth(subMonths(new Date(), 1));
     });
     const [endDate, setEndDate] = useState(() => {
-        return title === 'Next Visits' ? startDate : subDays(new Date(), 1);
+        if (title === 'Next Visits' && !isAdmin && !isDoctor) {
+            return endOfYear(startDate);
+        } else if (title === 'Next Visits') {
+            return startDate;
+        } else {
+            return subDays(new Date(), 1);
+        }
     });
     const [currentPage, setCurrentPage] = useState(1);
     const [patientNameFilter, setPatientNameFilter] = useState('');
@@ -289,7 +295,7 @@ const VisitsTable = ({ title, isDoctor, isAdmin, data }) => {
                                                                 )}
                                                             </div>
                                                         )}
-                                                        {title === 'Past Visits' && visit.invoice.invoiceFile !== '' && (
+                                                        {title === 'Past Visits' && visit.invoice && visit.invoice.invoiceFile !== undefined && (
                                                             <div className='flex mx-auto justify-center'>
                                                                 <FaFilePdf
                                                                     onClick={() => handleDownloadPdf(visit.invoice.invoiceFile)}
